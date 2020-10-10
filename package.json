@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "asc test/main.ts --target debug",
+    "test": "node test"
+  },
+  "devDependencies": {
+    "@assemblyscript/loader": "^0.15.1",
+    "assemblyscript": "^0.15.1"
+  }
+}
