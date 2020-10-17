@@ -38,9 +38,9 @@ export class Vector<T>
 
     private _Reserve(capacity: usize, limit: usize): void
     {
-        const data: StaticArray<T> = new StaticArray(capacity);
+        const data: StaticArray<T> = new StaticArray(<i32>capacity);
         for (let i: usize = 0; i < limit; ++i)
-            data[i] = this.data_[i];
+            data[<i32>i] = this.data_[<i32>i];
         this.data_ = data;
     }
 
@@ -77,7 +77,7 @@ export class Vector<T>
     @inline()
     public capacity(): usize
     {
-        return this.data_.length;
+        return <usize>this.data_.length;
     }
 
     @inline()
@@ -94,7 +94,7 @@ export class Vector<T>
     public at(index: usize): T
     {
         ErrorGenerator.excessive("Vector.at()", index, this.size());
-        return this.data_[index];
+        return this.data_[<i32>index];
     }
 
     @inline()
@@ -102,7 +102,7 @@ export class Vector<T>
     public set(index: usize, val: T): void
     {
         ErrorGenerator.excessive("Vector.set()", index, this.size());
-        this.data_[index] = val;
+        this.data_[<i32>index] = val;
     }
     
     @inline()
@@ -149,7 +149,7 @@ export class Vector<T>
     public push_back(val: T): void
     {
         this._Try_expand(1);
-        this.data_[this.size_++] = val;
+        this.data_[<i32>(this.size_++)] = val;
     }
 
     public insert(pos: Vector.Iterator<T>, val: T): Vector.Iterator<T>
@@ -195,7 +195,7 @@ export class Vector<T>
     public erase(first: Vector.Iterator<T>, last: Vector.Iterator<T> = first.next()): Vector.Iterator<T>
     {
         const distance: usize = last.index() - first.index();
-        const limit: usize = Math.min(this.size(), last.index() + distance);
+        const limit: usize = CMath.min(this.size(), last.index() + distance);
 
         for (let i: usize = last.index(); i < limit; ++i)
             this.data_[i - distance] = this.data_[i];
