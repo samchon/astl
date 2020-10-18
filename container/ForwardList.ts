@@ -7,8 +7,8 @@ export class ForwardList<T>
     private source_ptr_: SourcePtr<T>;
     private size_: usize;
 
-    private readonly before_begin_: ForwardList.Iterator<T>;
-    private readonly end_: ForwardList.Iterator<T>;
+    private before_begin_: ForwardList.Iterator<T>;
+    private end_: ForwardList.Iterator<T>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
@@ -129,6 +129,19 @@ export class ForwardList<T>
         // SOURCE POINTER
         this.source_ptr_.value = obj;
         obj.source_ptr_.value = this;
+
+        const source: SourcePtr<T> = this.source_ptr_;
+        this.source_ptr_ = obj.source_ptr_;
+        obj.source_ptr_ = source;
+
+        // ITERATORS
+        const before: ForwardList.Iterator<T> = this.before_begin_;
+        this.before_begin_ = obj.before_begin_;
+        obj.before_begin_ = before;
+
+        const end: ForwardList.Iterator<T> = this.end_;
+        this.end_ = obj.end_;
+        obj.end_ = end;
 
         // CONTAINER SIZE
         const size: usize = this.size_;
