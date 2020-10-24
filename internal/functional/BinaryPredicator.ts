@@ -1,0 +1,1 @@
+export declare type BinaryPredicator<X, Y = X> = (x: X, y: Y) => boolean;

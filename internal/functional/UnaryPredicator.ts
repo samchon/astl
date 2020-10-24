@@ -1,0 +1,1 @@
+export declare type UnaryPredicator<T> = (val: T) => boolean;

@@ -1,12 +1,17 @@
-import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
-import { Repeater } from "../internal/iterator/disposable/Repeater";
-import { CMath } from "../internal/numeric/CMath";
-import { distance } from "../iterator/global";
 import { IForwardIterator } from "../iterator/IForwardIterator";
-import { Pair } from "../utility/Pair";
 import { Vector } from "./Vector";
 
+import { CMath } from "../internal/numeric/CMath";
+import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
+import { Pair } from "../utility/Pair";
+import { Repeater } from "../internal/iterator/disposable/Repeater";
+import { distance } from "../iterator/global";
+import { ArrayIterator } from "../internal/iterator/ArrayIterator";
+import { ArrayReverseIterator } from "../internal/iterator/ArrayReverseIterator";
+import { IArrayContainer } from "../base/container/IArrayContainer";
+
 export class Deque<T>
+    implements IArrayContainer<T, Deque<T>, Deque<T>, Deque.Iterator<T>, Deque.ReverseIterator<T>, T>
 {
     private matrix_: Vector<Vector<T>>;
     private size_: usize;
@@ -28,6 +33,11 @@ export class Deque<T>
         this.matrix_.clear();
         this.matrix_.push_back(new Vector());
         this.capacity_ = 8;
+    }
+
+    public resize(n: usize): void
+    {
+        this._Reserve(n, n);
     }
 
     private _Reserve(capacity: usize, limit: usize): void
@@ -181,6 +191,16 @@ export class Deque<T>
     public end(): Deque.Iterator<T>
     {
         return this.nth(this.size());
+    }
+
+    public rbegin(): Deque.ReverseIterator<T>
+    {
+        return this.end().reverse();
+    }
+
+    public rend(): Deque.ReverseIterator<T>
+    {
+        return this.begin().reverse();
     }
 
     /* =========================================================
@@ -358,55 +378,45 @@ export namespace Deque
     export const MAGNIFIER = 2;
 
     export class Iterator<T>
+        extends ArrayIterator<T, Deque<T>, Deque<T>, Deque.Iterator<T>, Deque.ReverseIterator<T>, T>
     {
-        private readonly source_: Deque<T>;
-        private readonly index_: usize;
-
-        public constructor(source: Deque<T>, index: usize)
+        public reverse(): ReverseIterator<T>
         {
-            this.source_ = source;
-            this.index_ = index;
+            return new ReverseIterator(this);
         }
 
-        @inline()
         public source(): Deque<T>
         {
-            return this.source_;
+            return this.container_;
         }
 
-        @inline()
-        public index(): usize
-        {
-            return this.index_;
-        }
-
-        @inline()
         public get value(): T
         {
-            return this.source_.at(this.index_);
+            return this.container_.at(this.index_);
         }
 
         public set value(val: T)
         {
-            this.source_.set(this.index_, val);
+            this.container_.set(this.index_, val);
+        }
+    }
+
+    export class ReverseIterator<T>
+        extends ArrayReverseIterator<T, Deque<T>, Deque<T>, Deque.Iterator<T>, Deque.ReverseIterator<T>, T>
+    {
+        protected _Create_neighbor(base: Iterator<T>): ReverseIterator<T>
+        {
+            return new ReverseIterator(base);
         }
 
-        @inline()
-        public prev(): Iterator<T>
+        public get value(): T
         {
-            return new Iterator(this.source_, this.index_ - 1);
-        }
-        
-        @inline()
-        public next(): Iterator<T>
-        {
-            return new Iterator(this.source_, this.index_ + 1);
+            return this.base().value;
         }
 
-        @inline()
-        public advance(n: isize): Iterator<T>
+        public set value(val: T)
         {
-            return new Iterator(this.source_, this.index_ + n);
+            this.base().value = val;
         }
     }
 }

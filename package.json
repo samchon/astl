@@ -4,7 +4,7 @@
     "test": "node test"
   },
   "devDependencies": {
-    "@assemblyscript/loader": "^0.15.1",
-    "assemblyscript": "^0.15.1"
+    "@assemblyscript/loader": "^0.16.1",
+    "assemblyscript": "^0.16.1"
   }
 }
