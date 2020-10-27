@@ -8,7 +8,10 @@ export abstract class XTree<T>
     protected root_: XTreeNode<T> | null;
 
     private comp_: Comparator<T>;
-    private equal_: Comparator<T>;
+    private equal_(x: T, y: T): boolean
+    {
+        return !this.comp_(x, y) && !this.comp_(y, x);
+    }
 
     /* ---------------------------------------------------------
         CONSTRUCTOR
@@ -18,7 +21,6 @@ export abstract class XTree<T>
         this.root_ = null;
 
         this.comp_ = comp;
-        this.equal_ = (x, y) => !this.comp_(x, y) && this.comp_(y, x);
     }
 
     public clear(): void

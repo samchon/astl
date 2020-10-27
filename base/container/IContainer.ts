@@ -15,8 +15,6 @@ export declare interface IContainer<T extends PElem,
 
     erase(it: IteratorT): IteratorT;
     erase(first: IteratorT, last: IteratorT): IteratorT;
-    
-    swap(source: this): void;
 
     /* ---------------------------------------------------------
         ACCESSORS
