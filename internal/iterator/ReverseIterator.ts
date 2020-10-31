@@ -1,12 +1,11 @@
-import { IContainer } from "../../base/container/IContainer";
+import { IContainer, IContainerIterator, IContainerReverseIterator } from "../container/linear/IContainer";
 
-export abstract class ReverseIterator<T extends ElemT,
-        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        IteratorT extends IContainer.Iterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>, 
-        ReverseT extends IContainer.ReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        ElemT>
-    implements IContainer.ReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>
+export abstract class ReverseIterator<T extends InputT,
+        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>, 
+        ReverseT extends IContainerReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        InputT>
 {
     protected readonly base_: IteratorT;
 
@@ -15,29 +14,31 @@ export abstract class ReverseIterator<T extends ElemT,
     --------------------------------------------------------- */
     public constructor(base: IteratorT)
     {
-        this.base_ = base;
+        this.base_ = base.prev();
     }
 
-    protected abstract _Create_neighbor(base: IteratorT): ReverseT;
-
+    @inline()
     public prev(): ReverseT
     {
-        return this._Create_neighbor(this.base().next());
+        return this.base().next().reverse();
     }
 
+    @inline()
     public next(): ReverseT
     {
-        return this._Create_neighbor(this.base_);
+        return this.base_.reverse();
     }
 
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
+    @inline()
     public source(): SourceT
     {
         return this.base_.source();
     }
 
+    @inline()
     public base(): IteratorT
     {
         return this.base_.next();
@@ -45,6 +46,7 @@ export abstract class ReverseIterator<T extends ElemT,
 
     public abstract get value(): T;
 
+    @inline()
     public equals(obj: ReverseT): boolean
     {
         return this.base() == obj.base();

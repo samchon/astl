@@ -1,15 +1,14 @@
-import { IContainer } from "../../base/container/IContainer";
-import { IArrayContainer } from "../../base/container/IArrayContainer";
+import { IContainer } from "../container/linear/IContainer";
+import { IArrayContainer } from "../container/linear/IArrayContainer";
 
 import { ArrayReverseIterator } from "./ArrayReverseIterator";
 
-export abstract class ArrayIterator<T extends ElemT,
-        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        ContainerT extends IArrayContainer<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        IteratorT extends ArrayIterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>, 
-        ReverseT extends ArrayReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        ElemT>
-    implements IArrayContainer.Iterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>
+export abstract class ArrayIterator<T extends InputT,
+        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        ContainerT extends IArrayContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        IteratorT extends ArrayIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>, 
+        ReverseT extends ArrayReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        InputT>
 {
     protected readonly container_: ContainerT;
     protected readonly index_: usize;
@@ -25,16 +24,19 @@ export abstract class ArrayIterator<T extends ElemT,
 
     public abstract reverse(): ReverseT;
 
+    @inline()
     public prev(): IteratorT
     {
         return this.advance(-1);
     }
 
+    @inline()
     public next(): IteratorT
     {
         return this.advance(1);
     }
 
+    @inline()
     public advance(n: isize): IteratorT
     {
         return this.container_.nth(this.index_ + n);
@@ -45,6 +47,7 @@ export abstract class ArrayIterator<T extends ElemT,
     --------------------------------------------------------- */
     public abstract source(): SourceT;
 
+    @inline()
     public index(): usize
     {
         return this.index_;
@@ -52,6 +55,7 @@ export abstract class ArrayIterator<T extends ElemT,
 
     public abstract get value(): T;
 
+    @inline()
     public equals(obj: IteratorT): boolean
     {
         return this.container_ == obj.container_ 

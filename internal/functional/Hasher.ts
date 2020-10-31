@@ -1,1 +1,1 @@
-export declare type Hasher<Key> = (key: Key) => number;
+export declare type Hasher<Key> = (key: Key) => usize;

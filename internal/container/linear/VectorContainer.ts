@@ -1,22 +1,10 @@
-import { IContainer } from "../../../base/container/IContainer";
-import { IArrayContainer } from "../../../base/container/IArrayContainer";
-
+import { distance } from "../../../iterator/global";
 import { IForwardIterator } from "../../../iterator/IForwardIterator";
-import { ArrayIterator } from "../../iterator/ArrayIterator";
-import { ArrayReverseIterator } from "../../iterator/ArrayReverseIterator";
-
-import { CMath } from "../../numeric/CMath";
 import { ErrorGenerator } from "../../exception/ErrorGenerator";
 import { Repeater } from "../../iterator/disposable/Repeater";
-import { distance } from "../../../iterator/global";
+import { CMath } from "../../numeric/CMath";
 
-export abstract class VectorContainer<T extends ElemT,
-        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        ContainerT extends VectorContainer<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        IteratorT extends ArrayIterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>, 
-        ReverseT extends ArrayReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>,
-        ElemT>
-    implements IArrayContainer<T, SourceT, ContainerT, IteratorT, ReverseT, ElemT>
+export class VectorContainer<T>
 {
     private data_: StaticArray<T>;
     private size_: usize;
@@ -29,23 +17,26 @@ export abstract class VectorContainer<T extends ElemT,
         this.size_ = 0;
         this.data_ = new StaticArray(1);
     }
-
+    
     public clear(): void
     {
         this.size_ = 0;
         this.data_ = new StaticArray(1);
     }
 
+    @inline()
     public resize(n: usize): void
     {
         this._Reserve(n, n);
     }
 
+    @inline()
     public reserve(capacity: usize): void
     {
         this._Reserve(capacity, this.size());
     }
 
+    @inline()
     public shrink_to_fit(): void
     {
         if (this.empty() === false && this.size() !== this.capacity())
@@ -70,13 +61,8 @@ export abstract class VectorContainer<T extends ElemT,
         this._Reserve(capacity, limit);
     }
 
-    /* =========================================================
+    /* ---------------------------------------------------------
         ACCESSORS
-            - CAPACITIES
-            - ELEMENTS
-            - ITERATORS
-    ============================================================
-        CAPACITIES
     --------------------------------------------------------- */
     @inline()
     public size(): usize
@@ -101,15 +87,13 @@ export abstract class VectorContainer<T extends ElemT,
     {
         return this.data_;
     }
-
-    /* ---------------------------------------------------------
-        ELEMENTS
-    --------------------------------------------------------- */
+    
     @inline()
     @operator("[]")
     public at(index: usize): T
     {
-        ErrorGenerator.excessive("Vector.at()", index, this.size());
+        if (index >= this.size())
+            throw ErrorGenerator.excessive("VectorContainer.at()", index, this.size());
         return this.data_[<i32>index];
     }
 
@@ -117,7 +101,8 @@ export abstract class VectorContainer<T extends ElemT,
     @operator("[]=")
     public set(index: usize, val: T): void
     {
-        ErrorGenerator.excessive("Vector.set()", index, this.size());
+        if (index >= this.size())
+            throw ErrorGenerator.excessive("VectorContainer.set()", index, this.size());
         this.data_[<i32>index] = val;
     }
     
@@ -133,33 +118,6 @@ export abstract class VectorContainer<T extends ElemT,
         return this.at(this.size() - 1);
     }
 
-    /* ---------------------------------------------------------
-        ITERATORS
-    --------------------------------------------------------- */
-    public abstract nth(index: usize): IteratorT;
-
-    @inline()
-    public begin(): IteratorT
-    {
-        return this.nth(0);
-    }
-
-    @inline()
-    public end(): IteratorT
-    {
-        return this.nth(this.size());
-    }
-
-    public rbegin(): ReverseT
-    {
-        return this.end().reverse();
-    }
-
-    public rend(): ReverseT
-    {
-        return this.begin().reverse();
-    }
-
     /* =========================================================
         ELEMENTS I/O
             - INSERT
@@ -168,68 +126,67 @@ export abstract class VectorContainer<T extends ElemT,
     ============================================================
         INSERT
     --------------------------------------------------------- */
+    @inline()
     public push_back(val: T): void
     {
         this._Try_expand(1);
         this.data_[<i32>(this.size_++)] = val;
     }
 
-    public insert(pos: IteratorT, val: T): IteratorT
+    @inline()
+    protected _Insert(index: usize, val: T): void
     {
-        return this.insert_repeatedly(pos, 1, val);
+        this._Insert_repeatedly(index, 1, val);
     }
-    
-    public insert_repeatedly(pos: IteratorT, n: usize, val: T): IteratorT
+
+    @inline()
+    protected _Insert_repeatedly(index: usize, n: usize, val: T): void
     {
         const first: Repeater<T> = new Repeater(0, val);
-        const last: Repeater<T> = new Repeater(n);
+        const last: Repeater<T> = new Repeater(n, val);
 
-        return this.insert_range(pos, first, last);
+        this._Insert_range(index, first, last);
     }
 
-    public insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
-        (pos: IteratorT, first: InputIterator, last: InputIterator): IteratorT
+    protected _Insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
+        (index: usize, first: InputIterator, last: InputIterator): void
     {
-        const plus: usize = distance(first, last);
-        this._Try_expand(plus, pos.index());
+        const length: usize = distance(first, last);
+        this._Try_expand(length, index);
 
-        for (let i: usize = pos.index(); i < this.size(); ++i)
+        for (let i: usize = index; i < this.size(); ++i)
         {
-            this.data_[i + plus] = this.data_[i];
+            this.data_[i + length] = this.data_[i];
             this.data_[i] = first.value;
             first = first.next();
         }
-        
-        this.size_ += plus
-        return pos;
+        this.size_ += length
     }
 
     /* ---------------------------------------------------------
         ERASE
     --------------------------------------------------------- */
+    @inline()
     public pop_back(): void
     {
-        if (this.empty() === true)
-            ErrorGenerator.empty("Vector.pop_back()");
         --this.size_;
     }
 
-    public erase(first: IteratorT, last: IteratorT = first.next()): IteratorT
+    protected _Erase(first: usize, last: usize): void
     {
-        const distance: usize = last.index() - first.index();
-        const limit: usize = CMath.min(this.size(), last.index() + distance);
+        const length: usize = last - first;
+        const limit: usize = CMath.min(this.size(), last + length);
 
-        for (let i: usize = last.index(); i < limit; ++i)
-            this.data_[i - distance] = this.data_[i];
+        for (let i: usize = last; i < limit; ++i)
+            this.data_[i - length] = this.data_[i];
 
-        this.size_ -= distance;
-        return first;
+        this.size_ -= length;
     }
 
     /* ---------------------------------------------------------
         SWAP
     --------------------------------------------------------- */
-    public swap(obj: ContainerT): void
+    protected _Swap(obj: VectorContainer<T>): void
     {
         // DATA
         const data: StaticArray<T> = this.data_;

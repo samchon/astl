@@ -1,4 +1,6 @@
 import { IForwardIterator } from "../iterator/IForwardIterator";
+
+import { DomainError } from "../exception/DomainError";
 import { Repeater } from "../internal/iterator/disposable/Repeater";
 import { distance } from "../iterator/global";
 
@@ -75,7 +77,6 @@ export class ForwardList<T>
         this.insert_after(this.before_begin(), val);
     }
 
-    @inline()
     public insert_after(pos: ForwardList.Iterator<T>, val: T): ForwardList.Iterator<T>
     {
         const it: ForwardList.Iterator<T> = new ForwardList.Iterator(this.source_ptr_, pos.next(), val);
@@ -88,7 +89,7 @@ export class ForwardList<T>
     public insert_after_repeatedly(pos: ForwardList.Iterator<T>, n: usize, val: T): ForwardList.Iterator<T>
     {
         const first: Repeater<T> = new Repeater(0, val);
-        const last: Repeater<T> = new Repeater(n);
+        const last: Repeater<T> = new Repeater(n, val);
 
         return this.insert_after_range(pos, first, last);
     }
@@ -188,10 +189,11 @@ export namespace ForwardList
             this.value_ = val;
         }
 
+        @inline()
         public next(): Iterator<T>
         {
             if (this.next_ === null)
-                throw new Error("Error on ForwardList.Iterator.next(): unable to forward to the next step because it's the ForwardList.end().");
+                throw new DomainError("Error on ForwardList.Iterator.next(): unable to forward to the next step because it's the ForwardList.end().");
             return this.next_;
         }
     }

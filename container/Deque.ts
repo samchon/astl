@@ -8,10 +8,8 @@ import { Repeater } from "../internal/iterator/disposable/Repeater";
 import { distance } from "../iterator/global";
 import { ArrayIterator } from "../internal/iterator/ArrayIterator";
 import { ArrayReverseIterator } from "../internal/iterator/ArrayReverseIterator";
-import { IArrayContainer } from "../base/container/IArrayContainer";
 
 export class Deque<T>
-    implements IArrayContainer<T, Deque<T>, Deque<T>, Deque.Iterator<T>, Deque.ReverseIterator<T>, T>
 {
     private matrix_: Vector<Vector<T>>;
     private size_: usize;
@@ -35,6 +33,7 @@ export class Deque<T>
         this.capacity_ = 8;
     }
 
+    @inline()
     public resize(n: usize): void
     {
         this._Reserve(n, n);
@@ -126,7 +125,8 @@ export class Deque<T>
     @operator("[]")
     public at(index: usize): T
     {
-        ErrorGenerator.excessive("Deque.at()", index, this.size());
+        if (index >= this.size())
+            throw ErrorGenerator.excessive("Deque.at()", index, this.size());
 
         const tuple: Pair<usize, usize> = this._Fetch_index(index);
         return this.matrix_.at(tuple.first).at(tuple.second);
@@ -136,7 +136,8 @@ export class Deque<T>
     @operator("[]=")
     public set(index: usize, val: T): void
     {
-        ErrorGenerator.excessive("Deque.set()", index, this.size());
+        if (index >= this.size())
+            throw ErrorGenerator.excessive("Deque.set()", index, this.size());
 
         const tuple: Pair<usize, usize> = this._Fetch_index(index);
         this.matrix_.at(tuple.first).set(tuple.second, val);
@@ -193,11 +194,13 @@ export class Deque<T>
         return this.nth(this.size());
     }
 
+    @inline()
     public rbegin(): Deque.ReverseIterator<T>
     {
         return this.end().reverse();
     }
 
+    @inline()
     public rend(): Deque.ReverseIterator<T>
     {
         return this.begin().reverse();
@@ -255,6 +258,7 @@ export class Deque<T>
         ++this.size_;
     }
     
+    @inline()
     public insert(pos: Deque.Iterator<T>, val: T): Deque.Iterator<T>
     {
         return this.insert_repeatedly(pos, 1, val);
@@ -263,7 +267,7 @@ export class Deque<T>
     public insert_repeatedly(pos: Deque.Iterator<T>, n: usize, val: T): Deque.Iterator<T>
     {
         const first: Repeater<T> = new Repeater(0, val);
-        const last: Repeater<T> = new Repeater(n);
+        const last: Repeater<T> = new Repeater(n, val);
 
         return this.insert_range(pos, first, last);
     }
@@ -308,7 +312,7 @@ export class Deque<T>
     {
         // VALIDATE
         if (this.empty() === true)
-            ErrorGenerator.empty("Deque.pop_front()");
+            throw ErrorGenerator.empty("Deque.pop_front()");
 
         // ERASE THE FIRST ELEMENT
         const first: Vector<T> = this.matrix_.front();
@@ -325,7 +329,7 @@ export class Deque<T>
     {
         // VALIDATE
         if (this.empty() === true)
-            ErrorGenerator.empty("Deque.pop_back()");
+            throw ErrorGenerator.empty("Deque.pop_back()");
 
         // ERASE THE LAST ELEMENT
         const last: Vector<T> = this.matrix_.back();
@@ -380,21 +384,23 @@ export namespace Deque
     export class Iterator<T>
         extends ArrayIterator<T, Deque<T>, Deque<T>, Deque.Iterator<T>, Deque.ReverseIterator<T>, T>
     {
-        public reverse(): ReverseIterator<T>
-        {
-            return new ReverseIterator(this);
-        }
-
+        @inline()
         public source(): Deque<T>
         {
             return this.container_;
         }
 
+        @inline()
+        public reverse(): ReverseIterator<T>
+        {
+            return new ReverseIterator(this);
+        }
+
+        @inline()
         public get value(): T
         {
             return this.container_.at(this.index_);
         }
-
         public set value(val: T)
         {
             this.container_.set(this.index_, val);
@@ -404,16 +410,11 @@ export namespace Deque
     export class ReverseIterator<T>
         extends ArrayReverseIterator<T, Deque<T>, Deque<T>, Deque.Iterator<T>, Deque.ReverseIterator<T>, T>
     {
-        protected _Create_neighbor(base: Iterator<T>): ReverseIterator<T>
-        {
-            return new ReverseIterator(base);
-        }
-
+        @inline()
         public get value(): T
         {
             return this.base().value;
         }
-
         public set value(val: T)
         {
             this.base().value = val;

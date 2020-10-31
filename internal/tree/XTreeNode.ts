@@ -22,19 +22,21 @@ export class XTreeNode<T>
         this.right = null;
     }
 
+    @inline()
     public get grand(): XTreeNode<T> | null
     {
         return this.parent!.parent;
     }
 
+    @inline()
     public get sibling(): XTreeNode<T>  | null
     {
-        if (this === this.parent!.left)
-            return this.parent!.right;
-        else
-            return this.parent!.left;
+        return this === this.parent!.left
+            ? this.parent!.right
+            : this.parent!.left;
     }
-    
+ 
+    @inline()
     public get uncle(): XTreeNode<T>  | null
     {
         return this.parent!.sibling;

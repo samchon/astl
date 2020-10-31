@@ -1,9 +1,9 @@
 export class Repeater<T>
 {
     private index_: usize;
-    private value_: T | null;
+    private value_: T;
 
-    public constructor(index: usize, value: T | null = null)
+    public constructor(index: usize, value: T)
     {
         this.index_ = index;
         this.value_ = value;
@@ -16,7 +16,7 @@ export class Repeater<T>
 
     public get value(): T
     {
-        return this.value_!;
+        return this.value_;
     }
 
     public next(): Repeater<T>

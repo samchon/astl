@@ -5,8 +5,8 @@ import { Hasher } from "../functional/Hasher";
 
 export class HashBuckets<Key, Elem>
 {
-    private hasher_: Hasher<Key>;
-    private fetcher_: (elem: Elem) => Key;
+    private readonly hasher_: Hasher<Key>;
+    protected readonly fetcher_: (elem: Elem) => Key;
 
     private max_load_factor_: f64;
     private data_: Vector<Vector<Elem>>;
@@ -76,39 +76,52 @@ export class HashBuckets<Key, Elem>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
+    @inline()
     public length(): usize
     {
         return this.data_.size();
     }
 
+    @inline()
     public capacity(): usize
     {
-        return this.length() * this.max_load_factor_;
+        return <usize>(this.length() * this.max_load_factor_);
     }
 
+    @inline()
     public at(index: usize): Vector<Elem>
     {
         return this.data_.at(index);
     }
 
+    @inline()
     public load_factor(): f64
     {
         return this.size_ / this.length();
     }
 
-    public max_load_factor(): f64;
-    public max_load_factor(z: f64): void;
-    public max_load_factor(z: number | null = null): f64 | void
+    @inline()
+    public max_load_factor(): f64
     {
-        if (z === null)
-            return this.max_load_factor_;
-        else
-            this.max_load_factor_ = z;
+        return this.max_load_factor_;
+    }
+
+    @inline()
+    public set_max_load_factor(z: f64): void
+    {
+        this.max_load_factor_ = z;
+    }
+
+    @inline()
+    public hash_function(): Hasher<Key>
+    {
+        return this.hasher_;
     }
 
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
+    @inline()
     private index(elem: Elem): usize
     {
         return this.hasher_(this.fetcher_(elem)) % this.length();
