@@ -1,4 +1,13 @@
 {
+  "name": "astl",
+  "description": "AssemblyScript-STL (Standard Template Library, migrated from the C++)",
+  "author": {
+    "name": "Jeongho Nam",
+    "email": "samchon@samchon.org",
+    "url": "http://samchon.org"
+  },
+  "version": "0.0.0",
+  "main": "./index.ts",
   "scripts": {
     "build": "asc test/main.ts --target debug",
     "test": "node test"
@@ -6,5 +15,34 @@
   "devDependencies": {
     "@assemblyscript/loader": "^0.16.1",
     "assemblyscript": "^0.16.1"
-  }
+  },
+  "homepage": "https://github.com/samchon/tstl",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samchon/tstl"
+  },
+  "bugs": {
+    "url": "https://github.com/samchon/tstl/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "assemblyscript", 
+    "stl",
+    "standard template library",
+    "Vector",
+    "Deque",
+    "List",
+    "ForwardList",
+    "Stack",
+    "Queue",
+    "PriorityQueue",
+    "HashMap",
+    "HashMultiMap",
+    "HashMultiSet",
+    "HashSet",
+    "TreeMap",
+    "TreeMultiMap",
+    "TreeMultiSet",
+    "TreeSet"
+  ]
 }

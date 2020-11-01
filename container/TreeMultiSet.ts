@@ -1,26 +1,23 @@
-import { MapElementList } from "../internal/container/associative/MapElementList";
+import { SetElementList } from "../internal/container/associative/SetElementList";
 import { IteratorTree } from "../internal/tree/IteratorTree";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { Comparator } from "../internal/functional/Comparator";
-
-import { IPair } from "../utility/IPair";
 import { Pair } from "../utility/Pair";
-import { Entry } from "../utility/Entry";
 
-export class TreeMultiMap<Key, T>
+export class TreeMultiSet<Key>
 {
-    private data_: MapElementList<Key, T, false, TreeMultiMap<Key, T>> = new MapElementList(<TreeMultiMap<Key, T>>this);
-    private tree_: IteratorTree<Key, TreeMultiMap.Iterator<Key, T>, false>;
+    private data_: SetElementList<Key, false, TreeMultiSet<Key>> = new SetElementList(<TreeMultiSet<Key>>this);
+    private tree_: IteratorTree<Key, TreeMultiSet.Iterator<Key>, false>;
 
     public constructor(comp: Comparator<Key>)
     {
         this.tree_ = new IteratorTree
         (
             comp, 
-            it => it.first, 
+            it => it.value, 
             false, 
-            (x, y) => MapElementList.Iterator._Compare_uid(x, y)
+            (x, y) => SetElementList.Iterator._Compare_uid(x, y)
         );
     }
 
@@ -53,31 +50,31 @@ export class TreeMultiMap<Key, T>
     }
 
     @inline()
-    public begin(): TreeMultiMap.Iterator<Key, T>
+    public begin(): TreeMultiSet.Iterator<Key>
     {
         return this.data_.begin();
     }
 
     @inline()
-    public end(): TreeMultiMap.Iterator<Key, T>
+    public end(): TreeMultiSet.Iterator<Key>
     {
         return this.data_.end();
     }
 
     @inline()
-    public rbegin(): TreeMultiMap.ReverseIterator<Key, T>
+    public rbegin(): TreeMultiSet.ReverseIterator<Key>
     {
         return this.data_.rbegin();
     }
 
     @inline()
-    public rend(): TreeMultiMap.ReverseIterator<Key, T>
+    public rend(): TreeMultiSet.ReverseIterator<Key>
     {
         return this.data_.rend();
     }
 
     @inline()
-    public find(key: Key): TreeMultiMap.Iterator<Key, T>
+    public find(key: Key): TreeMultiSet.Iterator<Key>
     {
         const node = this.tree_.find(key);
         return (node !== null) ? node.value : this.end();
@@ -93,7 +90,7 @@ export class TreeMultiMap<Key, T>
     public count(key: Key): usize
     {
         let ret: usize = 0;
-        for (let it = this.find(key); it != this.end() && this.key_eq(key, it.first); it = it.next())
+        for (let it = this.find(key); it != this.end() && this.key_eq(key, it.value); it = it.next())
             ++ret;
         return ret;
     }
@@ -105,19 +102,19 @@ export class TreeMultiMap<Key, T>
     }
 
     @inline()
-    public lower_bound(key: Key): TreeMultiMap.Iterator<Key, T>
+    public lower_bound(key: Key): TreeMultiSet.Iterator<Key>
     {
         return this.tree_.lower_bound(this.end(), key);
     }
 
     @inline()
-    public upper_bound(key: Key): TreeMultiMap.Iterator<Key, T>
+    public upper_bound(key: Key): TreeMultiSet.Iterator<Key>
     {
         return this.tree_.upper_bound(this.end(), key);
     }
 
     @inline()
-    public equal_range(key: Key): Pair<TreeMultiMap.Iterator<Key, T>, TreeMultiMap.Iterator<Key, T>>
+    public equal_range(key: Key): Pair<TreeMultiSet.Iterator<Key>, TreeMultiSet.Iterator<Key>>
     {
         return this.tree_.equal_range(this.end(), key);
     }
@@ -125,28 +122,28 @@ export class TreeMultiMap<Key, T>
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
-    public emplace(key: Key, value: T): TreeMultiMap.Iterator<Key, T>
+    public insert(key: Key): TreeMultiSet.Iterator<Key>
     {
-        const it = this.data_.insert(this.upper_bound(key), new Entry(key, value));
+        const it = this.data_.insert(this.upper_bound(key), key);
         this.tree_.insert(it);
 
         return it;
     }
 
     @inline()
-    public emplace_hint(hint: TreeMultiMap.Iterator<Key, T>, key: Key, value: T): TreeMultiMap.Iterator<Key, T>
+    public insert_hint(hint: TreeMultiSet.Iterator<Key>, key: Key): TreeMultiSet.Iterator<Key>
     {
-        return this.emplace(key, value);
+        return this.insert(key);
     }
 
-    public insert_range<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
+    public insert_range<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
         for (; first != last; first = first.next())
-            this.emplace(first.value.first, first.value.second);
+            this.insert(first.value);
     }
     
-    public erase(first: TreeMultiMap.Iterator<Key, T>, last: TreeMultiMap.Iterator<Key, T> = first.next()): TreeMultiMap.Iterator<Key, T>
+    public erase(first: TreeMultiSet.Iterator<Key>, last: TreeMultiSet.Iterator<Key> = first.next()): TreeMultiSet.Iterator<Key>
     {
         const ret = this.data_.erase(first, last);
         for (; first != last; first = first.next())
@@ -162,7 +159,7 @@ export class TreeMultiMap<Key, T>
             return 0;
 
         let count: usize = 0;
-        for (let it = node.value; it != this.end() && this.key_eq(key, it.first); )
+        for (let it = node.value; it != this.end() && this.key_eq(key, it.value); )
         {
             this.erase(it);
             ++count;
@@ -171,8 +168,8 @@ export class TreeMultiMap<Key, T>
     }
 }
 
-export namespace TreeMultiMap
+export namespace TreeMultiSet
 {
-    export type Iterator<Key, T> = MapElementList.Iterator<Key, T, false, TreeMultiMap<Key, T>>;
-    export type ReverseIterator<Key, T> = MapElementList.ReverseIterator<Key, T, false, TreeMultiMap<Key, T>>;
+    export type Iterator<Key> = SetElementList.Iterator<Key, false, TreeMultiSet<Key>>;
+    export type ReverseIterator<Key> = SetElementList.ReverseIterator<Key, false, TreeMultiSet<Key>>;
 }

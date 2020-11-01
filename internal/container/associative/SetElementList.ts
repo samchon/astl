@@ -12,11 +12,13 @@ export class SetElementList<Key,
             SetElementList.Iterator<Key, Unique, SourceT>, 
             SetElementList.ReverseIterator<Key, Unique, SourceT>>>
 {
-    private source_: SourceT;
-    private end_: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this);
-    private begin_: SetElementList.Iterator<Key, Unique, SourceT> = this.end_;
     private size_: usize = 0;
+    private uid_: usize = 0;
 
+    private source_: SourceT;
+    private end_: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, this.uid_++);
+    private begin_: SetElementList.Iterator<Key, Unique, SourceT> = this.end_;
+    
     public constructor(source: SourceT)
     {
         this.source_ = source;
@@ -117,7 +119,7 @@ export class SetElementList<Key,
     {
         const prev: SetElementList.Iterator<Key, Unique, SourceT> = pos.prev();
         
-        const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, prev, pos, value);
+        const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, this.uid_++, prev, pos, value);
         SetElementList.Iterator._Set_next<Key, Unique, SourceT>(prev, it);
         SetElementList.Iterator._Set_prev<Key, Unique, SourceT>(pos, it);
 
@@ -146,7 +148,7 @@ export class SetElementList<Key,
         // ITERATE THE NEW ELEMENTS
         for (; first != last; first = first.next())
         {
-            const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, prev, null, first.value);
+            const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, this.uid_++, prev, null, first.value);
             if (top === null)
                 top = it;
 
@@ -213,6 +215,7 @@ export namespace SetElementList
                 ReverseIterator<Key, Unique, SourceT>>>
     {
         private readonly container_: SetElementList<Key, Unique, SourceT>;
+        private uid_: usize;
         private erased_: boolean;
         
         private prev_: Iterator<Key, Unique, SourceT> | null;
@@ -222,9 +225,10 @@ export namespace SetElementList
         /* ---------------------------------------------------------------
             CONSTRUCTORS
         --------------------------------------------------------------- */
-        private constructor(container: SetElementList<Key, Unique, SourceT>)
+        private constructor(container: SetElementList<Key, Unique, SourceT>, uid: usize)
         {
             this.container_ = container;
+            this.uid_ = uid;
             this.erased_ = false;
 
             this.prev_ = null;
@@ -240,12 +244,13 @@ export namespace SetElementList
                     ReverseIterator<Key, Unique, SourceT>>>
             (
                 container: SetElementList<Key, Unique, SourceT>, 
+                uid: usize,
                 prev: Iterator<Key, Unique, SourceT> | null = null, 
                 next: Iterator<Key, Unique, SourceT> | null = null,
                 value: Key | null = null
             ): Iterator<Key, Unique, SourceT>
         {
-            const ret: Iterator<Key, Unique, SourceT> = new Iterator(container);
+            const ret: Iterator<Key, Unique, SourceT> = new Iterator(container, uid);
             if (prev) ret.prev_ = prev;
             if (next) ret.next_ = next;
             ret.value_ = value;
@@ -335,6 +340,18 @@ export namespace SetElementList
             (it: Iterator<Key, Unique, SourceT>): void
         {
             it.erased_ = true;
+        }
+
+        @inline()
+        public static _Compare_uid<Key, 
+                Unique extends boolean, 
+                SourceT extends ISetContainer<Key, Unique, SourceT, 
+                    SetElementList<Key, Unique, SourceT>, 
+                    Iterator<Key, Unique, SourceT>, 
+                    ReverseIterator<Key, Unique, SourceT>>>
+            (x: Iterator<Key, Unique, SourceT>, y: Iterator<Key, Unique, SourceT>): boolean
+        {
+            return x.uid_ < y.uid_;
         }
     }
 

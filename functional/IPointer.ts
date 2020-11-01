@@ -1,4 +1,4 @@
-export declare interface IPointer<T>
+export interface IPointer<T>
 {
     value: T;
 }

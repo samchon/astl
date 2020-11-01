@@ -55,10 +55,18 @@ export abstract class ArrayIterator<T extends InputT,
 
     public abstract get value(): T;
 
+    @operator("==")
     @inline()
     public equals(obj: IteratorT): boolean
     {
         return this.container_ == obj.container_ 
             && this.index_ === obj.index_;
+    }
+
+    @operator("!=")
+    @inline()
+    public _not_equals(obj: IteratorT): boolean
+    {
+        return !this.equals(obj);
     }
 }

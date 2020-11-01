@@ -61,6 +61,13 @@ export class VectorContainer<T>
         this._Reserve(capacity, limit);
     }
 
+    private _Shift(index: usize, length: usize): void
+    {
+        const limit: usize = index + length;
+        for (; index < limit; ++index)
+            this.data_[<i32>(index + length)] = this.data_[<i32>index];
+    }
+
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
@@ -140,12 +147,15 @@ export class VectorContainer<T>
     }
 
     @inline()
-    protected _Insert_repeatedly(index: usize, n: usize, val: T): void
+    protected _Insert_repeatedly(index: usize, length: usize, val: T): void
     {
-        const first: Repeater<T> = new Repeater(0, val);
-        const last: Repeater<T> = new Repeater(n, val);
+        this._Try_expand(length, index);
+        this._Shift(index, length);
 
-        this._Insert_range(index, first, last);
+        const limit: usize = index + length;
+        for (; index < limit; ++index)
+            this.data_[<i32>index] = val;
+        this.size_ += length;
     }
 
     protected _Insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
@@ -153,13 +163,10 @@ export class VectorContainer<T>
     {
         const length: usize = distance(first, last);
         this._Try_expand(length, index);
+        this._Shift(index, length);
 
-        for (let i: usize = index; i < this.size(); ++i)
-        {
-            this.data_[i + length] = this.data_[i];
-            this.data_[i] = first.value;
-            first = first.next();
-        }
+        for (; first != last; first = first.next())
+            this.data_[index++] = first.value;
         this.size_ += length
     }
 
@@ -178,7 +185,7 @@ export class VectorContainer<T>
         const limit: usize = CMath.min(this.size(), last + length);
 
         for (let i: usize = last; i < limit; ++i)
-            this.data_[i - length] = this.data_[i];
+            this.data_[<i32>(i - length)] = this.data_[<i32>i];
 
         this.size_ -= length;
     }

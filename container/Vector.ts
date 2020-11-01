@@ -1,7 +1,7 @@
-import { IForwardIterator } from "../iterator/IForwardIterator";
 import { VectorContainer } from "../internal/container/linear/VectorContainer";
-import { ArrayIterator } from "../internal/iterator/ArrayIterator";
-import { ArrayReverseIterator } from "../internal/iterator/ArrayReverseIterator";
+import { ReverseIterator as ReverseBase } from "../internal/iterator/ReverseIterator";
+
+import { IForwardIterator } from "../iterator/IForwardIterator";
 
 export class Vector<T> 
     extends VectorContainer<T>
@@ -84,12 +84,17 @@ export class Vector<T>
 export namespace Vector
 {
     export class Iterator<T>
-        extends ArrayIterator<T, Vector<T>, Vector<T>, Iterator<T>, ReverseIterator<T>, T>
     {
-        @inline()
-        public source(): Vector<T>
+        private readonly source_: Vector<T>;
+        private readonly index_: usize;
+
+        /* ---------------------------------------------------------
+            CONSTRUCTORS
+        --------------------------------------------------------- */
+        public constructor(source: Vector<T>, index: usize)
         {
-            return this.container_;
+            this.source_ = source;
+            this.index_ = index;
         }
 
         @inline()
@@ -99,19 +104,79 @@ export namespace Vector
         }
 
         @inline()
+        public prev(): Iterator<T>
+        {
+            return this.advance(-1);
+        }
+
+        @inline()
+        public next(): Iterator<T>
+        {
+            return this.advance(1);
+        }
+
+        @inline()
+        public advance(n: isize): Iterator<T>
+        {
+            return this.source_.nth(this.index_ + n);
+        }
+
+        /* ---------------------------------------------------------
+            ACCESSORS
+        --------------------------------------------------------- */
+        @inline()
+        public source(): Vector<T>
+        {
+            return this.source_;
+        }
+
+        @inline()
+        public index(): usize
+        {
+            return this.index_;
+        }
+
+        @inline()
+        @operator("==")
+        public equals(obj: Vector.Iterator<T>): boolean
+        {
+            return this.source_ === obj.source_
+                && this.index_ === obj.index_;
+        }
+        
+        @inline()
+        @operator("!=")
+        public __not_equals(obj: Vector.Iterator<T>): boolean
+        {
+            return !this.equals(obj);
+        }
+
+        @inline()
         public get value(): T
         {
-            return this.container_.at(this.index_);
+            return this.source_.at(this.index_);
         }
         public set value(val: T)
         {
-            this.container_.set(this.index_, val);
+            this.source_.set(this.index_, val);
         }
     }
 
     export class ReverseIterator<T>
-        extends ArrayReverseIterator<T, Vector<T>, Vector<T>, Iterator<T>, ReverseIterator<T>, T>
-    {
+        extends ReverseBase<T, Vector<T>, Vector<T>, Iterator<T>, ReverseIterator<T>, T>
+    {   
+        @inline()
+        public advance(n: isize): ReverseIterator<T>
+        {
+            return this.base().advance(-n).reverse();
+        }
+
+        @inline()
+        public index(): usize
+        {
+            return this.base().index();
+        }
+
         @inline()
         public get value(): T
         {

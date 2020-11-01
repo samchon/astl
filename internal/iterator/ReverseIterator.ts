@@ -46,9 +46,17 @@ export abstract class ReverseIterator<T extends InputT,
 
     public abstract get value(): T;
 
+    @operator("==")
     @inline()
     public equals(obj: ReverseT): boolean
     {
         return this.base() == obj.base();
+    }
+
+    @operator("!=")
+    @inline()
+    public __not_equals(obj: ReverseT): boolean
+    {
+        return !this.equals(obj);
     }
 }

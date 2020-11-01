@@ -361,6 +361,7 @@ export namespace MapElementList
             it.erased_ = true;
         }
 
+        @inline()
         public static _Compare_uid<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 

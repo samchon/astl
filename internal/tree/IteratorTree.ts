@@ -5,8 +5,8 @@ import { IBidirectionalIterator } from "../../iterator/IBidirectionalIterator";
 import { Comparator } from "../functional/Comparator";
 import { Pair } from "../../utility/Pair";
 
-export class IteratorTree<Key, Elem,  
-        IteratorT extends IBidirectionalIterator<Elem, IteratorT>,
+export class IteratorTree<Key, 
+        IteratorT extends IBidirectionalIterator<any, IteratorT>,
         Unique extends boolean>
     extends XTree<Key, IteratorT, Unique>
 {
