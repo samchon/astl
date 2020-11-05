@@ -2,22 +2,23 @@ import { SetElementList } from "../internal/container/associative/SetElementList
 import { IteratorTree } from "../internal/tree/IteratorTree";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
-import { Comparator } from "../internal/functional/Comparator";
 import { Pair } from "../utility/Pair";
+
+import { Comparator } from "../internal/functional/Comparator";
+import { less } from "../functional/comparators";
 
 export class TreeMultiSet<Key>
 {
     private data_: SetElementList<Key, false, TreeMultiSet<Key>> = new SetElementList(<TreeMultiSet<Key>>this);
-    private tree_: IteratorTree<Key, TreeMultiSet.Iterator<Key>, false>;
+    private tree_: IteratorTree<Key, TreeMultiSet.Iterator<Key>>;
 
-    public constructor(comp: Comparator<Key>)
+    public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
         this.tree_ = new IteratorTree
         (
-            comp, 
             it => it.value, 
-            false, 
-            (x, y) => SetElementList.Iterator._Compare_uid(x, y)
+            comp, 
+            (x, y) => SetElementList.Iterator._Compare_uid<Key, false, TreeMultiSet<Key>>(x, y)
         );
     }
 
@@ -124,9 +125,10 @@ export class TreeMultiSet<Key>
     --------------------------------------------------------- */
     public insert(key: Key): TreeMultiSet.Iterator<Key>
     {
-        const it = this.data_.insert(this.upper_bound(key), key);
-        this.tree_.insert(it);
+        const upper: TreeMultiSet.Iterator<Key> = this.upper_bound(key);
+        const it: TreeMultiSet.Iterator<Key> = this.data_.insert(upper, key);
 
+        this.tree_.insert(it);
         return it;
     }
 

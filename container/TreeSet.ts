@@ -2,20 +2,22 @@ import { SetElementList } from "../internal/container/associative/SetElementList
 import { IteratorTree } from "../internal/tree/IteratorTree";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
-import { Comparator } from "../internal/functional/Comparator";
 import { Pair } from "../utility/Pair";
+
+import { Comparator } from "../internal/functional/Comparator";
+import { less } from "../functional/comparators";
 
 export class TreeSet<Key>
 {
     private data_: SetElementList<Key, true, TreeSet<Key>> = new SetElementList(<TreeSet<Key>>this);
-    private tree_: IteratorTree<Key, TreeSet.Iterator<Key>, true>;
+    private tree_: IteratorTree<Key, TreeSet.Iterator<Key>>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    public constructor(comp: Comparator<Key>)
+    public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new IteratorTree(comp, it => it.value, true);
+        this.tree_ = new IteratorTree(it => it.value, comp);
     }
 
     @inline()
@@ -112,11 +114,11 @@ export class TreeSet<Key>
     --------------------------------------------------------- */
     public insert(key: Key): Pair<TreeSet.Iterator<Key>, boolean>
     {
-        let it: TreeSet.Iterator<Key> = this.lower_bound(key);
-        if (it != this.end() && this.key_comp()(it.value, key) === true)
-            return new Pair(it, false);
+        const lower: TreeSet.Iterator<Key> = this.lower_bound(key);
+        if (lower != this.end() && this.key_comp()(key, lower.value) === false)
+            return new Pair(lower, false);
 
-        it = this.data_.insert(it, key);
+        const it: TreeSet.Iterator<Key> = this.data_.insert(lower, key);
         this.tree_.insert(it);
 
         return new Pair(it, true);

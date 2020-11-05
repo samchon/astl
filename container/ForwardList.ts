@@ -2,27 +2,16 @@ import { IForwardIterator } from "../iterator/IForwardIterator";
 
 import { DomainError } from "../exception/DomainError";
 import { Repeater } from "../internal/iterator/disposable/Repeater";
+import { SourcePointer } from "../internal/functional/SourcePointer";
 import { distance } from "../iterator/global";
 
 export class ForwardList<T>
 {
-    private source_ptr_: SourcePtr<T>;
-    private size_: usize;
-
-    private before_begin_: ForwardList.Iterator<T>;
-    private end_: ForwardList.Iterator<T>;
-
-    /* ---------------------------------------------------------
-        CONSTRUCTORS
-    --------------------------------------------------------- */
-    public constructor()
-    {
-        this.source_ptr_ = new SourcePtr(this);
-        this.size_ = 0;
-
-        this.end_ = new ForwardList.Iterator(this.source_ptr_, null!, undefined);
-        this.before_begin_ = new ForwardList.Iterator(this.source_ptr_, this.end_, undefined);
-    }
+    private source_ptr_: SourcePointer<ForwardList<T>> = new SourcePointer(this);
+    
+    private end_: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, null);
+    private before_begin_: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, this.end_);
+    private size_: usize = 0;
 
     /* ---------------------------------------------------------
         ACCESSORS
@@ -79,8 +68,9 @@ export class ForwardList<T>
 
     public insert_after(pos: ForwardList.Iterator<T>, val: T): ForwardList.Iterator<T>
     {
-        const it: ForwardList.Iterator<T> = new ForwardList.Iterator(this.source_ptr_, pos.next(), val);
-        ForwardList.Iterator.set_next(pos, it);
+        const it: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, pos.next());
+        it.value = val;
+        ForwardList.Iterator.set_next<T>(pos, it);
 
         ++this.size_;
         return it;
@@ -110,14 +100,11 @@ export class ForwardList<T>
     {
         this.erase_after(this.before_begin());
     }
-
-    public erase_after(it: ForwardList.Iterator<T>): ForwardList.Iterator<T>;
-    public erase_after(first: ForwardList.Iterator<T>, last: ForwardList.Iterator<T>): ForwardList.Iterator<T>;
-
+    
     public erase_after(first: ForwardList.Iterator<T>, last: ForwardList.Iterator<T> = first.next()): ForwardList.Iterator<T>
     {
         this.size_ -= distance(first, last);
-        ForwardList.Iterator.set_next(first, last);
+        ForwardList.Iterator.set_next<T>(first, last);
 
         return last;
     }
@@ -131,7 +118,7 @@ export class ForwardList<T>
         this.source_ptr_.value = obj;
         obj.source_ptr_.value = this;
 
-        const source: SourcePtr<T> = this.source_ptr_;
+        const source: SourcePointer<ForwardList<T>> = this.source_ptr_;
         this.source_ptr_ = obj.source_ptr_;
         obj.source_ptr_ = source;
 
@@ -155,15 +142,25 @@ export namespace ForwardList
 {
     export class Iterator<T>
     {
-        private source_ptr_: SourcePtr<T>;
+        private source_ptr_: SourcePointer<ForwardList<T>>;
         private next_: Iterator<T> | null;
-        private value_: T | undefined;
+        private value_: T;
 
-        public constructor(sourcePtr: SourcePtr<T>, next: Iterator<T> | null, value: T | undefined)
+        /* ---------------------------------------------------------------
+            CONSTRUCTORS
+        --------------------------------------------------------------- */
+        private constructor(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null)
         {
             this.source_ptr_ = sourcePtr;
             this.next_ = next;
-            this.value_ = value;
+
+            if (isNullable<T>() === true)
+                this.value_ = null!;
+        }
+
+        public static _Create<T>(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null): ForwardList.Iterator<T>
+        {
+            return new Iterator(sourcePtr, next);
         }
 
         @inline()
@@ -173,6 +170,17 @@ export namespace ForwardList
         }
 
         @inline()
+        public next(): Iterator<T>
+        {
+            if (this.next_ === null)
+                throw new DomainError("Error on ForwardList.Iterator.next(): unable to forward to the next step because it's the ForwardList.end().");
+            return this.next_!;
+        }
+
+        /* ---------------------------------------------------------------
+            ACCESSORS
+        --------------------------------------------------------------- */
+        @inline()
         public source(): ForwardList<T>
         {
             return this.source_ptr_.value;
@@ -181,30 +189,12 @@ export namespace ForwardList
         @inline()
         public get value(): T
         {
-            return this.value_!;
+            return this.value_;
         }
 
         public set value(val: T)
         {
             this.value_ = val;
         }
-
-        @inline()
-        public next(): Iterator<T>
-        {
-            if (this.next_ === null)
-                throw new DomainError("Error on ForwardList.Iterator.next(): unable to forward to the next step because it's the ForwardList.end().");
-            return this.next_;
-        }
-    }
-}
-
-class SourcePtr<T>
-{
-    public value: ForwardList<T>;
-
-    public constructor(value: ForwardList<T>)
-    {
-        this.value = value;
     }
 }

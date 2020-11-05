@@ -23,7 +23,7 @@ Below components are list of the provided objects in the **ASTL**.
     - `Vector`
     - `Deque`
     - `List`
-    - `ForwardList`
+    - ~~`ForwardList`~~
     - ~~`VectorBoolean`~~
   - **Associative Containers**
     - *Tree-structured ontainers*
@@ -65,7 +65,7 @@ npm install --save astl
 ```
 ### Usage
 ```typescript
-import * as std from "astl";
+import std from "astl";
 
 function main(): void
 {

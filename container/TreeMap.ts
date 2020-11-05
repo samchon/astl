@@ -2,24 +2,25 @@ import { MapElementList } from "../internal/container/associative/MapElementList
 import { IteratorTree } from "../internal/tree/IteratorTree";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
-import { Comparator } from "../internal/functional/Comparator";
-import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
-
 import { IPair } from "../utility/IPair";
 import { Pair } from "../utility/Pair";
 import { Entry } from "../utility/Entry";
+import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
+
+import { Comparator } from "../internal/functional/Comparator";
+import { less } from "../functional/comparators";
 
 export class TreeMap<Key, T>
 {
     private data_: MapElementList<Key, T, true, TreeMap<Key, T>> = new MapElementList(<TreeMap<Key, T>>this);
-    private tree_: IteratorTree<Key, TreeMap.Iterator<Key, T>, true>;
+    private tree_: IteratorTree<Key, TreeMap.Iterator<Key, T>>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    public constructor(comp: Comparator<Key>)
+    public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new IteratorTree(comp, it => it.first, true);
+        this.tree_ = new IteratorTree(it => it.first, comp);
     }
 
     @inline()
@@ -135,11 +136,12 @@ export class TreeMap<Key, T>
 
     public emplace(key: Key, value: T): Pair<TreeMap.Iterator<Key, T>, boolean>
     {
-        let it: TreeMap.Iterator<Key, T> = this.lower_bound(key);
-        if (it != this.end() && this.key_comp()(it.first, key) === true)
-            return new Pair(it, false);
+        const lower: TreeMap.Iterator<Key, T> = this.lower_bound(key);
+        if (lower != this.end() && this.key_comp()(key, lower.first) === false)
+            return new Pair(lower, false);
 
-        it = this.data_.insert(it, new Entry(key, value));
+        const entry: Entry<Key, T> = new Entry(key, value);
+        const it: TreeMap.Iterator<Key, T> = this.data_.insert(lower, entry);
         this.tree_.insert(it);
 
         return new Pair(it, true);

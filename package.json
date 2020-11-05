@@ -13,8 +13,8 @@
     "test": "node test"
   },
   "devDependencies": {
-    "@assemblyscript/loader": "^0.16.1",
-    "assemblyscript": "^0.16.1"
+    "@assemblyscript/loader": "^0.17.1",
+    "assemblyscript": "^0.17.1"
   },
   "homepage": "https://github.com/samchon/tstl",
   "repository": {
@@ -26,7 +26,7 @@
   },
   "license": "MIT",
   "keywords": [
-    "assemblyscript", 
+    "assemblyscript",
     "stl",
     "standard template library",
     "Vector",

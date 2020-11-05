@@ -28,6 +28,7 @@ export class VectorContainer<T>
     public resize(n: usize): void
     {
         this._Reserve(n, n);
+        this.size_ = n;
     }
 
     @inline()
@@ -43,29 +44,42 @@ export class VectorContainer<T>
             this.reserve(this.size());
     }
 
-    private _Reserve(capacity: usize, limit: usize): void
+    private _Reserve(capacity: usize, limit: usize): StaticArray<T>
     {
+        const old: StaticArray<T> = this.data_;
         const data: StaticArray<T> = new StaticArray(<i32>capacity);
+
         for (let i: usize = 0; i < limit; ++i)
-            data[<i32>i] = this.data_[<i32>i];
+            data[<i32>i] = old[<i32>i];
+
         this.data_ = data;
+        return old;
     }
 
-    private _Try_expand(plus: usize, limit: usize = this.size()): void
+    private _Try_expand(plus: usize, limit: usize = this.size()): StaticArray<T> | null
     {
         const required: usize = this.size() + plus;
         if (this.capacity() >= required)
-            return;
+            return null;
         
         const capacity: usize = CMath.max(required, this.capacity() * 2);
-        this._Reserve(capacity, limit);
+        return this._Reserve(capacity, limit);
     }
 
     private _Shift(index: usize, length: usize): void
     {
-        const limit: usize = index + length;
-        for (; index < limit; ++index)
-            this.data_[<i32>(index + length)] = this.data_[<i32>index];
+        if (index >= this.size())
+            return;
+        
+        let i: usize = this.size() + length - 1;
+        while (true)
+        {
+            this.data_[<i32>(i + length)] = this.data_[<i32>i];
+            if (i === index)
+                break;
+            else
+                --i;
+        }
     }
 
     /* ---------------------------------------------------------
@@ -147,27 +161,46 @@ export class VectorContainer<T>
     }
 
     @inline()
-    protected _Insert_repeatedly(index: usize, length: usize, val: T): void
+    protected _Insert_repeatedly(index: usize, length: usize, value: T): void
     {
-        this._Try_expand(length, index);
-        this._Shift(index, length);
+        const first: Repeater<T> = new Repeater(index, value);
+        const last: Repeater<T> = new Repeater(index + length, value);
 
-        const limit: usize = index + length;
-        for (; index < limit; ++index)
-            this.data_[<i32>index] = val;
-        this.size_ += length;
+        this._Insert_range_with_length(index, first, last, length);
     }
 
     protected _Insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
         (index: usize, first: InputIterator, last: InputIterator): void
     {
         const length: usize = distance(first, last);
-        this._Try_expand(length, index);
-        this._Shift(index, length);
+        this._Insert_range_with_length(index, first, last, length);
+    }
 
-        for (; first != last; first = first.next())
-            this.data_[index++] = first.value;
-        this.size_ += length
+    private _Insert_range_with_length<InputIterator extends IForwardIterator<T, InputIterator>>
+        (index: usize, first: InputIterator, last: InputIterator, length: usize): void
+    {
+        const old: StaticArray<T> | null = this._Try_expand(length, index);
+        if (old !== null)
+        {
+            // INSERT RANGE
+            for (; first != last; first = first.next())
+                this.data_[<i32>(index++)] = first.value;
+            
+            // FILL TAIL VALUES
+            const limit: usize = this.size() + length;
+            for (; index < limit; ++index)
+                this.data_[<i32>index] = old[<i32>(index - length)];
+        }
+        else
+        {
+            // SHIFT TAIL VALUES
+            this._Shift(index, length);
+
+            // INSERT RANGE
+            for (; first != last; first = first.next())
+                this.data_[<i32>(index++)] = first.value;
+        }
+        this.size_ += length;
     }
 
     /* ---------------------------------------------------------
@@ -181,10 +214,11 @@ export class VectorContainer<T>
 
     protected _Erase(first: usize, last: usize): void
     {
-        const length: usize = last - first;
-        const limit: usize = CMath.min(this.size(), last + length);
+        if (first >= last)
+            return;
 
-        for (let i: usize = last; i < limit; ++i)
+        const length: usize = last - first;
+        for (let i: usize = last; i < this.size(); ++i)
             this.data_[<i32>(i - length)] = this.data_[<i32>i];
 
         this.size_ -= length;

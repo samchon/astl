@@ -1,5 +1,4 @@
 import { IForwardIterator } from "./IForwardIterator";
-import { IRandomAccessIterator } from "./IRandomAccessIterator";
 
 export function advance<InputIterator extends IForwardIterator<any, InputIterator>>
     (it: InputIterator, n: isize): InputIterator

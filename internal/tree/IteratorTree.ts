@@ -5,20 +5,17 @@ import { IBidirectionalIterator } from "../../iterator/IBidirectionalIterator";
 import { Comparator } from "../functional/Comparator";
 import { Pair } from "../../utility/Pair";
 
-export class IteratorTree<Key, 
-        IteratorT extends IBidirectionalIterator<any, IteratorT>,
-        Unique extends boolean>
-    extends XTree<Key, IteratorT, Unique>
+export class IteratorTree<Key, IteratorT extends IBidirectionalIterator<any, IteratorT>>
+    extends XTree<Key, IteratorT>
 {
     public constructor
         (
+            fetcher: (it: IteratorT) => Key,
             keyComp: Comparator<Key>, 
-            fetcher: (it: IteratorT) => Key, 
-            unique: Unique,
             duplicateComp: ((x: IteratorT, y: IteratorT) => boolean) | null = null
         )
     {
-        super(keyComp, fetcher, unique, duplicateComp);
+        super(fetcher, keyComp, duplicateComp);
     }
 
     public lower_bound(end: IteratorT, key: Key): IteratorT
@@ -34,14 +31,14 @@ export class IteratorTree<Key,
 
     public upper_bound(end: IteratorT, key: Key): IteratorT
     {
-        const node: XTreeNode<IteratorT> | null = this.unique_ === true
+        const node: XTreeNode<IteratorT> | null = (this.unique_ === true)
             ? this.nearest(key)
-            : IteratorTree.multi_nearest(this, key, node => node.right);
+            : IteratorTree.multi_nearest<Key, IteratorT>(this, key, node => node.right);
         if (node === null)
             return end;
 
         const it: IteratorT = node.value;
-        return this.key_comp()(key, this.fetcher_(it))
+        return this.key_comp()(key, this.fetcher_(it)) // key < it.value
             ? it
             : it.next();
     }

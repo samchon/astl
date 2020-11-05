@@ -4,6 +4,9 @@ import { ReverseIterator as ReverseBase } from "../internal/iterator/ReverseIter
 import { Repeater } from "../internal/iterator/disposable/Repeater";
 import { SourcePointer } from "../internal/functional/SourcePointer";
 import { distance } from "../iterator/global";
+import { BinaryPredicator } from "../internal/functional/BinaryPredicator";
+import { UnaryPredicator } from "../internal/functional/UnaryPredicator";
+import { Comparator } from "../internal/functional/Comparator";
 
 export class List<T>
 {
@@ -111,10 +114,10 @@ export class List<T>
         List.Iterator._Set_prev<T>(pos, it);
         it.value = val;
 
-        if (pos === this.begin_)
+        ++this.size_;
+        if (pos == this.begin_)
             this.begin_ = it;
 
-        ++this.size_;
         return it;
     }
 
@@ -183,14 +186,140 @@ export class List<T>
 
         List.Iterator._Set_next<T>(prev, last);
         List.Iterator._Set_prev<T>(last, prev);
+
         this.size_ -= length;
+        if (first == this.begin_)
+            this.begin_ = last;
 
         return last;
     }
 
-    /* ---------------------------------------------------------------
-        SWAP
+    /* ===============================================================
+        ALGORITHMS
+            - UNIQUE & REMOVE(_IF)
+            - MERGE & SPLICE
+            - SORT & SWAP
+    ==================================================================
+        UNIQUE & REMOVE(_IF)
     --------------------------------------------------------------- */
+    public unique(pred: BinaryPredicator<T>): void
+    {
+        for (let it = this.begin().next(); it != this.end(); )
+            if (pred(it.prev().value, it.value) === true)
+                it = this.erase(it);
+            else
+                it = it.next();
+    }
+
+    @inline()
+    public remove(val: T): void
+    {
+        for (let it = this.begin(); it != this.end(); )
+            if (val === it.value)
+                it = this.erase(it);
+            else
+                it = it.next();
+    }
+
+    public remove_if(pred: UnaryPredicator<T>): void
+    {
+        for (let it = this.begin(); it != this.end(); )
+            if (pred(it.value) === true)
+                it = this.erase(it);
+            else
+                it = it.next();
+    }
+
+
+    /* ---------------------------------------------------------
+        MERGE & SPLICE
+    --------------------------------------------------------- */
+    public merge(source: List<T>, comp: Comparator<T>): void
+    {
+        if (this === source)
+            return;
+
+        let it = this.begin();
+        while (source.empty() === false)
+        {
+            const first = source.begin();
+            while (it != this.end() && comp(it.value, first.value) === true)
+                it = it.next();
+
+            this.splice(it, source, first);
+        }
+    }
+
+    // public splice(pos: List.Iterator<T>, from: List<T>): void;
+    // public splice(pos: List.Iterator<T>, from: List<T>, it: List.Iterator<T>): void;
+    // public splice(pos: List.Iterator<T>, from: List<T>, first: List.Iterator<T>, last: List.Iterator<T>): void;
+
+    public splice
+        (
+            pos: List.Iterator<T>, 
+            from: List<T>, 
+            first: List.Iterator<T> = null!, 
+            last: List.Iterator<T> = null!
+        ): void
+    {
+        // DEFAULT PARAMETERS
+        if (first === null)
+        {
+            first = from.begin();
+            last = from.end();
+        }
+        else if (last === null)
+            last = first.next();
+
+        // DO SPLICE
+        this.insert_range(pos, first, last);
+        from.erase(first, last);
+    }
+
+    /* ---------------------------------------------------------
+        SORT & SWAP
+    --------------------------------------------------------- */
+    public sort(comp: Comparator<T>): void
+    {
+        this._Quick_sort(this.begin(), this.end(), comp);
+    }
+
+    private _Quick_sort(first: List.Iterator<T>, last: List.Iterator<T>, comp: Comparator<T>): void
+    {
+        if (first != last && last != this.end() && first != last.next())
+        {
+            const temp: List.Iterator<T> = this._Quick_sort_partition(first, last, comp);
+
+            this._Quick_sort(first, temp.prev(), comp);
+            this._Quick_sort(temp.next(), last, comp);
+        }
+    }
+
+    private _Quick_sort_partition(first: List.Iterator<T>, last: List.Iterator<T>, comp: Comparator<T>): List.Iterator<T>
+    {
+        const standard: T = last.value; // TO BE COMPARED
+        let prev: List.Iterator<T> = first.prev(); // TO BE SMALLEST
+
+        let it: List.Iterator<T> = first;
+        for (; it != last; it = it.next())
+            if (comp(it.value, standard))
+            {
+                prev = prev == this.end() ? first : prev.next();
+
+                const value: T = prev.value;
+                prev.value = it.value;
+                it.value = value;
+            }
+
+        prev = prev == this.end() ? first : prev.next();
+
+        const value: T = prev.value;
+        prev.value = it.value;
+        it.value = value;
+    
+        return prev;
+    }
+
     public swap(obj: List<T>): void
     {
         //----
@@ -245,9 +374,7 @@ export namespace List
 
             this.prev_ = null;
             this.next_ = null;
-            
-            if (isNullable<T>() === true)
-                this.value_ = null!;
+            this.value_ = changetype<T>(0);
         }
 
         public static _Create<T>(sourcePtr: SourcePointer<List<T>>, prev: Iterator<T> | null = null, next: Iterator<T> | null = null): Iterator<T>
@@ -298,7 +425,7 @@ export namespace List
         @inline()
         public source(): List<T>
         {
-            return this.source_ptr_.value!;
+            return this.source_ptr_.value;
         }
 
         @inline()

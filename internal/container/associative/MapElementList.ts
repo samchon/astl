@@ -128,6 +128,8 @@ export class MapElementList<Key, T,
 
         if (pos === this.begin_)
             this.begin_ = it;
+
+        ++this.size_;
         return it;
     }
 

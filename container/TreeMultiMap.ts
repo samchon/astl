@@ -2,25 +2,25 @@ import { MapElementList } from "../internal/container/associative/MapElementList
 import { IteratorTree } from "../internal/tree/IteratorTree";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
-import { Comparator } from "../internal/functional/Comparator";
-
 import { IPair } from "../utility/IPair";
 import { Pair } from "../utility/Pair";
 import { Entry } from "../utility/Entry";
 
+import { Comparator } from "../internal/functional/Comparator";
+import { less } from "../functional/comparators";
+
 export class TreeMultiMap<Key, T>
 {
     private data_: MapElementList<Key, T, false, TreeMultiMap<Key, T>> = new MapElementList(<TreeMultiMap<Key, T>>this);
-    private tree_: IteratorTree<Key, TreeMultiMap.Iterator<Key, T>, false>;
+    private tree_: IteratorTree<Key, TreeMultiMap.Iterator<Key, T>>;
 
-    public constructor(comp: Comparator<Key>)
+    public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
         this.tree_ = new IteratorTree
         (
-            comp, 
             it => it.first, 
-            false, 
-            (x, y) => MapElementList.Iterator._Compare_uid(x, y)
+            comp,
+            (x, y) => MapElementList.Iterator._Compare_uid<Key, T, false, TreeMultiMap<Key, T>>(x, y)
         );
     }
 
@@ -127,9 +127,10 @@ export class TreeMultiMap<Key, T>
     --------------------------------------------------------- */
     public emplace(key: Key, value: T): TreeMultiMap.Iterator<Key, T>
     {
-        const it = this.data_.insert(this.upper_bound(key), new Entry(key, value));
-        this.tree_.insert(it);
+        const upper: TreeMultiMap.Iterator<Key, T> = this.upper_bound(key);
+        const it: TreeMultiMap.Iterator<Key, T> = this.data_.insert(upper, new Entry(key, value));
 
+        this.tree_.insert(it);
         return it;
     }
 

@@ -22,14 +22,19 @@ export class Deque<T>
     {
         this.matrix_ = new Vector();
         this.matrix_.push_back(new Vector());
+        this.matrix_.back().reserve(Deque.MIN_ROW_CAPACITY);
+
         this.size_ = 0;
-        this.capacity_ = 8;
+        this.capacity_ = Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY;
     }
 
     public clear(): void
     {
-        this.matrix_.clear();
+        this.matrix_ = new Vector();
         this.matrix_.push_back(new Vector());
+        this.matrix_.back().reserve(Deque.MIN_ROW_CAPACITY);
+
+        this.size_ = 0;
         this.capacity_ = 8;
     }
 
@@ -37,26 +42,23 @@ export class Deque<T>
     public resize(n: usize): void
     {
         this._Reserve(n, n);
+        this.size_ = n;
     }
 
     private _Reserve(capacity: usize, limit: usize): void
     {
         // FIX CAPACITY
+        capacity = CMath.max(capacity, Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY);
         const length: usize = this._Compute_row_size(capacity);
         capacity = length * Deque.ROW_SIZE;
         
         // CREATE THE NEW MATRIX
         const matrix: Vector<Vector<T>> = new Vector();
         matrix.reserve(Deque.ROW_SIZE);
+        this._Insert_row(matrix.end(), length);
 
         // RE-FILL THE VALES
-        if (limit === 0)
-        {
-            const v: Vector<T> = new Vector();
-            v.reserve(length);
-            matrix.push_back(v);
-        }
-        else
+        if (limit !== 0)
             this._Fill_range(matrix, length, this.begin(), this.nth(limit));
 
         // ASSIGN THE MEMBERS
@@ -104,16 +106,6 @@ export class Deque<T>
     {
         const value: f64 = capacity / <f64>Deque.ROW_SIZE;
         const ret: usize = <usize>Math.ceil(value);
-
-        return CMath.max(ret, Deque.MIN_ROW_CAPACITY);
-    }
-
-    private _Clone(): Deque<T>
-    {
-        const ret: Deque<T> = new Deque();
-        ret.size_ = this.size_;
-        ret.capacity_ = this.capacity_;
-        ret.matrix_ = this.matrix_;
 
         return ret;
     }
@@ -169,7 +161,6 @@ export class Deque<T>
 
         if (row === this.matrix_.size())
             row--;
-
         return new Pair(row, index);
     }
 
@@ -220,19 +211,14 @@ export class Deque<T>
         this._Try_expand(1);
 
         const length: usize = this._Compute_row_size(this.capacity());
-        let first: Vector<T> = this.matrix_.front();
+        let top: Vector<T> = this.matrix_.front();
 
         // ADD A NEW ROW IF REQUIRED
-        if (first.size() >= length && this.matrix_.size() < Deque.ROW_SIZE)
-        {
-            first = new Vector();
-            first.reserve(length);
-
-            this.matrix_.insert(this.matrix_.begin(), first);
-        }
+        if (top.size() >= length && this.matrix_.size() < Deque.ROW_SIZE)
+            top = this._Insert_row(this.matrix_.begin(), length);
 
         // INSERT ITEM
-        first.insert(first.begin(), val);
+        top.insert(top.begin(), val);
         ++this.size_;
     }
 
@@ -242,19 +228,14 @@ export class Deque<T>
         this._Try_expand(1);
 
         const length: usize = this._Compute_row_size(this.capacity());
-        let last: Vector<T> = this.matrix_.back();
+        let bottom: Vector<T> = this.matrix_.back();
 
         // ADD A NEW ROW IF REQUIRED
-        if (last.size() >= length && this.matrix_.size() < Deque.ROW_SIZE)
-        {
-            last = new Vector();
-            last.reserve(length);
-
-            this.matrix_.push_back(last);
-        }
+        if (bottom.size() >= length && this.matrix_.size() < Deque.ROW_SIZE)
+            bottom = this._Insert_row(this.matrix_.end(), length);
 
         // INSERT ITEM
-        this.matrix_.back().push_back(val);
+        bottom.push_back(val);
         ++this.size_;
     }
     
@@ -275,32 +256,56 @@ export class Deque<T>
     public insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
         (pos: Deque.Iterator<T>, first: InputIterator, last: InputIterator): Deque.Iterator<T>
     {
-        const cloned: Deque<T> = this._Clone();
         const plus: usize = distance(first, last);
-        this._Try_expand(plus, pos.index());
+        if (plus === 0)
+            return pos;
 
-        const length: usize = this._Compute_row_size(this.capacity());
-        this._Fill_range(this.matrix_, length, first, last);
-        this._Fill_range(this.matrix_, length, cloned.nth(pos.index()), cloned.end());
+        if (pos == this.end())
+        {
+            this._Try_expand(plus);
+            this._Fill_range(this.matrix_, this._Compute_row_size(this.capacity()), first, last);
+            this.size_ += plus;
+        }
+        else if (this.capacity() >= this.size() + plus)
+        {
+            const tuple: Pair<usize, usize> = this._Fetch_index(pos.index());
+            const row: Vector<T> = this.matrix_.at(tuple.first);
 
-        this.size_ += plus;
+            row.insert_range(row.nth(tuple.second), first, last);
+            this.size_ += plus;
+        }
+        else
+        {
+            const deque: Deque<T> = new Deque();
+            deque._Reserve(CMath.max(this.size() + plus, this.capacity() * 2), 0);
+
+            deque.insert_range(deque.end(), this.begin(), pos);
+            deque.insert_range(deque.end(), first, last);
+            deque.insert_range(deque.end(), pos, this.end());
+            
+            this.swap(deque);
+        }
         return pos;
+    }
+
+    private _Insert_row(pos: Vector.Iterator<Vector<T>>, length: usize): Vector<T>
+    {
+        const row: Vector<T> = new Vector<T>();
+        row.reserve(length);
+        pos.source().insert(pos, row);
+
+        return row;
     }
 
     private _Fill_range<InputIterator extends IForwardIterator<T, InputIterator>>
         (matrix: Vector<Vector<T>>, length: usize, first: InputIterator, last: InputIterator): void
     {
-        let row!: Vector<T>;
-        let index: usize = 0;
-
         for (; first != last; first = first.next())
         {
-            if (index++ % length === 0)
-            {
-                row = new Vector();
-                row.reserve(length);
-                matrix.push_back(row);
-            }
+            let row: Vector<T> = matrix.back();
+            if (row.size() >= length)
+                row = this._Insert_row(matrix.end(), length);
+            
             row.push_back(first.value);
         }
     }
@@ -315,10 +320,10 @@ export class Deque<T>
             throw ErrorGenerator.empty("Deque.pop_front()");
 
         // ERASE THE FIRST ELEMENT
-        const first: Vector<T> = this.matrix_.front();
-        first.erase(first.begin());
+        const top: Vector<T> = this.matrix_.front();
+        top.erase(top.begin());
 
-        if (first.empty() === true && this.matrix_.size() > 1)
+        if (top.empty() === true && this.matrix_.size() > 1)
             this.matrix_.erase(this.matrix_.begin());
 
         // SHRINK THE SIZE
@@ -332,10 +337,10 @@ export class Deque<T>
             throw ErrorGenerator.empty("Deque.pop_back()");
 
         // ERASE THE LAST ELEMENT
-        const last: Vector<T> = this.matrix_.back();
-        last.pop_back();
+        const bottom: Vector<T> = this.matrix_.back();
+        bottom.pop_back();
 
-        if (last.empty() === true && this.matrix_.size() > 1)
+        if (bottom.empty() === true && this.matrix_.size() > 1)
             this.matrix_.pop_back();
 
         // SHRINK THE SIZE
@@ -344,17 +349,46 @@ export class Deque<T>
 
     public erase(first: Deque.Iterator<T>, last: Deque.Iterator<T> = first.next()): Deque.Iterator<T>
     {
-        const cloned: Deque<T> = this._Clone();
-        const distance: usize = last.index() - first.index();
+        if (first.index() >= last.index())
+            return first;
 
-        this.clear();
-        this._Reserve(this.size() - distance, 0);
+        let remained: usize = CMath.min(this.size(), last.index()) - first.index();
+        this.size_ -= remained;
 
-        const length: usize = this._Compute_row_size(this.capacity());
-        this._Fill_range(this.matrix_, length, cloned.begin(), cloned.nth(first.index()));
-        this._Fill_range(this.matrix_, length, cloned.nth(last.index()), cloned.end());
+        let tuple: Pair<usize, usize> | null = null;
+        let top: Vector<T> | null = null;
+        let bottom: Vector<T> | null = null;
+        
+        while (remained !== 0)
+        {
+            // LIST UP THE TARGET ROW
+            tuple = this._Fetch_index(first.index());
+            const row: Vector<T> = this.matrix_.at(tuple.first);
+            const col: usize = tuple.second;
 
-        this.size_ -= distance;
+            // ERASE FROM THE ROW
+            const length: usize = CMath.min(remained, row.size() - col);
+            row.erase(row.nth(col), row.nth(col + length));
+            remained -= length;
+
+            // TO MERGE
+            if (row.size() !== 0)
+                if (top !== null)
+                    top = row;
+                else
+                    bottom = row;
+
+            // ERASE THE ENTIRE ROW IF REQUIRED
+            if (row.empty() === true && this.matrix_.size() > 1)
+                this.matrix_.erase(this.matrix_.nth(tuple.first));
+        }
+
+        // MERGE FIRST AND SECOND ROW IF POSSIBLE
+        if (top !== null && bottom !== null && top.size() + bottom.size() <= this._Compute_row_size(this.capacity()))
+        {
+            top.insert_range(top.end(), bottom.begin(), bottom.end());
+            this.matrix_.erase(this.matrix_.nth(tuple!.first + 1));
+        }
         return first;
     }
 
@@ -372,13 +406,18 @@ export class Deque<T>
         const size: usize = this.size_;
         this.size_ = obj.size_;
         obj.size_ = size;
+
+        // CAPACITY
+        const capacity: usize = this.capacity_;
+        this.capacity_ = obj.capacity_;
+        obj.capacity_= capacity;
     }
 }
 
 export namespace Deque
 {
     export const ROW_SIZE: usize = 8;
-    export const MIN_ROW_CAPACITY: usize = 32;
+    export const MIN_ROW_CAPACITY: usize = 4;
     export const MAGNIFIER: usize = 2;
 
     export class Iterator<T>

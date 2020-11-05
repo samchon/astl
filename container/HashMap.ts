@@ -5,10 +5,12 @@ import { IForwardIterator } from "../iterator/IForwardIterator";
 import { IPair } from "../utility/IPair";
 import { Pair } from "../utility/Pair";
 import { Entry } from "../utility/Entry";
-
-import { Hasher } from "../internal/functional/Hasher";
-import { BinaryPredicator } from "../internal/functional/BinaryPredicator";
 import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
+
+import { BinaryPredicator } from "../internal/functional/BinaryPredicator";
+import { Hasher } from "../internal/functional/Hasher";
+import { hash } from "../functional/hash";
+import { equal_to } from "../functional/comparators";
 
 export class HashMap<Key, T>
 {
@@ -18,7 +20,7 @@ export class HashMap<Key, T>
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    public constructor(hasher: Hasher<Key>, predicator: BinaryPredicator<Key>)
+    public constructor(hasher: Hasher<Key> = elem => hash(elem), predicator: BinaryPredicator<Key> = (x, y) => equal_to(x, y))
     {
         this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.first);
     }

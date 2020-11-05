@@ -1,0 +1,9 @@
+.git/
+.github/
+build/
+node_modules/
+
+*.*ignore
+asconfig.json
+package-lock.json
+tsconfig.json

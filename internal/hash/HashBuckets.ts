@@ -39,22 +39,27 @@ export class HashBuckets<Key, Elem>
     {
         length = CMath.max(length, MIN_BUCKET_COUNT);
 
+        // CREATE NEW BUCKET
         const data: Vector<Vector<Elem>> = new Vector();
         data.reserve(length);
+
         for (let i: usize = 0; i < length; ++i)
             data.push_back(new Vector());
 
+        // MIGRATE ELEMENTS TO THE NEW BUCKET
         for (let i: usize = 0; i < this.data_.size(); ++i)
         {
             const row: Vector<Elem> = this.data_.at(i);
             for (let j: usize = 0; j < row.size(); ++j)
             {
-                const element: Elem = row.at(i);
+                const element: Elem = row.at(j);
                 const index: usize = this.hasher_(this.fetcher_(element)) % length;
-
+                
                 data.at(index).push_back(element);
             }
         }
+
+        // DO CHANGE THE BUCKET
         this.data_ = data;
     }
 

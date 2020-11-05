@@ -6,9 +6,4 @@ export class InvalidArgument extends LogicError
     {
         super(message);
     }
-
-    public what(): string
-    {
-        return this.message;
-    }
 }

@@ -2,9 +2,12 @@ import { SetElementList } from "../internal/container/associative/SetElementList
 import { IteratorHashBuckets } from "../internal/hash/IteratorHashBuckets";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
-import { Hasher } from "../internal/functional/Hasher";
-import { BinaryPredicator } from "../internal/functional/BinaryPredicator";
 import { Vector } from "./Vector";
+
+import { BinaryPredicator } from "../internal/functional/BinaryPredicator";
+import { Hasher } from "../internal/functional/Hasher";
+import { hash } from "../functional/hash";
+import { equal_to } from "../functional/comparators";
 
 export class HashMultiSet<Key>
 {
@@ -14,7 +17,7 @@ export class HashMultiSet<Key>
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    public constructor(hasher: Hasher<Key>, predicator: BinaryPredicator<Key>)
+    public constructor(hasher: Hasher<Key> = elem => hash(elem), predicator: BinaryPredicator<Key> = (x, y) => equal_to(x, y))
     {
         this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.value);
     }

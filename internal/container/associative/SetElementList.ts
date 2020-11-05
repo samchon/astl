@@ -119,12 +119,15 @@ export class SetElementList<Key,
     {
         const prev: SetElementList.Iterator<Key, Unique, SourceT> = pos.prev();
         
-        const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, this.uid_++, prev, pos, value);
+        const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, this.uid_++, prev, pos);
+        SetElementList.Iterator._Set_value<Key, Unique, SourceT>(it, value);
         SetElementList.Iterator._Set_next<Key, Unique, SourceT>(prev, it);
         SetElementList.Iterator._Set_prev<Key, Unique, SourceT>(pos, it);
 
         if (pos === this.begin_)
             this.begin_ = it;
+
+        ++this.size_;
         return it;
     }
 
@@ -148,11 +151,13 @@ export class SetElementList<Key,
         // ITERATE THE NEW ELEMENTS
         for (; first != last; first = first.next())
         {
-            const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, this.uid_++, prev, null, first.value);
+            const it: SetElementList.Iterator<Key, Unique, SourceT> = SetElementList.Iterator._Create(this, this.uid_++, prev, null);
+            SetElementList.Iterator._Set_value<Key, Unique, SourceT>(it, first.value);
+
             if (top === null)
                 top = it;
 
-            SetElementList.Iterator._Set_next(prev, it);
+            SetElementList.Iterator._Set_next<Key, Unique, SourceT>(prev, it);
             prev = it;
             ++size;
         }
@@ -160,8 +165,8 @@ export class SetElementList<Key,
             return pos;
 
         // RETURNS WITH FINALIZATION
-        SetElementList.Iterator._Set_next(prev, top!);
-        SetElementList.Iterator._Set_prev(pos, top!);
+        SetElementList.Iterator._Set_next<Key, Unique, SourceT>(prev, top!);
+        SetElementList.Iterator._Set_prev<Key, Unique, SourceT>(pos, top!);
 
         if (pos === this.begin_)
             this.begin_ = top!;
@@ -190,8 +195,8 @@ export class SetElementList<Key,
         const prev: SetElementList.Iterator<Key, Unique, SourceT> = first.prev();
         const length: usize = distance(first, last);
 
-        SetElementList.Iterator._Set_next(prev, last);
-        SetElementList.Iterator._Set_prev(last, prev);
+        SetElementList.Iterator._Set_next<Key, Unique, SourceT>(prev, last);
+        SetElementList.Iterator._Set_prev<Key, Unique, SourceT>(last, prev);
         this.size_ -= length;
 
         return last;
@@ -215,12 +220,12 @@ export namespace SetElementList
                 ReverseIterator<Key, Unique, SourceT>>>
     {
         private readonly container_: SetElementList<Key, Unique, SourceT>;
-        private uid_: usize;
+        private readonly uid_: usize;
         private erased_: boolean;
         
         private prev_: Iterator<Key, Unique, SourceT> | null;
         private next_: Iterator<Key, Unique, SourceT> | null;
-        private value_: Key | null;
+        private value_: Key;
 
         /* ---------------------------------------------------------------
             CONSTRUCTORS
@@ -233,7 +238,7 @@ export namespace SetElementList
 
             this.prev_ = null;
             this.next_ = null;
-            this.value_ = null;
+            this.value_ = changetype<Key>(0);
         }
 
         public static _Create<Key, 
@@ -246,14 +251,12 @@ export namespace SetElementList
                 container: SetElementList<Key, Unique, SourceT>, 
                 uid: usize,
                 prev: Iterator<Key, Unique, SourceT> | null = null, 
-                next: Iterator<Key, Unique, SourceT> | null = null,
-                value: Key | null = null
+                next: Iterator<Key, Unique, SourceT> | null = null
             ): Iterator<Key, Unique, SourceT>
         {
             const ret: Iterator<Key, Unique, SourceT> = new Iterator(container, uid);
             if (prev) ret.prev_ = prev;
             if (next) ret.next_ = next;
-            ret.value_ = value;
             
             return ret;
         }
@@ -280,6 +283,18 @@ export namespace SetElementList
             (it: Iterator<Key, Unique, SourceT>, next: Iterator<Key, Unique, SourceT>): void
         {
             it.next_ = next;
+        }
+
+        @inline()
+        public static _Set_value<Key, 
+                Unique extends boolean, 
+                SourceT extends ISetContainer<Key, Unique, SourceT, 
+                    SetElementList<Key, Unique, SourceT>, 
+                    Iterator<Key, Unique, SourceT>, 
+                    ReverseIterator<Key, Unique, SourceT>>>
+            (it: Iterator<Key, Unique, SourceT>, value: Key): void
+        {
+            it.value_ = value;;
         }
 
         /* ---------------------------------------------------------------
@@ -315,7 +330,7 @@ export namespace SetElementList
         @inline()
         public get value(): Key
         {
-            return this.value_!;
+            return this.value_;
         }
 
         @inline()

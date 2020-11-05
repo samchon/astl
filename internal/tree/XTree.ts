@@ -3,34 +3,34 @@ import { XTreeNode } from "./XTreeNode";
 import { Comparator } from "../functional/Comparator";
 import { Color } from "./Color";
 
-export class XTree<Key, Elem, Unique extends boolean>
+export class XTree<Key, Elem>
 {
     protected root_: XTreeNode<Elem> | null;
+    protected unique_: boolean;
 
-    private readonly key_comp_: Comparator<Key>;
     protected readonly fetcher_: (elem: Elem) => Key;
-    protected readonly unique_: Unique;
+    private readonly key_comp_: Comparator<Key>;
     private readonly duplicate_comp_: ((x: Elem, y: Elem) => boolean) | null;
 
     /* ---------------------------------------------------------
         CONSTRUCTOR
     --------------------------------------------------------- */
-    protected constructor
+    public constructor
         (
-            keyComp: Comparator<Key>, 
             fetcher: (elem: Elem) => Key, 
-            unique: Unique,
+            keyComp: Comparator<Key>, 
             duplicateComp: ((x: Elem, y: Elem) => boolean) | null = null,
         )
     { 
         this.root_ = null;
+        this.unique_ = (duplicateComp === null);
 
-        this.key_comp_ = keyComp;
         this.fetcher_ = fetcher;
-        this.unique_ = unique;
+        this.key_comp_ = keyComp;
         this.duplicate_comp_ = duplicateComp;
     }
 
+    @inline()
     public clear(): void
     {
         this.root_ = null;
@@ -39,33 +39,37 @@ export class XTree<Key, Elem, Unique extends boolean>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
+    @inline()
     public root(): XTreeNode<Elem> | null
     {
         return this.root_;
     }
 
+    @inline()
     public key_comp(): Comparator<Key>
     {
         return this.key_comp_;
     }
 
+    @inline()
     private key_eq_(x: Key, y: Key): boolean
     {
         return !this.key_comp_(x, y) && !this.key_comp_(y, x);
     }
 
-    private value_comp_(x: Elem, y: Elem): boolean
+    public value_comp_(x: Elem, y: Elem): boolean
     {
         const ret: boolean = this.key_comp_(this.fetcher_(x), this.fetcher_(y));
         if (ret === false && 
-            this.unique_ === true &&
+            this.unique_ === false &&
             this.key_comp_(this.fetcher_(y), this.fetcher_(x)) === false)
             return this.duplicate_comp_!(x, y);
         else
             return ret;
     }
 
-    private value_eq_(x: Elem, y: Elem): boolean
+    @inline()
+    public value_eq_(x: Elem, y: Elem): boolean
     {
         return !this.value_comp_(x, y) && !this.value_comp_(y, x);
     }
@@ -103,28 +107,52 @@ export class XTree<Key, Elem, Unique extends boolean>
         else
             return ret;
     }
-
-    @inline()
+    
     private nearest_value(value: Elem): XTreeNode<Elem> | null
     {
-        return (this.unique_ === true)
-            ? XTree.unique_nearest_value(this, value)
-            : XTree.multi_nearest_value(this, value, node => node.left);
+        // NEED NOT TO ITERATE
+        if (this.root_ === null)
+            return null;
+
+        //----
+        // ITERATE
+        //----
+        let ret: XTreeNode<Elem> = this.root_!;
+
+        while (true) // UNTIL MEET THE MATCHED VALUE OR FINAL BRANCH
+        {
+            let child: XTreeNode<Elem> | null = null;
+
+            // COMPARE
+            if (this.value_comp_(value, ret.value))
+                child = ret.left;
+            else if (this.value_comp_(ret.value, value))
+                child = ret.right;
+            else
+                return ret; // MATCHED VALUE
+
+            // FINAL BRANCH? OR KEEP GOING
+            if (child !== null)
+                ret = child;
+            else
+                break;
+        }
+        return ret; // DIFFERENT NODE
     }
 
     @inline()
     private _Fetch_maximum(node: XTreeNode<Elem>): XTreeNode<Elem>
     {
         while (node.right !== null)
-            node = node.right;
+            node = node.right!;
         return node;
     }
 
     /* ---------------------------------------------------------
         UNIQUE
     --------------------------------------------------------- */
-    private static unique_nearest<Key, Elem, Unique extends boolean>
-        (tree: XTree<Key, Elem, Unique>, key: Key): XTreeNode<Elem> | null
+    private static unique_nearest<Key, Elem>
+        (tree: XTree<Key, Elem>, key: Key): XTreeNode<Elem> | null
     {
         // NEED NOT TO ITERATE
         if (tree.root_ === null)
@@ -133,7 +161,7 @@ export class XTree<Key, Elem, Unique extends boolean>
         //----
         // ITERATE
         //----
-        let ret: XTreeNode<Elem> | null = tree.root_;
+        let ret: XTreeNode<Elem> = tree.root_!;
 
         while (true) // UNTIL MEET THE MATCHED VALUE OR FINAL BRANCH
         {
@@ -156,44 +184,11 @@ export class XTree<Key, Elem, Unique extends boolean>
         return ret; // DIFFERENT NODE
     }
 
-    private static unique_nearest_value<Key, Elem, Unique extends boolean>
-        (tree: XTree<Key, Elem, Unique>, value: Elem): XTreeNode<Elem> | null
-    {
-        // NEED NOT TO ITERATE
-        if (tree.root_ === null)
-            return null;
-
-        //----
-        // ITERATE
-        //----
-        let ret: XTreeNode<Elem> | null = tree.root_;
-
-        while (true) // UNTIL MEET THE MATCHED VALUE OR FINAL BRANCH
-        {
-            let child: XTreeNode<Elem> | null = null;
-
-            // COMPARE
-            if (tree.value_comp_(value, ret.value))
-                child = ret.left;
-            else if (tree.value_comp_(ret.value, value))
-                child = ret.right;
-            else
-                return ret; // MATCHED VALUE
-
-            // FINAL BRANCH? OR KEEP GOING
-            if (child !== null)
-                ret = child;
-            else
-                break;
-        }
-        return ret; // DIFFERENT NODE
-    }
-
     /* ---------------------------------------------------------
         DUPLICATED
     --------------------------------------------------------- */
-    protected static multi_nearest<Key, Elem, Unique extends boolean>
-        (tree: XTree<Key, Elem, Unique>, key: Key, equalMover: (node: XTreeNode<Elem>) => XTreeNode<Elem> | null): XTreeNode<Elem> | null
+    protected static multi_nearest<Key, Elem>
+        (tree: XTree<Key, Elem>, key: Key, equalMover: (node: XTreeNode<Elem>) => XTreeNode<Elem> | null): XTreeNode<Elem> | null
     {
         // NEED NOT TO ITERATE
         if (tree.root_ === null)
@@ -202,7 +197,7 @@ export class XTree<Key, Elem, Unique extends boolean>
         //----
         // ITERATE
         //----
-        let ret: XTreeNode<Elem> = tree.root_;
+        let ret: XTreeNode<Elem> = tree.root_!;
         let matched: XTreeNode<Elem> | null = null;
 
         while (true)
@@ -217,7 +212,6 @@ export class XTree<Key, Elem, Unique extends boolean>
                 node = ret.right;
             else
             {
-                // EQUAL, RESERVE THAT POINT
                 matched = ret;
                 node = equalMover(ret);
             }
@@ -225,53 +219,14 @@ export class XTree<Key, Elem, Unique extends boolean>
             // ULTIL CHILD NODE EXISTS
             if (node === null)
                 break;
-            else
-                ret = node;
+            ret = node;
         }
 
         // RETURNS -> MATCHED OR NOT
-        return (matched !== null) ? matched : ret;
-    }
-
-    private static multi_nearest_value<Key, Elem, Unique extends boolean>
-        (tree: XTree<Key, Elem, Unique>, value: Elem, equalMover: (node: XTreeNode<Elem>) => XTreeNode<Elem> | null): XTreeNode<Elem> | null
-    {
-        // NEED NOT TO ITERATE
-        if (tree.root_ === null)
-            return null;
-
-        //----
-        // ITERATE
-        //----
-        let ret: XTreeNode<Elem> = tree.root_;
-        let matched: XTreeNode<Elem> | null = null;
-
-        while (true)
-        {
-            const candidate: Elem = ret.value;
-            let node: XTreeNode<Elem> | null = null;
-
-            // COMPARE
-            if (tree.value_comp_(value, candidate))
-                node = ret.left;
-            else if (tree.value_comp_(candidate, value))
-                node = ret.right;
-            else
-            {
-                // EQUAL, RESERVE THAT POINT
-                matched = ret;
-                node = equalMover(ret);
-            }
-
-            // ULTIL CHILD NODE EXISTS
-            if (node === null)
-                break;
-            else
-                ret = node;
-        }
-
-        // RETURNS -> MATCHED OR NOT
-        return (matched !== null) ? matched : ret;
+        if (matched !== null)
+            return matched;
+        else
+            return ret;
     }
     
     /* =========================================================
@@ -285,16 +240,15 @@ export class XTree<Key, Elem, Unique extends boolean>
     --------------------------------------------------------- */
     public insert(elem: Elem): void
     {
-        const parent = this.nearest_value(elem);
-        const node = new XTreeNode<Elem>(elem, Color.RED);
+        const parent: XTreeNode<Elem> | null = this.nearest_value(elem);
+        const node: XTreeNode<Elem> = new XTreeNode(elem, Color.RED);
 
         if (parent === null)
             this.root_ = node;
         else
         {
             node.parent = parent;
-
-            if (this.key_comp_(this.fetcher_(node.value), this.fetcher_(parent.value)))
+            if (this.value_comp_(node.value, parent.value))
                 parent.left = node;
             else
                 parent.right = node;
@@ -371,7 +325,7 @@ export class XTree<Key, Elem, Unique extends boolean>
 
         if (node.left !== null && node.right !== null)
         {
-            const pred: XTreeNode<Elem> = this._Fetch_maximum(node.left);
+            const pred: XTreeNode<Elem> = this._Fetch_maximum(node.left!);
 
             node.value = pred.value;
             node = pred;
@@ -431,11 +385,11 @@ export class XTree<Key, Elem, Unique extends boolean>
     {
         if (this._Fetch_color(N.parent) === Color.RED &&
             N.sibling !== null &&
-            this._Fetch_color(N.sibling) === Color.BLACK &&
-            this._Fetch_color(N.sibling.left) === Color.BLACK &&
-            this._Fetch_color(N.sibling.right) === Color.BLACK)
+            this._Fetch_color(N.sibling!) === Color.BLACK &&
+            this._Fetch_color(N.sibling!.left) === Color.BLACK &&
+            this._Fetch_color(N.sibling!.right) === Color.BLACK)
         {
-            N.sibling.color = Color.RED;
+            N.sibling!.color = Color.RED;
             N.parent!.color = Color.BLACK;
         }
         else
@@ -446,25 +400,25 @@ export class XTree<Key, Elem, Unique extends boolean>
     {
         if (n === n.parent!.left &&
             n.sibling !== null &&
-            this._Fetch_color(n.sibling) === Color.BLACK &&
-            this._Fetch_color(n.sibling.left) === Color.RED &&
-            this._Fetch_color(n.sibling.right) === Color.BLACK)
+            this._Fetch_color(n.sibling!) === Color.BLACK &&
+            this._Fetch_color(n.sibling!.left) === Color.RED &&
+            this._Fetch_color(n.sibling!.right) === Color.BLACK)
         {
-            n.sibling.color = Color.RED;
-            n.sibling.left!.color = Color.BLACK;
+            n.sibling!.color = Color.RED;
+            n.sibling!.left!.color = Color.BLACK;
 
-            this._Rotate_right(n.sibling);
+            this._Rotate_right(n.sibling!);
         }
         else if (n === n.parent!.right &&
             n.sibling !== null &&
-            this._Fetch_color(n.sibling) === Color.BLACK &&
-            this._Fetch_color(n.sibling.left) === Color.BLACK &&
-            this._Fetch_color(n.sibling.right) === Color.RED)
+            this._Fetch_color(n.sibling!) === Color.BLACK &&
+            this._Fetch_color(n.sibling!.left) === Color.BLACK &&
+            this._Fetch_color(n.sibling!.right) === Color.RED)
         {
-            n.sibling.color = Color.RED;
-            n.sibling.right!.color = Color.BLACK;
+            n.sibling!.color = Color.RED;
+            n.sibling!.right!.color = Color.BLACK;
 
-            this._Rotate_left(n.sibling);
+            this._Rotate_left(n.sibling!);
         }
         this._Erase_case6(n);
     }
@@ -521,10 +475,10 @@ export class XTree<Key, Elem, Unique extends boolean>
             this.root_ = newNode;
         else
         {
-            if (oldNode === oldNode.parent.left)
-                oldNode.parent.left = newNode;
+            if (oldNode === oldNode.parent!.left)
+                oldNode.parent!.left = newNode;
             else
-                oldNode.parent.right = newNode;
+                oldNode.parent!.right = newNode;
         }
 
         if (newNode !== null)
