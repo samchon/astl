@@ -1,9 +1,9 @@
 import std from "../../../index";
 import { StopWatch } from "../../internal/StopWatch";
 
-export function test_tree_multimap(): void
+export function test_tree_multi_map(): void
 {
-    StopWatch.measure("test_tree_multimap", () =>
+    StopWatch.measure("test_tree_multi_map", () =>
     {
         //----
         // INSERTIONS

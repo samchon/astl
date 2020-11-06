@@ -1,4 +1,5 @@
 # AssemblyScript Standard Template Library
+![logo](https://user-images.githubusercontent.com/13158709/98328610-7b5f4d00-2039-11eb-8135-6cf8100a12b3.png)
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/samchon/astl/blob/master/LICENSE)
 [![Build Status](https://github.com/samchon/astl/workflows/build/badge.svg)](https://github.com/samchon/astl/actions?query=workflow%3Abuild)

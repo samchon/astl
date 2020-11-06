@@ -9,7 +9,7 @@ export function test_priority_queue(): void
         
         // INSERT RANDOM ELEMENTS
         const elements: Array<i32> = [];
-        for (let i: i32 = 0; i < 200; ++i)
+        for (let i: i32 = 0; i < 10; ++i)
             for (let j: i32 = 0; j < 4; ++j)
                 elements.push(i);
 
@@ -18,7 +18,7 @@ export function test_priority_queue(): void
             const index: i32 = std.randint<i32>(0, elements.length - 1);
             const value: i32 = elements[index];
 
-            adaptor.push_back(value);
+            adaptor.push(value);
             elements.splice(index, 1);
         }
 

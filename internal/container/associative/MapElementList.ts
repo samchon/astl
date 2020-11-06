@@ -19,7 +19,7 @@ export class MapElementList<Key, T,
     private sequence_: usize = 0;
 
     private source_: SourceT;
-    private end_: MapElementList.Iterator<Key, T, Unique, SourceT> = MapElementList.Iterator._Create(this, this.sequence_++);
+    private end_: MapElementList.Iterator<Key, T, Unique, SourceT> = MapElementList.Iterator._Create(this, this.sequence_++, null, null, null);
     private begin_: MapElementList.Iterator<Key, T, Unique, SourceT> = this.end_;
 
     public constructor(source: SourceT)
@@ -32,13 +32,8 @@ export class MapElementList<Key, T,
         MapElementList.Iterator._Set_prev(this.end_, this.end_);
         MapElementList.Iterator._Set_next(this.end_, this.end_);
         
-        this.begin_ = this.end();
+        this.begin_ = this.end_;
         this.size_ = 0;
-    }
-
-    public resize(n: usize): void
-    {
-        
     }
 
     /* ---------------------------------------------------------
@@ -227,22 +222,30 @@ export namespace MapElementList
         
         private prev_: Iterator<Key, T, Unique, SourceT> | null;
         private next_: Iterator<Key, T, Unique, SourceT> | null;
-        private value_: Entry<Key, T> | null;
+        private readonly value_: Entry<Key, T> | null;
 
         /* ---------------------------------------------------------------
             CONSTRUCTORS
         --------------------------------------------------------------- */
-        private constructor(container: MapElementList<Key, T, Unique, SourceT>, uid: usize)
+        private constructor
+            (
+                container: MapElementList<Key, T, Unique, SourceT>, 
+                uid: usize, 
+                prev: Iterator<Key, T, Unique, SourceT> | null, 
+                next: Iterator<Key, T, Unique, SourceT> | null,
+                value: Entry<Key, T> | null
+            )
         {
             this.container_ = container;
             this.uid_ = uid;
             this.erased_ = false;
 
-            this.prev_ = null;
-            this.next_ = null;
-            this.value_ = null;
+            this.prev_ = prev;
+            this.next_ = next;
+            this.value_ = value;
         }
 
+        @inline()
         public static _Create<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
@@ -252,17 +255,12 @@ export namespace MapElementList
             (
                 container: MapElementList<Key, T, Unique, SourceT>, 
                 uid: usize,
-                prev: Iterator<Key, T, Unique, SourceT> | null = null, 
-                next: Iterator<Key, T, Unique, SourceT> | null = null,
-                value: Entry<Key, T> | null = null
+                prev: Iterator<Key, T, Unique, SourceT> | null, 
+                next: Iterator<Key, T, Unique, SourceT> | null,
+                value: Entry<Key, T> | null
             ): Iterator<Key, T, Unique, SourceT>
         {
-            const ret: Iterator<Key, T, Unique, SourceT> = new Iterator(container, uid);
-            if (prev) ret.prev_ = prev;
-            if (next) ret.next_ = next;
-            ret.value_ = value;
-            
-            return ret;
+            return new Iterator(container, uid, prev, next, value);
         }
 
         @inline()

@@ -1,9 +1,9 @@
 import std from "../../../index";
 import { StopWatch } from "../../internal/StopWatch";
 
-export function test_tree_multiset(): void
+export function test_tree_multi_set(): void
 {
-    StopWatch.measure("test_tree_multiset", () =>
+    StopWatch.measure("test_tree_multi_set", () =>
     {
         //----
         // INSERTIONS

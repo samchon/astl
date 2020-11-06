@@ -3,17 +3,18 @@ import { ReverseIterator as ReverseBase } from "../internal/iterator/ReverseIter
 
 import { Repeater } from "../internal/iterator/disposable/Repeater";
 import { SourcePointer } from "../internal/functional/SourcePointer";
-import { distance } from "../iterator/global";
+import { advance, distance } from "../iterator/global";
+
+import { Comparator } from "../internal/functional/Comparator";
 import { BinaryPredicator } from "../internal/functional/BinaryPredicator";
 import { UnaryPredicator } from "../internal/functional/UnaryPredicator";
-import { Comparator } from "../internal/functional/Comparator";
 
 export class List<T>
 {
     // LAZY CONSTRUCTIONS
     private source_ptr_: SourcePointer<List<T>> = new SourcePointer(this);
 
-    private end_: List.Iterator<T> = List.Iterator._Create(this.source_ptr_);
+    private end_: List.Iterator<T> = List.Iterator._Create(this.source_ptr_, null, null, changetype<T>(0));
     private begin_: List.Iterator<T> = this.end_;
     private size_: usize = 0;
 
@@ -22,16 +23,19 @@ export class List<T>
     --------------------------------------------------------- */
     public clear(): void
     {
-        List.Iterator._Set_prev<T>(this.end_, null!);
-        List.Iterator._Set_next<T>(this.end_, null!);
+        List.Iterator._Set_prev<T>(this.end_, null);
+        List.Iterator._Set_next<T>(this.end_, null);
         
-        this.begin_ = this.end();
+        this.begin_ = this.end_;
         this.size_ = 0;
     }
 
     public resize(n: usize): void
     {
-        
+        if (n < this.size())
+            this.erase(advance(this.end(), this.size() - n), this.end());
+        else if (n > this.size())
+            this.insert_repeatedly(this.end(), n - this.size(), changetype<T>(0));
     }
 
     /* ---------------------------------------------------------
@@ -109,10 +113,9 @@ export class List<T>
     {
         const prev: List.Iterator<T> = pos.prev();
 
-        const it: List.Iterator<T> = List.Iterator._Create<T>(this.source_ptr_, prev, pos);
+        const it: List.Iterator<T> = List.Iterator._Create<T>(this.source_ptr_, prev, pos, val);
         List.Iterator._Set_next<T>(prev, it);
         List.Iterator._Set_prev<T>(pos, it);
-        it.value = val;
 
         ++this.size_;
         if (pos == this.begin_)
@@ -140,13 +143,11 @@ export class List<T>
         // ITERATE THE NEW ELEMENTS
         for (; first != last; first = first.next())
         {
-            const it: List.Iterator<T> = List.Iterator._Create<T>(this.source_ptr_, prev);
-            it.value = first.value;
+            const it: List.Iterator<T> = List.Iterator._Create<T>(this.source_ptr_, prev, null, first.value);
+            List.Iterator._Set_next<T>(prev, it);
 
             if (top === null)
                 top = it;
-
-            List.Iterator._Set_next<T>(prev, it);
             prev = it;
             ++size;
         }
@@ -154,8 +155,8 @@ export class List<T>
             return pos;
 
         // RETURNS WITH FINALIZATION
-        List.Iterator._Set_next<T>(prev, top!);
-        List.Iterator._Set_prev<T>(pos, top!);
+        List.Iterator._Set_next<T>(prev, top);
+        List.Iterator._Set_prev<T>(pos, top);
 
         if (pos === this.begin_)
             this.begin_ = top!;
@@ -367,33 +368,30 @@ export namespace List
         /* ---------------------------------------------------------------
             CONSTRUCTORS
         --------------------------------------------------------------- */
-        private constructor(sourcePtr: SourcePointer<List<T>>)
+        private constructor(sourcePtr: SourcePointer<List<T>>, prev: Iterator<T> | null, next: Iterator<T> | null, value: T)
         {
             this.source_ptr_ = sourcePtr;
             this.erased_ = false;
 
-            this.prev_ = null;
-            this.next_ = null;
-            this.value_ = changetype<T>(0);
-        }
-
-        public static _Create<T>(sourcePtr: SourcePointer<List<T>>, prev: Iterator<T> | null = null, next: Iterator<T> | null = null): Iterator<T>
-        {
-            const ret: Iterator<T> = new Iterator(sourcePtr);
-            if (prev) ret.prev_ = prev;
-            if (next) ret.next_ = next;
-            
-            return ret;
+            this.prev_ = prev;
+            this.next_ = next;
+            this.value_ = value;
         }
 
         @inline()
-        public static _Set_prev<T>(it: Iterator<T>, prev: Iterator<T>): void
+        public static _Create<T>(sourcePtr: SourcePointer<List<T>>, prev: Iterator<T> | null, next: Iterator<T> | null, value: T): Iterator<T>
+        {
+            return new Iterator<T>(sourcePtr, prev, next, value);
+        }
+
+        @inline()
+        public static _Set_prev<T>(it: Iterator<T>, prev: Iterator<T> | null): void
         {
             it.prev_ = prev;
         }
 
         @inline()
-        public static _Set_next<T>(it: Iterator<T>, next: Iterator<T>): void
+        public static _Set_next<T>(it: Iterator<T>, next: Iterator<T> | null): void
         {
             it.next_ = next;
         }

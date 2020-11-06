@@ -1,9 +1,9 @@
 import std from "../../../index";
 import { StopWatch } from "../../internal/StopWatch";
 
-export function test_hash_multimap(): void
+export function test_hash_multi_map(): void
 {
-    StopWatch.measure("test_hash_multimap", () =>
+    StopWatch.measure("test_hash_multi_map", () =>
     {
         // INSERTIONS
         const container: std.HashMultiMap<i32, i32> = new std.HashMultiMap(x => x, (x, y) => x === y);

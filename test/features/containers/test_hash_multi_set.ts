@@ -1,9 +1,9 @@
 import std from "../../../index";
 import { StopWatch } from "../../internal/StopWatch";
 
-export function test_hash_multiset(): void
+export function test_hash_multi_set(): void
 {
-    StopWatch.measure("test_hash_multiset", () =>
+    StopWatch.measure("test_hash_multi_set", () =>
     {
         // INSERTIONS
         const container: std.HashMultiSet<i32> = new std.HashMultiSet(x => x, (x, y) => x === y);
