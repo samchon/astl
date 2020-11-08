@@ -1,3 +1,4 @@
+import { IPointer } from "../../../functional";
 import std from "../../../index";
 import { StopWatch } from "../../internal/StopWatch";
 

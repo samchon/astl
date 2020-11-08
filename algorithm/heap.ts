@@ -32,7 +32,7 @@ export function push_heap<RandomAccessIterator, Comparator, T>
     ): void
 {
     const temp: T = last.prev().value;
-    _Promote_heap(first, 0, distance(first, last) - 1, temp, comp);
+    _Promote_heap<RandomAccessIterator, T, Comparator>(first, 0, distance(first, last) - 1, temp, comp);
 }
 
 /**
@@ -53,7 +53,7 @@ export function pop_heap<RandomAccessIterator, Comparator, T>
     const temp: T = bottom.value;
 
     bottom.value = first.value;
-    _Adjust_heap(first, 0, distance(first, last) - 1, 0, temp, comp);
+    _Adjust_heap<RandomAccessIterator, T, Comparator>(first, 0, distance(first, last) - 1, 0, temp, comp);
 }
 
 /* ---------------------------------------------------------
