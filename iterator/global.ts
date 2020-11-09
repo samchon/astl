@@ -1,6 +1,4 @@
-import { IForwardIterator } from "./IForwardIterator";
-
-export function advance<InputIterator extends IForwardIterator<any, InputIterator>>
+export function advance<InputIterator>
     (it: InputIterator, n: isize): InputIterator
 {
     while (n-- > 0)
@@ -8,7 +6,7 @@ export function advance<InputIterator extends IForwardIterator<any, InputIterato
     return it;
 }
 
-export function distance<IteratorT extends IForwardIterator<any, IteratorT>>
+export function distance<IteratorT>
     (first: IteratorT, last: IteratorT): isize
 {
     let ret: isize = 0;

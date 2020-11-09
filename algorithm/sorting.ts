@@ -10,21 +10,21 @@ import { copy, iter_swap } from "./modifiers";
 ============================================================
     SORT
 --------------------------------------------------------- */
-export function sort<RandomAccessIterator, Comparator, T>
+export function sort<RandomAccessIterator, Comparator>
     (
         first: RandomAccessIterator, last: RandomAccessIterator,
         comp: Comparator
     ): void
 {
-    const length: isize = distance(first, last);
+    const length: usize = distance(first, last);
     if (length <= 0)
         return;
 
     const pivotIt: RandomAccessIterator = first.advance(length / 2);
-    const pivot: T = pivotIt.value;
+    const pivot = pivotIt.value;
 
     if (pivotIt != first)
-        iter_swap<RandomAccessIterator, RandomAccessIterator, T>(first, pivotIt);
+        iter_swap<RandomAccessIterator, RandomAccessIterator>(first, pivotIt);
 
     let i: usize = 1;
     for (let j: usize = 1; j < length; ++j)
@@ -32,17 +32,17 @@ export function sort<RandomAccessIterator, Comparator, T>
         const jeIt: RandomAccessIterator = first.advance(j);
         if (comp(jeIt.value, pivot))
         {
-            iter_swap<RandomAccessIterator, RandomAccessIterator, T>(jeIt, first.advance(i));
+            iter_swap<RandomAccessIterator, RandomAccessIterator>(jeIt, first.advance(i));
             ++i;
         }
     }
-    iter_swap<RandomAccessIterator, RandomAccessIterator, T>(first, first.advance(i - 1));
+    iter_swap<RandomAccessIterator, RandomAccessIterator>(first, first.advance(i - 1));
 
-    sort<RandomAccessIterator, Comparator, T>(first, first.advance(i - 1), comp);
-    sort<RandomAccessIterator, Comparator, T>(first.advance(i), last, comp);
+    sort<RandomAccessIterator, Comparator>(first, first.advance(i - 1), comp);
+    sort<RandomAccessIterator, Comparator>(first.advance(i), last, comp);
 }
 
-export function stable_sort<RandomAccessIterator, Comparator, T>
+export function stable_sort<RandomAccessIterator, Comparator>
     (
         first: RandomAccessIterator, last: RandomAccessIterator,
         comp: Comparator
@@ -53,10 +53,10 @@ export function stable_sort<RandomAccessIterator, Comparator, T>
         return;
 
     const pivotIt: RandomAccessIterator = first.advance(length / 2);
-    const pivot: T = pivotIt.value;
+    const pivot = pivotIt.value;
 
     if (pivotIt != first)
-        iter_swap<RandomAccessIterator, RandomAccessIterator, T>(first, pivotIt);
+        iter_swap<RandomAccessIterator, RandomAccessIterator>(first, pivotIt);
 
     let i: usize = 1;
     for (let j: usize = 1; j < length; ++j)
@@ -64,17 +64,17 @@ export function stable_sort<RandomAccessIterator, Comparator, T>
         const jeIt: RandomAccessIterator = first.advance(j);
         if (comp(jeIt.value, pivot) && !comp(pivot, jeIt.value))
         {
-            iter_swap<RandomAccessIterator, RandomAccessIterator, T>(jeIt, first.advance(i));
+            iter_swap<RandomAccessIterator, RandomAccessIterator>(jeIt, first.advance(i));
             ++i;
         }
     }
-    iter_swap<RandomAccessIterator, RandomAccessIterator, T>(first, first.advance(i - 1));
+    iter_swap<RandomAccessIterator, RandomAccessIterator>(first, first.advance(i - 1));
 
-    sort<RandomAccessIterator, Comparator, T>(first, first.advance(i - 1), comp);
-    sort<RandomAccessIterator, Comparator, T>(first.advance(i), last, comp);
+    sort<RandomAccessIterator, Comparator>(first, first.advance(i - 1), comp);
+    sort<RandomAccessIterator, Comparator>(first.advance(i), last, comp);
 }
 
-export function partial_sort<RandomAccessIterator, Comparator, T>
+export function partial_sort<RandomAccessIterator, Comparator>
     (
         first: RandomAccessIterator, middle: RandomAccessIterator, last: RandomAccessIterator,
         comp: Comparator
@@ -87,7 +87,7 @@ export function partial_sort<RandomAccessIterator, Comparator, T>
             if (comp(j.value, min.value))
                 min = j;
         if (i != min)
-            iter_swap<RandomAccessIterator, RandomAccessIterator, T>(i, min);
+            iter_swap<RandomAccessIterator, RandomAccessIterator>(i, min);
     }
 }
 
@@ -103,7 +103,7 @@ export function partial_sort_copy<InputIterator, OutputIterator, Comparator, T>
 
     const vector: Vector<T> = new Vector();
     vector.insert(vector.end(), first, last);
-    sort<Vector.Iterator<T>, Comparator, T>(vector.begin(), vector.end(), comp);
+    sort<Vector.Iterator<T>, Comparator>(vector.begin(), vector.end(), comp);
 
     if (inputLength > resultLength)
         outputFirst = copy(vector.begin(), vector.begin().advance(resultLength), outputFirst);
@@ -113,7 +113,7 @@ export function partial_sort_copy<InputIterator, OutputIterator, Comparator, T>
     return outputFirst;
 }
 
-export function nth_element<RandomAccessIterator, Comparator, T>
+export function nth_element<RandomAccessIterator, Comparator>
     (
         first: RandomAccessIterator, nth: RandomAccessIterator, last: RandomAccessIterator, 
         comp: Comparator
@@ -131,7 +131,7 @@ export function nth_element<RandomAccessIterator, Comparator, T>
 
         if (count === n)
         {
-            iter_swap<RandomAccessIterator, RandomAccessIterator, T>(nth, i);
+            iter_swap<RandomAccessIterator, RandomAccessIterator>(nth, i);
             return;
         }
     }

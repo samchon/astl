@@ -152,6 +152,13 @@ export namespace Vector
         }
 
         @inline()
+        @operator("<")
+        public less(obj: Vector.Iterator<T>): boolean
+        {
+            return this.index_ < obj.index_;
+        }
+
+        @inline()
         public get value(): T
         {
             return this.source_.at(this.index_);

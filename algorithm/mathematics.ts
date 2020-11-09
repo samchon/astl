@@ -82,7 +82,7 @@ export function is_permutation<ForwardIterator1, ForwardIterator2, BinaryPredica
 
     const last2: ForwardIterator2 = advance(first2, distance(first1, last1));
     for (let it = first1; it != last1; it = it.next())
-        if (_Find_if(first1, it, pred, it) == it)
+        if (_Find_if(first1, it, it, pred) == it)
         {
             const n: usize = _Count_if(first2, last2, it, pred);
             if (n === 0 || _Count_if(it, last1, it, pred) !== n)
@@ -91,7 +91,7 @@ export function is_permutation<ForwardIterator1, ForwardIterator2, BinaryPredica
     return true;
 }
 
-export function prev_permutation<BidirectionalIterator, Comparator, T>
+export function prev_permutation<BidirectionalIterator, Comparator>
     (
         first: BidirectionalIterator, last: BidirectionalIterator,
         comp: Comparator
@@ -115,20 +115,20 @@ export function prev_permutation<BidirectionalIterator, Comparator, T>
             while (comp(y.value, previous.value) === false)
                 y = y.prev();
             
-            iter_swap<BidirectionalIterator, BidirectionalIterator, T>(previous, y);
-            reverse<BidirectionalIterator, T>(x, last);
+            iter_swap(previous, y);
+            reverse(x, last);
             return true;
         }
 
         if (previous == first)
         {
-            reverse<BidirectionalIterator, T>(first, last);
+            reverse(first, last);
             return false;
         }
     }
 }
 
-export function next_permutation<BidirectionalIterator, Comparator, T>
+export function next_permutation<BidirectionalIterator, Comparator>
     (
         first: BidirectionalIterator, last: BidirectionalIterator,
         comp: Comparator
@@ -163,6 +163,36 @@ export function next_permutation<BidirectionalIterator, Comparator, T>
             return false;
         }
     }
+
+    // if (first == last)
+    //     return false;
+
+    // let previous: BidirectionalIterator = last.prev();
+    // if (first == previous)
+    //     return false;
+
+    // while (true)
+    // {
+    //     const x: BidirectionalIterator = previous;
+    //     previous = previous.prev();
+
+    //     if (comp(previous.value, x.value) === true)
+    //     {
+    //         let y: BidirectionalIterator = last.prev();
+    //         while (comp(previous.value, y.value) === false)
+    //             y = y.prev();
+            
+    //         iter_swap<BidirectionalIterator, BidirectionalIterator>(previous, y);
+    //         reverse<BidirectionalIterator>(x, last);
+    //         return true;
+    //     }
+
+    //     if (previous == first)
+    //     {
+    //         reverse<BidirectionalIterator>(first, last);
+    //         return false;
+    //     }
+    // }
 }
 
 function _Count_if<InputIterator, TargetIterator, BinaryPredicator>
@@ -187,7 +217,7 @@ function _Find_if<InputIterator, TargetIterator, BinaryPredicator>
     ): InputIterator
 {
     for (; first != last; first = first.next())
-        if (pred(first.value, it.value))
+        if (pred(first.value, it.value) === true)
             return first;
     return last;
 }

@@ -39,13 +39,13 @@ export function partition_point<ForwardIterator, UnaryPredicator>
 }
 
 @inline()
-export function partition<BidirectionalIterator, UnaryPredicator, T>
+export function partition<BidirectionalIterator, UnaryPredicator>
     (first: BidirectionalIterator, last: BidirectionalIterator, pred: UnaryPredicator): BidirectionalIterator
 {
-    return stable_partition<BidirectionalIterator, UnaryPredicator, T>(first, last, pred);
+    return stable_partition<BidirectionalIterator, UnaryPredicator>(first, last, pred);
 }
 
-export function stable_partition<BidirectionalIterator, UnaryPredicator, T>
+export function stable_partition<BidirectionalIterator, UnaryPredicator>
     (first: BidirectionalIterator, last: BidirectionalIterator, pred: UnaryPredicator): BidirectionalIterator
 {
     while (first != last && pred(first.value) === true)
@@ -65,7 +65,7 @@ export function stable_partition<BidirectionalIterator, UnaryPredicator, T>
         } 
         while (pred(last.value) === false);
 
-        iter_swap<BidirectionalIterator, UnaryPredicator, T>(first, last);
+        iter_swap<BidirectionalIterator, UnaryPredicator>(first, last);
         first = first.next();
     }
     return last;

@@ -1,7 +1,5 @@
-import { IPointer } from "../functional/IPointer";
-
-export declare interface IForwardIterator<T, Iterator extends IForwardIterator<T, Iterator>>
-    extends IPointer<T>
+export interface IForwardIterator<T, Iterator extends IForwardIterator<T, Iterator>>
 {
+    value: T;
     next(): Iterator;
 }

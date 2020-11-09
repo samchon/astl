@@ -45,8 +45,8 @@ export function upper_bound<ForwardIterator, T, Comparator>
 export function equal_range<ForwardIterator, T, Comparator>
     (first: ForwardIterator, last: ForwardIterator, val: T, comp: Comparator): Pair<ForwardIterator, ForwardIterator>
 {
-    const lower = lower_bound(first, last, val, comp);
-    const upper = upper_bound(first, last, val, comp);
+    const lower: ForwardIterator = lower_bound<ForwardIterator, T, Comparator>(first, last, val, comp);
+    const upper: ForwardIterator = upper_bound<ForwardIterator, T, Comparator>(lower, last, val, comp);
 
     return new Pair(lower, upper);
 }
@@ -55,6 +55,6 @@ export function equal_range<ForwardIterator, T, Comparator>
 export function binary_search<ForwardIterator, T, Comparator>
     (first: ForwardIterator, last: ForwardIterator, val: T, comp: Comparator): boolean
 {
-    first = lower_bound(first, last, val, comp);
+    first = lower_bound<ForwardIterator, T, Comparator>(first, last, val, comp);
     return first != last && comp(val, first.value) === false;
 }

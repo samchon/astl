@@ -1,4 +1,4 @@
-import { distance } from "../iterator/global";
+import { advance, distance } from "../iterator/global";
 
 /* =========================================================
     EA-STL (https://github.com/electronicarts/EASTL/blob/master/include/EASTL/heap.h)
@@ -8,7 +8,7 @@ import { distance } from "../iterator/global";
 ============================================================
     PUSH & POP
 --------------------------------------------------------- */
-export function make_heap<RandomAccessIterator, Comparator, T>
+export function make_heap<RandomAccessIterator, Comparator>
     (first: RandomAccessIterator, last: RandomAccessIterator, comp: Comparator): void
 {
     const heapSize: usize = distance(first, last);
@@ -18,21 +18,21 @@ export function make_heap<RandomAccessIterator, Comparator, T>
     let parentPosition: usize = ((heapSize - 2) >> 1) + 1;
     do
     {
-        const temp: T = first.advance(--parentPosition).value;
-        _Adjust_heap<RandomAccessIterator, T, Comparator>(first, parentPosition, heapSize, parentPosition, temp, comp);
+        const temp = first.advance(--parentPosition).value;
+        _Adjust_heap(first, parentPosition, heapSize, parentPosition, temp, comp);
     }
     while (parentPosition !== 0);
 }
 
-export function push_heap<RandomAccessIterator, Comparator, T>
+export function push_heap<RandomAccessIterator, Comparator>
     (
         first: RandomAccessIterator, 
         last: RandomAccessIterator, 
         comp: Comparator
     ): void
 {
-    const temp: T = last.prev().value;
-    _Promote_heap<RandomAccessIterator, T, Comparator>(first, 0, distance(first, last) - 1, temp, comp);
+    const temp = last.prev().value;
+    _Promote_heap(first, 0, distance(first, last) - 1, temp, comp);
 }
 
 /**
@@ -42,18 +42,18 @@ export function push_heap<RandomAccessIterator, Comparator, T>
  * @param last Random access iterator of the last position.
  * @param comp A binary function predicates *x* element would be placed before *y*. When returns `true`, then *x* precedes *y*. Default is {@link less}.
  */
-export function pop_heap<RandomAccessIterator, Comparator, T>
+export function pop_heap<RandomAccessIterator, Comparator>
     (
         first: RandomAccessIterator, 
         last: RandomAccessIterator, 
         comp: Comparator
     ): void
 {
-    const bottom: RandomAccessIterator = last.prev();
-    const temp: T = bottom.value;
+    const bottom = last.prev();
+    const temp = bottom.value;
 
     bottom.value = first.value;
-    _Adjust_heap<RandomAccessIterator, T, Comparator>(first, 0, distance(first, last) - 1, 0, temp, comp);
+    _Adjust_heap(first, 0, distance(first, last) - 1, 0, temp, comp);
 }
 
 /* ---------------------------------------------------------
@@ -66,8 +66,8 @@ export function is_heap<RandomAccessIterator, Comparator>
         comp: Comparator
     ): boolean
 {
-    const it = is_heap_until(first, last, comp);
-    return it.equals(last);
+    const it: RandomAccessIterator = is_heap_until(first, last, comp);
+    return it == last;
 }
 
 export function is_heap_until<RandomAccessIterator, Comparator>
@@ -77,7 +77,7 @@ export function is_heap_until<RandomAccessIterator, Comparator>
         comp: Comparator
     ): RandomAccessIterator
 {
-    let counter: number = 0;
+    let counter: isize = 0;
     for (let child = first.next(); child < last; child = child.next(), counter ^= 1)
     {
         if (comp(first.value, child.value))
@@ -87,7 +87,7 @@ export function is_heap_until<RandomAccessIterator, Comparator>
     return last;
 }
 
-export function sort_heap<RandomAccessIterator, Comparator, T>
+export function sort_heap<RandomAccessIterator, Comparator>
     (
         first: RandomAccessIterator, 
         last: RandomAccessIterator, 
@@ -95,7 +95,7 @@ export function sort_heap<RandomAccessIterator, Comparator, T>
     ): void
 {
     for (; distance(first, last) > 1; last = last.prev())
-        pop_heap<RandomAccessIterator, Comparator, T>(first, last, comp);
+        pop_heap<RandomAccessIterator, Comparator>(first, last, comp);
 }
 
 /* ---------------------------------------------------------

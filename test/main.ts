@@ -1,4 +1,29 @@
 //----
+// ALGORITHM
+//----
+// BINARY-SERACH
+import { test_binary_search } from "./algorithm/binary_search/test_binary_search";
+import { test_equal_range } from "./algorithm/binary_search/test_equal_range";
+import { test_lower_bound } from "./algorithm/binary_search/test_lower_bound";
+import { test_upper_bound } from "./algorithm/binary_search/test_upper_bound";
+
+// HEAP
+import { test_make_heap } from "./algorithm/heap/test_make_heap";
+import { test_push_heap } from "./algorithm/heap/test_push_heap";
+import { test_sort_heap } from "./algorithm/heap/test_sort_heap";
+
+// MATHEMATICS
+import { test_max_element } from "./algorithm/mathematics/test_max_element";
+import { test_min_element } from "./algorithm/mathematics/test_min_element";
+import { test_minmax_element } from "./algorithm/mathematics/test_minmax_element";
+import { test_next_permutation } from "./algorithm/mathematics/test_next_permutation";
+import { test_prev_permutation } from "./algorithm/mathematics/test_prev_permutation";
+
+// RANDOM
+import { test_randint } from "./algorithm/random/test_randint";
+import { test_sample } from "./algorithm/random/test_sample";
+
+//----
 // CONTAINERS
 //----
 import { test_vector } from "./features/containers/test_vector";
@@ -21,16 +46,37 @@ import { test_queue } from "./features/containers/test_queue";
 import { test_stack } from "./features/containers/test_stack";
 import { test_storing_objects } from "./features/containers/test_storing_objects";
 
+//----
+// FUNCTIONAL
+//----
 import { test_hash } from "./features/functional/test_hash";
 
 export function main(): void
 {
-    test_hash();
-
     //----
     // ALGORITHM
     //----
-    
+    // BINARY SEARCH
+    test_binary_search();
+    test_equal_range();
+    test_lower_bound();
+    test_upper_bound();
+
+    // HEAP
+    test_make_heap();
+    test_push_heap();
+    // test_sort_heap();
+
+    // MATHEMATICS
+    test_max_element();
+    test_min_element();
+    test_minmax_element();
+    test_next_permutation();
+    test_prev_permutation();
+
+    // RANDOM
+    test_randint();
+    test_sample();
 
     //----
     // CONTAINERS
@@ -59,4 +105,9 @@ export function main(): void
 
     // ETC
     test_storing_objects();
+
+    //----
+    // FUNCTIONAL
+    //----
+    test_hash();
 }

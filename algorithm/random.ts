@@ -1,4 +1,5 @@
 import { Vector } from "../container/Vector";
+import { Comparator } from "../internal/functional/Comparator";
 
 import { CMath } from "../internal/numeric/CMath";
 import { advance, distance } from "../iterator/global";
@@ -7,7 +8,7 @@ import { sort } from "./sorting";
 @inline()
 export function randint<T>(x: T, y: T): T
 {
-    const value: f64 = Math.round(Math.random() * (y - x));
+    const value: f64 = Math.round(Math.random() * (y - x) + x);
     return <T>value;
 }
 
@@ -18,25 +19,25 @@ export function sample<InputIterator, OutputIterator>
     ): OutputIterator
 {
     // GENERATE REMAINDERS
-    const step: usize = distance(first, last);
-    const remainders: usize[] = [];
+    const step: isize = distance(first, last);
+    const remainders: isize[] = [];
 
-    for (let i: number = 0; i < step; ++i)
+    for (let i: isize = 0; i < step; ++i)
         remainders.push(i);
 
     //----
     // CONSTRUCT INDEXES
     //----
-    const advances: Vector<usize> = new Vector();
+    const advances: Vector<isize> = new Vector();
     n = CMath.min(n, step);
 
     // PICK SAMPLE INDEXES
-    for (let i: usize = 0; i < n; ++i)
+    for (let i: isize = 0; i < <isize>n; ++i)
     {
-        const index: usize = randint<usize>(0, <usize>remainders.length - 1);
-        advances.push_back(remainders.splice(index, 1)[0]);
+        const index: isize = randint<isize>(0, <isize>remainders.length - 1);
+        advances.push_back(remainders.splice(<i32>index, 1)[0]);
     }
-    sort<Vector.Iterator<usize>, (x: usize, y: usize) => boolean, usize>(advances.begin(), advances.end(), (x, y) => x < y);
+    sort<Vector.Iterator<isize>, Comparator<isize>>(advances.begin(), advances.end(), (x, y) => x < y);
 
     // CHANGE INDEXES TO ADVANCES
     for (let i: isize = n - 1; i >= 1; --i)
@@ -45,7 +46,7 @@ export function sample<InputIterator, OutputIterator>
     //----
     // FILL SAMPLES
     //----
-    for (let i: usize = 0; i < advances.size(); ++i)
+    for (let i: isize = 0; i < <isize>advances.size(); ++i)
     {
         first = advance(first, advances.at(i));
 

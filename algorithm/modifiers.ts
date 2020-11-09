@@ -301,20 +301,20 @@ export function replace_copy_if<InputIterator, OutputIterator, UnaryPredicator, 
     return output;
 }
 
-export function iter_swap<ForwardIterator1, ForwardIterator2, T>
+export function iter_swap<ForwardIterator1, ForwardIterator2>
     (x: ForwardIterator1, y: ForwardIterator2): void
 {
-    const value: T = x.value;
+    const value = x.value;
     x.value = y.value;
     y.value = value;
 }
 
-export function swap_ranges<ForwardIterator1, ForwardIterator2, T>
+export function swap_ranges<ForwardIterator1, ForwardIterator2>
     (first1: ForwardIterator2, last1: ForwardIterator2, first2: ForwardIterator2): ForwardIterator2
 {
     for (; first1 != last1; first1 = first1.next())
     {
-        iter_swap<ForwardIterator1, ForwardIterator2, T>(first1, first2);
+        iter_swap<ForwardIterator1, ForwardIterator2>(first1, first2);
         first2 = first2.next();
     }
     return first2;
@@ -323,12 +323,12 @@ export function swap_ranges<ForwardIterator1, ForwardIterator2, T>
 /* ---------------------------------------------------------
     RE-ARRANGEMENT
 --------------------------------------------------------- */
-export function reverse<BidirectionalIterator, T>
+export function reverse<BidirectionalIterator>
     (first: BidirectionalIterator, last: BidirectionalIterator): void
 {
-    while (first != last && first != last.prev())
+    while (first != last && first != (last = last.prev()))
     {
-        iter_swap<BidirectionalIterator, BidirectionalIterator, T>(first, last);
+        iter_swap<BidirectionalIterator, BidirectionalIterator>(first, last);
         first = first.next();   
     }
 }
@@ -360,12 +360,12 @@ export function shift_right<ForwardIterator>
     return copy(first, mid, last);
 }
 
-export function rotate<InputIterator, T>
+export function rotate<InputIterator>
     (first: InputIterator, middle: InputIterator, last: InputIterator): InputIterator
 {
     while (first != middle && middle != last)
     {
-        iter_swap<InputIterator, InputIterator, T>(first, middle);
+        iter_swap<InputIterator, InputIterator>(first, middle);
 
         first = first.next();
         middle = middle.next();
@@ -380,13 +380,13 @@ export function rotate_copy<ForwardIterator, OutputIterator>
     return copy(first, middle, output);
 }
 
-export function shuffle<RandomAccessIterator, T>
+export function shuffle<RandomAccessIterator>
     (first: RandomAccessIterator, last: RandomAccessIterator): void
 {
     for (let it = first; it != last; it = it.next())
     {
         const index: usize = randint<usize>(first.index(), last.index() - 1);
         if (it.index() !== index)
-            iter_swap<RandomAccessIterator, RandomAccessIterator, T>(it, first.advance(index));
+            iter_swap<RandomAccessIterator, RandomAccessIterator>(it, first.advance(index));
     }
 }

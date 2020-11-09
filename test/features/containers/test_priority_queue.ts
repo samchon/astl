@@ -3,7 +3,12 @@ import { StopWatch } from "../../internal/StopWatch";
 
 export function test_priority_queue(): void
 {
-    StopWatch.measure("test_priority_queue", () =>
+    StopWatch.measure("test_priority_queue", test_priority_queue.core);
+}
+
+export namespace test_priority_queue
+{
+    export function core(): void
     {
         const adaptor: std.PriorityQueue<i32> = new std.PriorityQueue();
         
@@ -32,5 +37,5 @@ export function test_priority_queue(): void
             previous = adaptor.top();
             adaptor.pop();
         }
-    });
+    }
 }

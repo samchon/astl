@@ -22,13 +22,13 @@ export class PriorityQueue<T>
     public push(elem: T): void
     {
         this.data_.push_back(elem);
-        push_heap<Vector.Iterator<T>, Comparator<T, T>, T>(this.data_.begin(), this.data_.end(), this.comp_);
+        push_heap<Vector.Iterator<T>, Comparator<T, T>>(this.data_.begin(), this.data_.end(), this.comp_);
     }
 
     @inline()
     public pop(): void
     {
-        pop_heap<Vector.Iterator<T>, Comparator<T, T>, T>(this.data_.begin(), this.data_.end(), this.comp_);
+        pop_heap<Vector.Iterator<T>, Comparator<T, T>>(this.data_.begin(), this.data_.end(), this.comp_);
         this.data_.pop_back();
     }
 
