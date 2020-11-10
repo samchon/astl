@@ -22,10 +22,26 @@ export class HashSet<Key>
         this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.value);
     }
     
+    @inline()
     public clear(): void
     {
         this.data_.clear();
         this.buckets_.clear();
+    }
+
+    public swap(obj: HashSet<Key>): void
+    {
+        // SWAP ELEMENTS
+        this.data_.swap(obj.data_);
+        
+        const data: SetElementList<Key, true, HashSet<Key>> = this.data_;
+        this.data_ = obj.data_;
+        obj.data_ = data;
+
+        // SWAP BUCKETS
+        const buckets: IteratorHashBuckets<Key, HashSet.Iterator<Key>> = this.buckets_;
+        this.buckets_ = obj.buckets_;
+        obj.buckets_ = buckets;
     }
 
     /* ---------------------------------------------------------

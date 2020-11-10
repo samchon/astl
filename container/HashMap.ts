@@ -25,10 +25,26 @@ export class HashMap<Key, T>
         this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.first);
     }
     
+    @inline()
     public clear(): void
     {
         this.data_.clear();
         this.buckets_.clear();
+    }
+    
+    public swap(obj: HashMap<Key, T>): void
+    {
+        // SWAP ELEMENTS
+        this.data_.swap(obj.data_);
+        
+        const data: MapElementList<Key, T, true, HashMap<Key, T>> = this.data_;
+        this.data_ = obj.data_;
+        obj.data_ = data;
+
+        // SWAP BUCKETS
+        const buckets: IteratorHashBuckets<Key, HashMap.Iterator<Key, T>> = this.buckets_;
+        this.buckets_ = obj.buckets_;
+        obj.buckets_ = buckets;
     }
 
     /* ---------------------------------------------------------

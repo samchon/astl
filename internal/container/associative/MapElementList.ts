@@ -1,7 +1,7 @@
 import { IMapContainer } from "./IMapContainer";
 
 import { IForwardIterator } from "../../../iterator/IForwardIterator";
-import { ReverseIterator as ReverseBase } from "../../iterator/ReverseIterator";
+import { ReverseIteratorBase as ReverseBase } from "../../iterator/ReverseIteratorBase";
 
 import { IPair } from "../../../utility/IPair";
 import { Entry } from "../../../utility/Entry";
@@ -22,6 +22,9 @@ export class MapElementList<Key, T,
     private end_: MapElementList.Iterator<Key, T, Unique, SourceT> = MapElementList.Iterator._Create(this, this.sequence_++, null, null, null);
     private begin_: MapElementList.Iterator<Key, T, Unique, SourceT> = this.end_;
 
+    /* ---------------------------------------------------------
+        CONSTRUCTORS
+    --------------------------------------------------------- */
     public constructor(source: SourceT)
     {
         this.source_ = source;
@@ -204,6 +207,9 @@ export class MapElementList<Key, T,
     --------------------------------------------------------------- */
     public swap(obj: MapElementList<Key, T, Unique, SourceT>): void
     {
+        const source: SourceT = this.source_;
+        this.source_ = obj.source_;
+        obj.source_ = source;
     }
 }
 
@@ -323,15 +329,19 @@ export namespace MapElementList
             return this.value_!;
         }
 
+        @inline()
         public get first(): Key
         {
-            return this.value_!.first;
+            return this.value.first;
         }
 
+        @inline()
         public get second(): T
         {
-            return this.value_!.second;
+            return this.value.second;
         }
+
+        @inline()
         public set second(val: T)
         {
             this.value.second = val;
@@ -387,20 +397,25 @@ export namespace MapElementList
             ReverseIterator<Key, T, Unique, SourceT>, 
             IPair<Key, T>>
     {
+        @inline()
         public get value(): Entry<Key, T>
         {
             return this.base_.value;
         }
 
+        @inline()
         public get first(): Key
         {
             return this.value.first;
         }
 
+        @inline()
         public get second(): T
         {
             return this.value.second;
         }
+
+        @inline()
         public set second(val: T)
         {
             this.value.second = val;

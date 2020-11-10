@@ -1,5 +1,5 @@
 import { VectorContainer } from "../internal/container/linear/VectorContainer";
-import { ReverseIterator as ReverseBase } from "../internal/iterator/ReverseIterator";
+import { ReverseIteratorBase } from "../internal/iterator/ReverseIteratorBase";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 
@@ -137,41 +137,69 @@ export namespace Vector
         }
 
         @inline()
-        @operator("==")
-        public equals(obj: Vector.Iterator<T>): boolean
+        public get value(): T
         {
-            return this.source_ === obj.source_
-                && this.index_ === obj.index_;
+            return this.source_.at(this.index_);
+        }
+
+        @inline()
+        public set value(val: T)
+        {
+            this.source_.set(this.index_, val);
+        }
+
+        /* ---------------------------------------------------------
+            OPERATORS
+        --------------------------------------------------------- */
+        @inline()
+        @operator("==")
+        public equals(obj: Iterator<T>): boolean
+        {
+            return this.source_ === obj.source_ && this.index_ === obj.index_;
+        }
+
+        @inline()
+        @operator("<")
+        public less(obj: Iterator<T>): boolean
+        {
+            return this.index_ < obj.index_;
         }
         
         @inline()
         @operator("!=")
-        public __not_equals(obj: Vector.Iterator<T>): boolean
+        protected __not_equals(obj: Iterator<T>): boolean
         {
             return !this.equals(obj);
         }
 
         @inline()
-        @operator("<")
-        public less(obj: Vector.Iterator<T>): boolean
+        @operator("<=")
+        protected __less_equals(obj: Iterator<T>): boolean
         {
-            return this.index_ < obj.index_;
+            return this.source_ === obj.source_ && this.index_ <= obj.index_;
         }
 
         @inline()
-        public get value(): T
+        @operator(">")
+        protected __greater(obj: Iterator<T>): boolean
         {
-            return this.source_.at(this.index_);
+            return this.index_ > obj.index_;
         }
-        public set value(val: T)
+
+        @inline()
+        @operator(">=")
+        protected __greater_equals(obj: Iterator<T>): boolean
         {
-            this.source_.set(this.index_, val);
+            return this.source_ === obj.source_ && this.index_ >= obj.index_;
         }
     }
 
     export class ReverseIterator<T>
-        extends ReverseBase<T, Vector<T>, Vector<T>, Iterator<T>, ReverseIterator<T>, T>
-    {   
+        extends ReverseIteratorBase<T, Vector<T>, Vector<T>, Iterator<T>, ReverseIterator<T>, T>
+    {
+        /* ---------------------------------------------------------
+            ACCESSORS
+        --------------------------------------------------------- */   
         @inline()
         public advance(n: isize): ReverseIterator<T>
         {
@@ -189,9 +217,42 @@ export namespace Vector
         {
             return this.base_.value;
         }
+
+        @inline()
         public set value(val: T)
         {
             this.base_.value = val;
+        }
+
+        /* ---------------------------------------------------------
+            OPERATORS
+        --------------------------------------------------------- */
+        @inline()
+        @operator("<")
+        public less(obj: ReverseIterator<T>): boolean
+        {
+            return this.index() > obj.index();
+        }
+
+        @inline()
+        @operator("<=")
+        protected __less_equals(obj: ReverseIterator<T>): boolean
+        {
+            return this.source() === obj.source() && this.index() >= obj.index();
+        }
+
+        @inline()
+        @operator(">")
+        protected __greater(obj: ReverseIterator<T>): boolean
+        {
+            return this.index() < obj.index();
+        }
+
+        @inline()
+        @operator(">=")
+        protected __greater_equals(obj: ReverseIterator<T>): boolean
+        {
+            return this.source() === obj.source() && this.index() <= obj.index();
         }
     }
 }

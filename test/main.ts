@@ -26,24 +26,31 @@ import { test_sample } from "./algorithm/random/test_sample";
 //----
 // CONTAINERS
 //----
+// LINEARS
 import { test_vector } from "./features/containers/test_vector";
 import { test_deque } from "./features/containers/test_deque";
 import { test_list } from "./features/containers/test_list";
 // import { test_forward_list } from "./features/containers/test_forward_list";
 
+// ASSOCIATIVES
 import { test_tree_map } from "./features/containers/test_tree_map";
 import { test_tree_multi_map } from "./features/containers/test_tree_multi_map";
 import { test_tree_multi_set } from "./features/containers/test_tree_multi_set";
 import { test_tree_set } from "./features/containers/test_tree_set";
-
 import { test_hash_map } from "./features/containers/test_hash_map";
 import { test_hash_multi_map } from "./features/containers/test_hash_multi_map";
 import { test_hash_multi_set } from "./features/containers/test_hash_multi_set";
 import { test_hash_set } from "./features/containers/test_hash_set";
 
+// ADAPTORS
 import { test_priority_queue } from "./features/containers/test_priority_queue";
 import { test_queue } from "./features/containers/test_queue";
 import { test_stack } from "./features/containers/test_stack";
+import { test_flat_map } from "./features/experimental/containers/test_flat_map";
+import { test_flat_multi_map } from "./features/experimental/containers/test_flat_multi_map";
+import { test_flat_multi_set } from "./features/experimental/containers/test_flat_multi_set";
+import { test_flat_set } from "./features/experimental/containers/test_flat_set";
+
 import { test_storing_objects } from "./features/containers/test_storing_objects";
 
 //----
@@ -63,7 +70,7 @@ export function main(): void
     test_upper_bound();
 
     // HEAP
-    test_make_heap();
+    // test_make_heap();
     test_push_heap();
     // test_sort_heap();
 
@@ -102,6 +109,10 @@ export function main(): void
     test_priority_queue();
     test_queue();
     test_stack();
+    test_flat_map();
+    test_flat_multi_map();
+    test_flat_multi_set();
+    test_flat_set();
 
     // ETC
     test_storing_objects();

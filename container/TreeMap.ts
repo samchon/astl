@@ -30,6 +30,21 @@ export class TreeMap<Key, T>
         this.tree_.clear();
     }
 
+    public swap(obj: TreeMap<Key, T>): void
+    {
+        // SWAP ELEMENTS
+        this.data_.swap(obj.data_);
+        
+        const data: MapElementList<Key, T, true, TreeMap<Key, T>> = this.data_;
+        this.data_ = obj.data_;
+        obj.data_ = data;
+
+        // SWAP TREE
+        const tree: IteratorTree<Key, TreeMap.Iterator<Key, T>> = this.tree_;
+        this.tree_ = obj.tree_;
+        obj.tree_ = tree;
+    }
+
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */

@@ -27,6 +27,21 @@ export class TreeSet<Key>
         this.tree_.clear();
     }
 
+    public swap(obj: TreeSet<Key>): void
+    {
+        // SWAP ELEMENTS
+        this.data_.swap(obj.data_);
+        
+        const data: SetElementList<Key, true, TreeSet<Key>> = this.data_;
+        this.data_ = obj.data_;
+        obj.data_ = data;
+
+        // SWAP TREE
+        const tree: IteratorTree<Key, TreeSet.Iterator<Key>> = this.tree_;
+        this.tree_ = obj.tree_;
+        obj.tree_ = tree;
+    }
+
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */

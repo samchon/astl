@@ -1,7 +1,7 @@
 import { ISetContainer } from "./ISetContainer";
 
 import { IForwardIterator } from "../../../iterator/IForwardIterator";
-import { ReverseIterator as ReverseBase } from "../../iterator/ReverseIterator";
+import { ReverseIteratorBase as ReverseBase } from "../../iterator/ReverseIteratorBase";
 import { Repeater } from "../../iterator/disposable/Repeater";
 import { distance } from "../../../iterator/global";
 
@@ -31,11 +31,6 @@ export class SetElementList<Key,
         
         this.begin_ = this.end_;
         this.size_ = 0;
-    }
-
-    public resize(n: usize): void
-    {
-        
     }
 
     /* ---------------------------------------------------------
@@ -204,6 +199,9 @@ export class SetElementList<Key,
     --------------------------------------------------------------- */
     public swap(obj: SetElementList<Key, Unique, SourceT>): void
     {
+        const source: SourceT = this.source_;
+        this.source_ = obj.source_;
+        obj.source_ = source;
     }
 }
 
@@ -373,6 +371,7 @@ export namespace SetElementList
             ReverseIterator<Key, Unique, SourceT>, 
             Key>
     {
+        @inline()
         public get value(): Key
         {
             return this.base_.value;

@@ -24,51 +24,75 @@ export class HashMultiMap<Key, T>
         this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.first);
     }
 
+    @inline()
     public clear(): void
     {
         this.data_.clear();
         this.buckets_.clear();
     }
 
+    public swap(obj: HashMultiMap<Key, T>): void
+    {
+        // SWAP ELEMENTS
+        this.data_.swap(obj.data_);
+        
+        const data: MapElementList<Key, T, true, HashMultiMap<Key, T>> = this.data_;
+        this.data_ = obj.data_;
+        obj.data_ = data;
+
+        // SWAP BUCKETS
+        const buckets: IteratorHashBuckets<Key, HashMultiMap.Iterator<Key, T>> = this.buckets_;
+        this.buckets_ = obj.buckets_;
+        obj.buckets_ = buckets;
+    }
+
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
+    @inline()
     public size(): usize
     {
         return this.data_.size();
     }
 
+    @inline()
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
+    @inline()
     public begin(): HashMultiMap.Iterator<Key, T>
     {
         return this.data_.begin();
     }
 
+    @inline()
     public end(): HashMultiMap.Iterator<Key, T>
     {
         return this.data_.end();
     }
 
+    @inline()
     public rbegin(): HashMultiMap.ReverseIterator<Key, T>
     {
         return this.data_.rbegin();
     }
 
+    @inline()
     public rend(): HashMultiMap.ReverseIterator<Key, T>
     {
         return this.data_.rend();
     }
 
+    @inline()
     public find(key: Key): HashMultiMap.Iterator<Key, T>
     {
         const it: HashMultiMap.Iterator<Key, T> | null = this.buckets_.find(key);
         return (it !== null) ? it : this.end();
     }
 
+    @inline()
     public has(key: Key): boolean
     {
         return this.buckets_.find(key) !== null;
@@ -87,51 +111,61 @@ export class HashMultiMap<Key, T>
         return ret;
     }
 
+    @inline()
     public hash_function(): Hasher<Key>
     {
         return this.buckets_.hash_function();
     }
 
+    @inline()
     public key_eq(): BinaryPredicator<Key>
     {
         return this.buckets_.key_eq();
     }
 
+    @inline()
     public bucket(key: Key): usize
     {
         return this.hash_function()(key) % this.bucket_count();
     }
 
+    @inline()
     public bucket_count(): usize
     {
         return this.buckets_.length();
     }
 
+    @inline()
     public bucket_size(index: usize): usize
     {
         return this.buckets_.at(index).size();
     }
 
+    @inline()
     public load_factor(): usize
     {
         return this.buckets_.load_factor();
     }
 
+    @inline()
     public max_load_factor(): f64
     {
         return this.buckets_.max_load_factor();
     }
 
+    @inline()
     public set_max_load_factor(z: f64): void
     {
         this.buckets_.set_max_load_factor(z);
     }
 
+    @inline()
     public reserve(n: usize): void
     {
         this.buckets_.reserve(n);
     }
 
+    @inline()
     public rehash(n: usize): void
     {
         this.buckets_.rehash(n);
@@ -140,6 +174,7 @@ export class HashMultiMap<Key, T>
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
+    @inline()
     public emplace(key: Key, value: T): HashMultiMap.Iterator<Key, T>
     {
         return this.emplace_hint(this.end(), key, value);

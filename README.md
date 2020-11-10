@@ -43,10 +43,10 @@ Below components are list of the provided objects in the **ASTL**.
       - `Queue`
       - `PriorityQueue`
     - *Associative adaptors*
-      - ~~`FlatSet`~~
-      - ~~`FlatMultiSet`~~
-      - ~~`FlatMap`~~
-      - ~~`FlatMultiMap`~~
+      - `experimental.FlatSet`
+      - `experimental.FlatMultiSet`
+      - `experimental.FlatMap`
+      - `experimental.FlatMultiMap`
 
 ### Algorithms
 Not implemented yet.

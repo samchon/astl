@@ -1,5 +1,5 @@
 import { Vector } from "./Vector";
-import { ReverseIterator as ReverseBase } from "../internal/iterator/ReverseIterator";
+import { ReverseIteratorBase } from "../internal/iterator/ReverseIteratorBase";
 
 import { CMath } from "../internal/numeric/CMath";
 import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
@@ -462,7 +462,7 @@ export namespace Deque
             ACCESSORS
         --------------------------------------------------------- */
         @inline()
-        public source(): Deque<T>
+        public source(): Vector<T>
         {
             return this.source_;
         }
@@ -474,34 +474,70 @@ export namespace Deque
         }
 
         @inline()
+        public get value(): T
+        {
+            return this.source_.at(this.index_);
+        }
+
+        @inline()
+        public set value(val: T)
+        {
+            this.source_.set(this.index_, val);
+        }
+
+        /* ---------------------------------------------------------
+            OPERATORS
+        --------------------------------------------------------- */
+        @inline()
         @operator("==")
-        public equals(obj: Deque.Iterator<T>): boolean
+        public equals(obj: Iterator<T>): boolean
         {
             return this.source_ === obj.source_
                 && this.index_ === obj.index_;
         }
+
+        @inline()
+        @operator("<")
+        public less(obj: Iterator<T>): boolean
+        {
+            return this.index_ < obj.index_;
+        }
         
         @inline()
         @operator("!=")
-        public __not_equals(obj: Deque.Iterator<T>): boolean
+        protected __not_equals(obj: Iterator<T>): boolean
         {
             return !this.equals(obj);
         }
 
         @inline()
-        public get value(): T
+        @operator("<=")
+        protected __less_equals(obj: Iterator<T>): boolean
         {
-            return this.source_.at(this.index_);
+            return this.source_ === obj.source_ && this.index_ <= obj.index_;
         }
-        public set value(val: T)
+
+        @inline()
+        @operator(">")
+        protected __greater(obj: Iterator<T>): boolean
         {
-            this.source_.set(this.index_, val);
+            return this.index_ > obj.index_;
+        }
+
+        @inline()
+        @operator(">=")
+        protected __greater_equals(obj: Iterator<T>): boolean
+        {
+            return this.source_ === obj.source_ && this.index_ >= obj.index_;
         }
     }
 
     export class ReverseIterator<T>
-        extends ReverseBase<T, Deque<T>, Deque<T>, Iterator<T>, ReverseIterator<T>, T>
+        extends ReverseIteratorBase<T, Deque<T>, Deque<T>, Iterator<T>, ReverseIterator<T>, T>
     {   
+        /* ---------------------------------------------------------
+            ACCESSORS
+        --------------------------------------------------------- */   
         @inline()
         public advance(n: isize): ReverseIterator<T>
         {
@@ -519,9 +555,42 @@ export namespace Deque
         {
             return this.base_.value;
         }
+
+        @inline()
         public set value(val: T)
         {
             this.base_.value = val;
+        }
+
+        /* ---------------------------------------------------------
+            OPERATORS
+        --------------------------------------------------------- */
+        @inline()
+        @operator("<")
+        public less(obj: ReverseIterator<T>): boolean
+        {
+            return this.index() > obj.index();
+        }
+
+        @inline()
+        @operator("<=")
+        protected __less_equals(obj: ReverseIterator<T>): boolean
+        {
+            return this.source() === obj.source() && this.index() >= obj.index();
+        }
+
+        @inline()
+        @operator(">")
+        protected __greater(obj: ReverseIterator<T>): boolean
+        {
+            return this.index() < obj.index();
+        }
+
+        @inline()
+        @operator(">=")
+        protected __greater_equals(obj: ReverseIterator<T>): boolean
+        {
+            return this.source() === obj.source() && this.index() <= obj.index();
         }
     }
 }

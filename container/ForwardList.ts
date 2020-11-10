@@ -70,7 +70,7 @@ export class ForwardList<T>
     {
         const it: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, pos.next());
         it.value = val;
-        ForwardList.Iterator.set_next<T>(pos, it);
+        ForwardList.Iterator._Set_next<T>(pos, it);
 
         ++this.size_;
         return it;
@@ -104,7 +104,7 @@ export class ForwardList<T>
     public erase_after(first: ForwardList.Iterator<T>, last: ForwardList.Iterator<T> = first.next()): ForwardList.Iterator<T>
     {
         this.size_ -= distance(first, last);
-        ForwardList.Iterator.set_next<T>(first, last);
+        ForwardList.Iterator._Set_next<T>(first, last);
 
         return last;
     }
@@ -158,13 +158,14 @@ export namespace ForwardList
                 this.value_ = null!;
         }
 
+        @inline()
         public static _Create<T>(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null): ForwardList.Iterator<T>
         {
             return new Iterator(sourcePtr, next);
         }
 
         @inline()
-        public static set_next<T>(it: Iterator<T>, next: Iterator<T>): void
+        public static _Set_next<T>(it: Iterator<T>, next: Iterator<T>): void
         {
             it.next_ = next;
         }
@@ -192,6 +193,7 @@ export namespace ForwardList
             return this.value_;
         }
 
+        @inline()
         public set value(val: T)
         {
             this.value_ = val;

@@ -1,6 +1,6 @@
 import { IContainer, IContainerIterator, IContainerReverseIterator } from "../container/linear/IContainer";
 
-export abstract class ReverseIterator<T extends InputT,
+export abstract class ReverseIteratorBase<T extends InputT,
         SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
         ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
         IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>, 
@@ -44,8 +44,9 @@ export abstract class ReverseIterator<T extends InputT,
         return this.base_.next();
     }
 
-    public abstract get value(): T;
-
+    /* ---------------------------------------------------------
+        OPERATORS
+    --------------------------------------------------------- */
     @operator("==")
     @inline()
     public equals(obj: ReverseT): boolean
@@ -55,7 +56,7 @@ export abstract class ReverseIterator<T extends InputT,
 
     @operator("!=")
     @inline()
-    public __not_equals(obj: ReverseT): boolean
+    protected __not_equals(obj: ReverseT): boolean
     {
         return !this.equals(obj);
     }

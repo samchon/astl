@@ -1,5 +1,5 @@
 import { IForwardIterator } from "../iterator/IForwardIterator";
-import { ReverseIterator as ReverseBase } from "../internal/iterator/ReverseIterator";
+import { ReverseIteratorBase as ReverseBase } from "../internal/iterator/ReverseIteratorBase";
 
 import { Repeater } from "../internal/iterator/disposable/Repeater";
 import { SourcePointer } from "../internal/functional/SourcePointer";
@@ -431,6 +431,8 @@ export namespace List
         {
             return this.value_;
         }
+
+        @inline()
         public set value(val: T)
         {
             this.value_ = val;
@@ -457,6 +459,8 @@ export namespace List
         {
             return this.base_.value;
         }
+        
+        @inline()
         public set value(val: T)
         {
             this.base_.value = val;

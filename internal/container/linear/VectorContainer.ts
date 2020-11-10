@@ -71,7 +71,7 @@ export class VectorContainer<T>
         if (index >= this.size())
             return;
         
-        let i: usize = this.size() + length - 1;
+        let i: usize = this.size() - 1;
         while (true)
         {
             this.data_[<i32>(i + length)] = this.data_[<i32>i];

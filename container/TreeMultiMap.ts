@@ -31,10 +31,19 @@ export class TreeMultiMap<Key, T>
         this.tree_.clear();
     }
 
-    @inline()
-    private key_eq(x: Key, y: Key): boolean
+    public swap(obj: TreeMultiMap<Key, T>): void
     {
-        return !this.key_comp()(x, y) && !this.key_comp()(y, x);
+        // SWAP ELEMENTS
+        this.data_.swap(obj.data_);
+        
+        const data: MapElementList<Key, T, true, TreeMultiMap<Key, T>> = this.data_;
+        this.data_ = obj.data_;
+        obj.data_ = data;
+
+        // SWAP TREE
+        const tree: IteratorTree<Key, TreeMultiMap.Iterator<Key, T>> = this.tree_;
+        this.tree_ = obj.tree_;
+        obj.tree_ = tree;
     }
 
     /* ---------------------------------------------------------
@@ -93,7 +102,7 @@ export class TreeMultiMap<Key, T>
     public count(key: Key): usize
     {
         let ret: usize = 0;
-        for (let it = this.find(key); it != this.end() && this.key_eq(key, it.first); it = it.next())
+        for (let it = this.find(key); it != this.end() && this.key_comp()(key, it.first) === false; it = it.next())
             ++ret;
         return ret;
     }
@@ -163,9 +172,9 @@ export class TreeMultiMap<Key, T>
             return 0;
 
         let count: usize = 0;
-        for (let it = node.value; it != this.end() && this.key_eq(key, it.first); )
+        for (let it = node.value; it != this.end() && this.key_comp()(key, it.first) === false;)
         {
-            this.erase(it);
+            it = this.erase(it);
             ++count;
         }
         return count;
