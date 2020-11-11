@@ -49,10 +49,29 @@ Below components are list of the provided objects in the **ASTL**.
       - `experimental.FlatMultiMap`
 
 ### Algorithms
-Not implemented yet.
+  `<algorithm>`
+    - binary_searche
+    - heap
+    - iterations
+    - mathematics
+    - merge
+    - modifiers
+    - partition
+    - sorting
+    - union_set
 
 ### Functors
-Not implemented yet.
+  `<exception>`
+    - Exception
+      - LogicError
+      - RntimeError
+  - `<functional>`
+    - *comparators*
+    - *hash*
+  - `<utility>`
+  - `<numeric>`
+    - *operations*
+    - *special_math*
 
 
 

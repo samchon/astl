@@ -462,7 +462,7 @@ export namespace Deque
             ACCESSORS
         --------------------------------------------------------- */
         @inline()
-        public source(): Vector<T>
+        public source(): Deque<T>
         {
             return this.source_;
         }
