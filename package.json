@@ -6,15 +6,15 @@
     "email": "samchon@samchon.org",
     "url": "http://samchon.org"
   },
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "./index.ts",
   "scripts": {
     "build": "asc test/main.ts --target debug",
     "test": "node test"
   },
   "devDependencies": {
-    "@assemblyscript/loader": "^0.17.1",
-    "assemblyscript": "^0.17.1"
+    "@assemblyscript/loader": "^0.17.2",
+    "assemblyscript": "^0.17.2"
   },
   "homepage": "https://github.com/samchon/tstl",
   "repository": {

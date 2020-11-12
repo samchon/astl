@@ -5,7 +5,7 @@ export function test_multi_tree_container_base<SourceT, IteratorT>
         emplacer: (source: SourceT, key: i32, value: i32) => IteratorT,
         keyGetter: (it: IteratorT) => i32,
         valueGetter: (it: IteratorT) => i32
-    ): SourceT
+    ): void
 {
     //----
     // INSERTIONS
@@ -70,5 +70,4 @@ export function test_multi_tree_container_base<SourceT, IteratorT>
             throw new Error("Bug on " + nameof<SourceT>() + ": elements are not sorted.");
         prev = keyGetter(it);
     }
-    return container;
 }

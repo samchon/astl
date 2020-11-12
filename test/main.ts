@@ -22,6 +22,7 @@ import { test_prev_permutation } from "./algorithm/mathematics/test_prev_permuta
 // RANDOM
 import { test_randint } from "./algorithm/random/test_randint";
 import { test_sample } from "./algorithm/random/test_sample";
+import { test_sort } from "./algorithm/sorting/test_sort";
 
 //----
 // CONTAINERS
@@ -84,6 +85,7 @@ export function main(): void
     // RANDOM
     test_randint();
     test_sample();
+    test_sort();
 
     //----
     // CONTAINERS

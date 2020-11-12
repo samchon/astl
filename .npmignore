@@ -2,6 +2,7 @@
 .github/
 build/
 node_modules/
+test/
 
 *.*ignore
 asconfig.json

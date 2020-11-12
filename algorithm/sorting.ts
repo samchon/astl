@@ -122,7 +122,7 @@ export function nth_element<RandomAccessIterator, Comparator>
     const n: isize = distance(first, nth);
     for (let i = first; i != last; i = i.next())
     {
-        let count: number = 0;
+        let count: isize = 0;
         for (let j = first; j != last; j = j.next())
             if (i == j)
                 continue;
@@ -144,7 +144,11 @@ export function nth_element<RandomAccessIterator, Comparator>
 export function is_sorted<InputIterator, Comparator>
     (first: InputIterator, last: InputIterator, comp: Comparator): boolean
 {
-    return is_sorted_until(first, last, comp) == last;
+    const it: InputIterator = is_sorted_until<InputIterator, Comparator>(first, last, comp);
+    const ret: boolean = (it == last);
+
+    trace("is_sorted: " + ret.toString());
+    return ret;
 }
 
 export function is_sorted_until<InputIterator, Comparator>
@@ -158,5 +162,6 @@ export function is_sorted_until<InputIterator, Comparator>
             return it;
         else
             first = first.next();
+    
     return last;
 }
