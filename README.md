@@ -50,7 +50,7 @@ Below components are list of the provided objects in the **ASTL**.
 
 ### Algorithms
   `<algorithm>`
-    - binary_searche
+    - binary_search
     - heap
     - iterations
     - mathematics
@@ -69,9 +69,6 @@ Below components are list of the provided objects in the **ASTL**.
     - *comparators*
     - *hash*
   - `<utility>`
-  - `<numeric>`
-    - *operations*
-    - *special_math*
 
 
 

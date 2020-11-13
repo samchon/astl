@@ -40,7 +40,7 @@ export class Repeater<T>
 
     @operator("!=")
     @inline()
-    public __non_equals(obj: Repeater<T>): boolean
+    protected __non_equals(obj: Repeater<T>): boolean
     {
         return !this.equals(obj);
     }
