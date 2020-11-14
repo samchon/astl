@@ -1,7 +1,7 @@
 import std from "../../../../index";
 
 import { StopWatch } from "../../../internal/StopWatch";
-import { test_unique_tree_container_base } from "../../containers/internal/test_unique_tree_container_base";
+import { test_unique_tree_container_base } from "../../container/internal/test_unique_tree_container_base";
 
 export function test_flat_map(): void
 {

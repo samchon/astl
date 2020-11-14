@@ -18,6 +18,15 @@ export class FlatMultiSet<Key>
     }
 
     @inline()
+    public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
+    }
+
+    @inline()
     public clear(): void
     {
         this.data_.clear();
@@ -135,6 +144,7 @@ export class FlatMultiSet<Key>
         return this.data_.insert(upper, key);
     }
 
+    @inline()
     public insert_hint(hint: FlatMultiSet.Iterator<Key>, key: Key): FlatMultiSet.Iterator<Key>
     {
         return this.insert(key);
@@ -147,6 +157,8 @@ export class FlatMultiSet<Key>
             this.insert(first.value);
     }
 
+
+    @inline()
     public erase(first: FlatMultiSet.Iterator<Key>, last: FlatMultiSet.Iterator<Key> = first.next()): FlatMultiSet.Iterator<Key>
     {
         return this.data_.erase(first, last);

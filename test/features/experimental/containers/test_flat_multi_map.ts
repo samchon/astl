@@ -1,7 +1,7 @@
 import std from "../../../../index";
 
 import { StopWatch } from "../../../internal/StopWatch";
-import { test_multi_tree_container_base } from "../../containers/internal/test_multi_tree_container_base";
+import { test_multi_tree_container_base } from "../../container/internal/test_multi_tree_container_base";
 
 export function test_flat_multi_map(): void
 {

@@ -1,5 +1,6 @@
 import { SetElementList } from "../internal/container/associative/SetElementList";
-import { IteratorTree } from "../internal/tree/IteratorTree";
+import { MultiIteratorTree } from "../internal/tree/MultiIteratorTree";
+import { XTreeNode } from "../internal/tree/XTreeNode";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { Pair } from "../utility/Pair";
@@ -10,16 +11,25 @@ import { less } from "../functional/comparators";
 export class TreeMultiSet<Key>
 {
     private data_: SetElementList<Key, false, TreeMultiSet<Key>> = new SetElementList(<TreeMultiSet<Key>>this);
-    private tree_: IteratorTree<Key, TreeMultiSet.Iterator<Key>>;
+    private tree_: MultiIteratorTree<Key, TreeMultiSet.Iterator<Key>>;
 
     public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new IteratorTree
+        this.tree_ = new MultiIteratorTree
         (
             it => it.value, 
             comp, 
             (x, y) => SetElementList.Iterator._Compare_uid<Key, false, TreeMultiSet<Key>>(x, y)
         );
+    }
+
+    @inline()
+    public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
     }
 
     @inline()
@@ -39,7 +49,7 @@ export class TreeMultiSet<Key>
         obj.data_ = data;
 
         // SWAP TREE
-        const tree: IteratorTree<Key, TreeMultiSet.Iterator<Key>> = this.tree_;
+        const tree: MultiIteratorTree<Key, TreeMultiSet.Iterator<Key>> = this.tree_;
         this.tree_ = obj.tree_;
         obj.tree_ = tree;
     }
@@ -86,14 +96,16 @@ export class TreeMultiSet<Key>
     @inline()
     public find(key: Key): TreeMultiSet.Iterator<Key>
     {
-        const node = this.tree_.find(key);
-        return (node !== null) ? node.value : this.end();
+        const node: XTreeNode<TreeMultiSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
+        return (node !== null && this.key_comp()(key, node.value.value) === false)
+            ? node.value
+            : this.end();
     }
 
     @inline()
     public has(key: Key): boolean
     {
-        return this.tree_.find(key) !== null;
+        return this.find(key) != this.end();
     }
 
     @inline()
@@ -114,7 +126,10 @@ export class TreeMultiSet<Key>
     @inline()
     public lower_bound(key: Key): TreeMultiSet.Iterator<Key>
     {
-        return this.tree_.lower_bound(this.end(), key);
+        const node: XTreeNode<TreeMultiSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
+        return (node !== null) 
+            ? node.value 
+            : this.end();
     }
 
     @inline()
@@ -126,7 +141,11 @@ export class TreeMultiSet<Key>
     @inline()
     public equal_range(key: Key): Pair<TreeMultiSet.Iterator<Key>, TreeMultiSet.Iterator<Key>>
     {
-        return this.tree_.equal_range(this.end(), key);
+        const lower: TreeMultiSet.Iterator<Key> = this.lower_bound(key);
+        const upper: TreeMultiSet.Iterator<Key> = (lower != this.end() && this.key_comp()(key, lower.value) === false)
+            ? this.upper_bound(key)
+            : lower;
+        return new Pair(lower, upper);
     }
 
     /* ---------------------------------------------------------
@@ -165,12 +184,12 @@ export class TreeMultiSet<Key>
 
     public erase_by_key(key: Key): usize
     {
-        const node = this.tree_.find(key);
-        if (node == null)
+        let it: TreeMultiSet.Iterator<Key> = this.find(key);
+        if (it == this.end())
             return 0;
 
         let count: usize = 0;
-        for (let it = node.value; it != this.end() && this.key_comp()(key, it.value) === false; )
+        while (it != this.end() && this.key_comp()(key, it.value) === false)
         {
             it = this.erase(it);
             ++count;

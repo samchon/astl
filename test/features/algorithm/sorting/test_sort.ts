@@ -1,6 +1,6 @@
-import std from "../../../index";
+import std from "../../../../index";
 
-import { StopWatch } from "../../internal/StopWatch";
+import { StopWatch } from "../../../internal/StopWatch";
 
 function less(x: i32, y: i32): boolean
 {

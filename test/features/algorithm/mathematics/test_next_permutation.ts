@@ -1,8 +1,8 @@
-import std from "../../../index";
+import std from "../../../../index";
 
-import { StopWatch } from "../../internal/StopWatch";
-import { Comparator } from "../../../internal/functional/Comparator";
-import { generate_incremental_vector } from "../../internal/generate_incremental_vector";
+import { StopWatch } from "../../../internal/StopWatch";
+import { Comparator } from "../../../../internal/functional/Comparator";
+import { generate_incremental_vector } from "../../../internal/generate_incremental_vector";
 
 export function test_next_permutation(): void
 {

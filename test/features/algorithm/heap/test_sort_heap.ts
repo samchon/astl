@@ -1,9 +1,9 @@
-import std from "../../../index";
+import std from "../../../../index";
 
-import { Comparator } from "../../../internal/functional/Comparator";
-import { StopWatch } from "../../internal/StopWatch";
-import { generate_incremental_vector } from "../../internal/generate_incremental_vector";
-import { is_sorted } from "../../../algorithm";
+import { Comparator } from "../../../../internal/functional/Comparator";
+import { StopWatch } from "../../../internal/StopWatch";
+import { generate_incremental_vector } from "../../../internal/generate_incremental_vector";
+import { is_sorted } from "../../../../algorithm";
 
 export function test_sort_heap(): void
 {

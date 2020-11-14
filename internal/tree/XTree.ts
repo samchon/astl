@@ -6,7 +6,7 @@ import { Color } from "./Color";
 export class XTree<Key, Elem>
 {
     protected root_: XTreeNode<Elem> | null;
-    protected unique_: boolean;
+    private readonly unique_: boolean;
 
     protected readonly fetcher_: (elem: Elem) => Key;
     private readonly key_comp_: Comparator<Key>;
@@ -51,13 +51,7 @@ export class XTree<Key, Elem>
         return this.key_comp_;
     }
 
-    @inline()
-    private key_eq_(x: Key, y: Key): boolean
-    {
-        return !this.key_comp_(x, y) && !this.key_comp_(y, x);
-    }
-
-    public value_comp_(x: Elem, y: Elem): boolean
+    private value_comp_(x: Elem, y: Elem): boolean
     {
         const ret: boolean = this.key_comp_(this.fetcher_(x), this.fetcher_(y));
         if (ret === false && 
@@ -69,7 +63,7 @@ export class XTree<Key, Elem>
     }
 
     @inline()
-    public value_eq_(x: Elem, y: Elem): boolean
+    private value_eq_(x: Elem, y: Elem): boolean
     {
         return !this.value_comp_(x, y) && !this.value_comp_(y, x);
     }
@@ -82,23 +76,50 @@ export class XTree<Key, Elem>
     ============================================================
         COMMON
     --------------------------------------------------------- */
-    public find(key: Key): XTreeNode<Elem> | null
+    public lower_bound(key: Key): XTreeNode<Elem> | null
     {
-        const ret = this.nearest(key);
-        if (ret === null || !this.key_eq_(key, this.fetcher_(ret.value)))
+        // NEED NOT TO ITERATE
+        if (this.root_ === null)
+            return null;
+
+        //----
+        // ITERATE
+        //----
+        let ret: XTreeNode<Elem> = this.root_!;
+        let matched: XTreeNode<Elem> | null = null;
+
+        // UNTIL MEET THE MATCHED VALUE OR FINAL BRANCH
+        while (true)
+        {
+            const candidate: Key = this.fetcher_(ret.value);
+            let child: XTreeNode<Elem> | null = null;
+
+            // COMPARE
+            if (this.key_comp_(candidate, key) === true)
+                child = ret.right;
+            else if (this.key_comp_(candidate, key) === false)
+            {
+                matched = ret;
+                child = ret.left;
+            }
+            else
+                child = ret.left;
+    
+            // FINAL BRANCH? OR KEEP GOING
+            if (child === null)
+                break;
+            ret = child;
+        }
+
+        // RETURNS
+        if (matched !== null)
+            return matched;
+        else if (this.key_comp_(this.fetcher_(ret.value), key) === true)
             return null;
         else
             return ret;
     }
-
-    @inline()
-    public nearest(key: Key): XTreeNode<Elem> | null
-    {
-        return (this.unique_ === true)
-            ? XTree.unique_nearest(this, key)
-            : XTree.multi_nearest(this, key, node => node.left);
-    }
-
+    
     private find_value(value: Elem): XTreeNode<Elem> | null
     {
         const ret = this.nearest_value(value);
@@ -146,87 +167,6 @@ export class XTree<Key, Elem>
         while (node.right !== null)
             node = node.right!;
         return node;
-    }
-
-    /* ---------------------------------------------------------
-        UNIQUE
-    --------------------------------------------------------- */
-    private static unique_nearest<Key, Elem>
-        (tree: XTree<Key, Elem>, key: Key): XTreeNode<Elem> | null
-    {
-        // NEED NOT TO ITERATE
-        if (tree.root_ === null)
-            return null;
-
-        //----
-        // ITERATE
-        //----
-        let ret: XTreeNode<Elem> = tree.root_!;
-
-        while (true) // UNTIL MEET THE MATCHED VALUE OR FINAL BRANCH
-        {
-            let child: XTreeNode<Elem> | null = null;
-
-            // COMPARE
-            if (tree.key_comp_(key, tree.fetcher_(ret.value)))
-                child = ret.left;
-            else if (tree.key_comp_(tree.fetcher_(ret.value), key))
-                child = ret.right;
-            else
-                return ret; // MATCHED VALUE
-
-            // FINAL BRANCH? OR KEEP GOING
-            if (child !== null)
-                ret = child;
-            else
-                break;
-        }
-        return ret; // DIFFERENT NODE
-    }
-
-    /* ---------------------------------------------------------
-        DUPLICATED
-    --------------------------------------------------------- */
-    protected static multi_nearest<Key, Elem>
-        (tree: XTree<Key, Elem>, key: Key, equalMover: (node: XTreeNode<Elem>) => XTreeNode<Elem> | null): XTreeNode<Elem> | null
-    {
-        // NEED NOT TO ITERATE
-        if (tree.root_ === null)
-            return null;
-
-        //----
-        // ITERATE
-        //----
-        let ret: XTreeNode<Elem> = tree.root_!;
-        let matched: XTreeNode<Elem> | null = null;
-
-        while (true)
-        {
-            const candidate: Elem = ret.value;
-            let node: XTreeNode<Elem> | null = null;
-
-            // COMPARE
-            if (tree.key_comp_(key, tree.fetcher_(candidate)))
-                node = ret.left;
-            else if (tree.key_comp_(tree.fetcher_(candidate), key))
-                node = ret.right;
-            else
-            {
-                matched = ret;
-                node = equalMover(ret);
-            }
-
-            // ULTIL CHILD NODE EXISTS
-            if (node === null)
-                break;
-            ret = node;
-        }
-
-        // RETURNS -> MATCHED OR NOT
-        if (matched !== null)
-            return matched;
-        else
-            return ret;
     }
     
     /* =========================================================

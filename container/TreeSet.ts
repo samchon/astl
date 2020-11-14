@@ -1,5 +1,6 @@
 import { SetElementList } from "../internal/container/associative/SetElementList";
-import { IteratorTree } from "../internal/tree/IteratorTree";
+import { XTree } from "../internal/tree/XTree";
+import { XTreeNode } from "../internal/tree/XTreeNode";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { Pair } from "../utility/Pair";
@@ -10,14 +11,23 @@ import { less } from "../functional/comparators";
 export class TreeSet<Key>
 {
     private data_: SetElementList<Key, true, TreeSet<Key>> = new SetElementList(<TreeSet<Key>>this);
-    private tree_: IteratorTree<Key, TreeSet.Iterator<Key>>;
+    private tree_: XTree<Key, TreeSet.Iterator<Key>>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
     public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new IteratorTree(it => it.value, comp);
+        this.tree_ = new XTree(it => it.value, comp);
+    }
+
+    @inline()
+    public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
     }
 
     @inline()
@@ -37,7 +47,7 @@ export class TreeSet<Key>
         obj.data_ = data;
 
         // SWAP TREE
-        const tree: IteratorTree<Key, TreeSet.Iterator<Key>> = this.tree_;
+        const tree: XTree<Key, TreeSet.Iterator<Key>> = this.tree_;
         this.tree_ = obj.tree_;
         obj.tree_ = tree;
     }
@@ -84,14 +94,16 @@ export class TreeSet<Key>
     @inline()
     public find(key: Key): TreeSet.Iterator<Key>
     {
-        const node = this.tree_.find(key);
-        return (node !== null) ? node.value : this.end();
+        const node: XTreeNode<TreeSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
+        return (node !== null && this.key_comp()(key, node.value.value) === false)
+            ? node.value
+            : this.end();
     }
 
     @inline()
     public has(key: Key): boolean
     {
-        return this.tree_.find(key) !== null;
+        return this.find(key) != this.end();
     }
 
     @inline()
@@ -109,19 +121,34 @@ export class TreeSet<Key>
     @inline()
     public lower_bound(key: Key): TreeSet.Iterator<Key>
     {
-        return this.tree_.lower_bound(this.end(), key);
+        const node: XTreeNode<TreeSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
+        return (node !== null) 
+            ? node.value 
+            : this.end();
     }
 
     @inline()
     public upper_bound(key: Key): TreeSet.Iterator<Key>
     {
-        return this.tree_.upper_bound(this.end(), key);
+        const lower: TreeSet.Iterator<Key> = this.lower_bound(key);
+        return this._Upper_bound(key, lower);
     }
 
     @inline()
     public equal_range(key: Key): Pair<TreeSet.Iterator<Key>, TreeSet.Iterator<Key>>
     {
-        return this.tree_.equal_range(this.end(), key);
+        const lower: TreeSet.Iterator<Key> = this.lower_bound(key);
+        const upper: TreeSet.Iterator<Key> = this._Upper_bound(key, lower);
+        return new Pair(lower, upper);
+    }
+
+    @inline()
+    private _Upper_bound(key: Key, lower: TreeSet.Iterator<Key>): TreeSet.Iterator<Key>
+    {
+        if (lower != this.end() && this.key_comp()(key, lower.value) === false)
+            return lower.next();
+        else
+            return lower;
     }
 
     /* ---------------------------------------------------------
@@ -139,6 +166,7 @@ export class TreeSet<Key>
         return new Pair(it, true);
     }
 
+    @inline()
     public insert_hint(hint: TreeSet.Iterator<Key>, key: Key): TreeSet.Iterator<Key>
     {
         return this.insert(key).first;
@@ -162,12 +190,12 @@ export class TreeSet<Key>
 
     public erase_by_key(key: Key): usize
     {
-        const node = this.tree_.find(key);
-        if (node == null)
+        const it: TreeSet.Iterator<Key> = this.find(key);
+        if (it == this.end())
             return 0;
 
-        this.data_.erase(node.value);
-        this.tree_.erase(node.value);
+        this.data_.erase(it);
+        this.tree_.erase(it);
         return 1;
     }
 }

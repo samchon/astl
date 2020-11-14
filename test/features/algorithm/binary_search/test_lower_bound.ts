@@ -1,7 +1,7 @@
-import std from "../../../index";
+import std from "../../../../index";
 
-import { StopWatch } from "../../internal/StopWatch";
-import { generate_multiples_of_te_vector } from "../../internal/generate_multiples_of_ten_vector";
+import { StopWatch } from "../../../internal/StopWatch";
+import { generate_multiples_of_te_vector } from "../../../internal/generate_multiples_of_ten_vector";
 
 export function test_lower_bound(): void
 {

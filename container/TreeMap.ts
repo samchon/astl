@@ -1,26 +1,36 @@
 import { MapElementList } from "../internal/container/associative/MapElementList";
-import { IteratorTree } from "../internal/tree/IteratorTree";
+import { XTree } from "../internal/tree/XTree";
+import { XTreeNode } from "../internal/tree/XTreeNode";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { IPair } from "../utility/IPair";
 import { Pair } from "../utility/Pair";
 import { Entry } from "../utility/Entry";
-import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
 
 import { Comparator } from "../internal/functional/Comparator";
+import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
 import { less } from "../functional/comparators";
 
 export class TreeMap<Key, T>
 {
     private data_: MapElementList<Key, T, true, TreeMap<Key, T>> = new MapElementList(<TreeMap<Key, T>>this);
-    private tree_: IteratorTree<Key, TreeMap.Iterator<Key, T>>;
+    public tree_: XTree<Key, TreeMap.Iterator<Key, T>>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
     public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new IteratorTree(it => it.first, comp);
+        this.tree_ = new XTree(it => it.first, comp);
+    }
+
+    @inline()
+    public assign<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
     }
 
     @inline()
@@ -40,7 +50,7 @@ export class TreeMap<Key, T>
         obj.data_ = data;
 
         // SWAP TREE
-        const tree: IteratorTree<Key, TreeMap.Iterator<Key, T>> = this.tree_;
+        const tree: XTree<Key, TreeMap.Iterator<Key, T>> = this.tree_;
         this.tree_ = obj.tree_;
         obj.tree_ = tree;
     }
@@ -87,14 +97,16 @@ export class TreeMap<Key, T>
     @inline()
     public find(key: Key): TreeMap.Iterator<Key, T>
     {
-        const node = this.tree_.find(key);
-        return (node !== null) ? node.value : this.end();
+        const node: XTreeNode<TreeMap.Iterator<Key, T>> | null = this.tree_.lower_bound(key);
+        return (node !== null && this.key_comp()(key, node.value.first) === false)
+            ? node.value
+            : this.end();
     }
 
     @inline()
     public has(key: Key): boolean
     {
-        return this.tree_.find(key) !== null;
+        return this.find(key) != this.end();
     }
 
     @inline()
@@ -107,10 +119,10 @@ export class TreeMap<Key, T>
     @operator("[]")
     public get(key: Key): T
     {
-        const node = this.tree_.find(key);
-        if (node === null)
+        const it: TreeMap.Iterator<Key, T> = this.find(key);
+        if (it == this.end())
             throw ErrorGenerator.key_nout_found("TreeMap.get()", key);
-        return node.value.second;
+        return it.second;
     }
 
     @inline()
@@ -122,19 +134,34 @@ export class TreeMap<Key, T>
     @inline()
     public lower_bound(key: Key): TreeMap.Iterator<Key, T>
     {
-        return this.tree_.lower_bound(this.end(), key);
+        const node: XTreeNode<TreeMap.Iterator<Key, T>> | null = this.tree_.lower_bound(key);
+        return (node !== null) 
+            ? node.value 
+            : this.end();
     }
 
     @inline()
     public upper_bound(key: Key): TreeMap.Iterator<Key, T>
     {
-        return this.tree_.upper_bound(this.end(), key);
+        const lower: TreeMap.Iterator<Key, T> = this.lower_bound(key);
+        return this._Upper_bound(key, lower);
     }
 
     @inline()
     public equal_range(key: Key): Pair<TreeMap.Iterator<Key, T>, TreeMap.Iterator<Key, T>>
     {
-        return this.tree_.equal_range(this.end(), key);
+        const lower: TreeMap.Iterator<Key, T> = this.lower_bound(key);
+        const upper: TreeMap.Iterator<Key, T> = this._Upper_bound(key, lower);
+        return new Pair(lower, upper);
+    }
+
+    @inline()
+    private _Upper_bound(key: Key, lower: TreeMap.Iterator<Key, T>): TreeMap.Iterator<Key, T>
+    {
+        if (lower != this.end() && this.key_comp()(key, lower.first) === false)
+            return lower.next();
+        else
+            return lower;
     }
 
     /* ---------------------------------------------------------
@@ -162,6 +189,7 @@ export class TreeMap<Key, T>
         return new Pair(it, true);
     }
 
+    @inline()
     public emplace_hint(hint: TreeMap.Iterator<Key, T>, key: Key, value: T): TreeMap.Iterator<Key, T>
     {
         return this.emplace(key, value).first;
@@ -185,12 +213,12 @@ export class TreeMap<Key, T>
 
     public erase_by_key(key: Key): usize
     {
-        const node = this.tree_.find(key);
-        if (node == null)
+        const it: TreeMap.Iterator<Key, T> = this.find(key);
+        if (it == this.end())
             return 0;
 
-        this.data_.erase(node.value);
-        this.tree_.erase(node.value);
+        this.data_.erase(it);
+        this.tree_.erase(it);
         return 1;
     }
 }

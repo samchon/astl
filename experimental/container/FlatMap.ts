@@ -11,7 +11,7 @@ import { Pair } from "../../utility/Pair";
 
 export class FlatMap<Key, T>
 {
-    public data_: MapElementVector<Key, T, true, FlatMap<Key, T>> = new MapElementVector(<FlatMap<Key, T>>this);
+    private data_: MapElementVector<Key, T, true, FlatMap<Key, T>> = new MapElementVector(<FlatMap<Key, T>>this);
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
@@ -19,6 +19,15 @@ export class FlatMap<Key, T>
     public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
         this.data_.assign(comp);
+    }
+
+    @inline()
+    public assign<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
     }
 
     @inline()
@@ -161,6 +170,7 @@ export class FlatMap<Key, T>
         return new Pair(it, true);
     }
 
+    @inline()
     public emplace_hint(hint: FlatMap.Iterator<Key, T>, key: Key, value: T): FlatMap.Iterator<Key, T>
     {
         return this.emplace(key, value).first;
@@ -173,6 +183,7 @@ export class FlatMap<Key, T>
             this.emplace(first.value.first, first.value.second);
     }
 
+    @inline()
     public erase(first: FlatMap.Iterator<Key, T>, last: FlatMap.Iterator<Key, T> = first.next()): FlatMap.Iterator<Key, T>
     {
         return this.data_.erase(first, last);

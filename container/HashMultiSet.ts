@@ -23,6 +23,15 @@ export class HashMultiSet<Key>
     }
 
     @inline()
+    public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
+    }
+
+    @inline()
     public clear(): void
     {
         this.data_.clear();

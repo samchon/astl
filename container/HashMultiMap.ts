@@ -25,6 +25,15 @@ export class HashMultiMap<Key, T>
     }
 
     @inline()
+    public assign<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
+    }
+
+    @inline()
     public clear(): void
     {
         this.data_.clear();

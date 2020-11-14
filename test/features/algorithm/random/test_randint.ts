@@ -1,6 +1,6 @@
-import std from "../../../index";
+import std from "../../../../index";
 
-import { StopWatch } from "../../internal/StopWatch";
+import { StopWatch } from "../../../internal/StopWatch";
 
 export function test_randint(): void
 {

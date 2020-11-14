@@ -16,7 +16,7 @@ export function sort<RandomAccessIterator, Comparator>
         comp: Comparator
     ): void
 {
-    const length: usize = distance(first, last);
+    const length: isize = distance(first, last);
     if (length <= 0)
         return;
 
@@ -26,8 +26,8 @@ export function sort<RandomAccessIterator, Comparator>
     if (pivotIt != first)
         iter_swap<RandomAccessIterator, RandomAccessIterator>(first, pivotIt);
 
-    let i: usize = 1;
-    for (let j: usize = 1; j < length; ++j)
+    let i: isize = 1;
+    for (let j: isize = 1; j < length; ++j)
     {
         const jeIt: RandomAccessIterator = first.advance(j);
         if (comp(jeIt.value, pivot))
@@ -58,8 +58,8 @@ export function stable_sort<RandomAccessIterator, Comparator>
     if (pivotIt != first)
         iter_swap<RandomAccessIterator, RandomAccessIterator>(first, pivotIt);
 
-    let i: usize = 1;
-    for (let j: usize = 1; j < length; ++j)
+    let i: isize = 1;
+    for (let j: isize = 1; j < length; ++j)
     {
         const jeIt: RandomAccessIterator = first.advance(j);
         if (comp(jeIt.value, pivot) && !comp(pivot, jeIt.value))
@@ -70,8 +70,8 @@ export function stable_sort<RandomAccessIterator, Comparator>
     }
     iter_swap<RandomAccessIterator, RandomAccessIterator>(first, first.advance(i - 1));
 
-    sort<RandomAccessIterator, Comparator>(first, first.advance(i - 1), comp);
-    sort<RandomAccessIterator, Comparator>(first.advance(i), last, comp);
+    stable_sort<RandomAccessIterator, Comparator>(first, first.advance(i - 1), comp);
+    stable_sort<RandomAccessIterator, Comparator>(first.advance(i), last, comp);
 }
 
 export function partial_sort<RandomAccessIterator, Comparator>

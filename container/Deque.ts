@@ -28,6 +28,23 @@ export class Deque<T>
         this.capacity_ = Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY;
     }
 
+    @inline()
+    public assign_range<InputIterator extends IForwardIterator<T, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(this.end(), first, last);
+    }
+
+    @inline()
+    public assign_repeatedly(length: usize, value: T): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_repeatedly(this.end(), length, value);
+    }
+
     public clear(): void
     {
         this.matrix_ = new Vector();

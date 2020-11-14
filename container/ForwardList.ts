@@ -1,6 +1,8 @@
 import { IForwardIterator } from "../iterator/IForwardIterator";
 
 import { DomainError } from "../exception/DomainError";
+
+import { CMath } from "../internal/numeric/CMath";
 import { Repeater } from "../internal/iterator/disposable/Repeater";
 import { SourcePointer } from "../internal/functional/SourcePointer";
 import { distance } from "../iterator/global";
@@ -9,9 +11,36 @@ export class ForwardList<T>
 {
     private source_ptr_: SourcePointer<ForwardList<T>> = new SourcePointer(this);
     
-    private end_: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, null);
-    private before_begin_: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, this.end_);
+    private end_: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, null, changetype<T>(0));
+    private before_begin_: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, this.end_, changetype<T>(0));
     private size_: usize = 0;
+
+    /* ---------------------------------------------------------
+        CONSTRUCTORS
+    --------------------------------------------------------- */
+    @inline()
+    public assign_range<InputIterator extends IForwardIterator<T, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_after_range<InputIterator>(this.before_begin_, first, last);
+    }
+
+    @inline()
+    public assign_repeatedly(length: usize, value: T): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_after_repeatedly(this.before_begin_, length, value);
+    }
+
+    @inline()
+    public clear(): void
+    {
+        ForwardList.Iterator._Set_next(this.before_begin_, this.end_);
+        this.size_ = 0;
+    }
 
     /* ---------------------------------------------------------
         ACCESSORS
@@ -63,19 +92,19 @@ export class ForwardList<T>
     @inline()
     public push_front(val: T): void
     {
-        this.insert_after(this.before_begin(), val);
+        this.insert_after(this.before_begin_, val);
     }
 
     public insert_after(pos: ForwardList.Iterator<T>, val: T): ForwardList.Iterator<T>
     {
-        const it: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, pos.next());
-        it.value = val;
+        const it: ForwardList.Iterator<T> = ForwardList.Iterator._Create(this.source_ptr_, pos.next(), val);
         ForwardList.Iterator._Set_next<T>(pos, it);
 
         ++this.size_;
         return it;
     }
 
+    @inline()
     public insert_after_repeatedly(pos: ForwardList.Iterator<T>, n: usize, val: T): ForwardList.Iterator<T>
     {
         const first: Repeater<T> = new Repeater(0, val);
@@ -101,9 +130,9 @@ export class ForwardList<T>
         this.erase_after(this.before_begin());
     }
     
-    public erase_after(first: ForwardList.Iterator<T>, last: ForwardList.Iterator<T> = first.next()): ForwardList.Iterator<T>
+    public erase_after(first: ForwardList.Iterator<T>, last: ForwardList.Iterator<T> = first.next().next()): ForwardList.Iterator<T>
     {
-        this.size_ -= distance(first, last);
+        this.size_ -= CMath.max<isize>(0, distance(first, last) - 1);
         ForwardList.Iterator._Set_next<T>(first, last);
 
         return last;
@@ -149,19 +178,17 @@ export namespace ForwardList
         /* ---------------------------------------------------------------
             CONSTRUCTORS
         --------------------------------------------------------------- */
-        private constructor(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null)
+        private constructor(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null, value: T)
         {
             this.source_ptr_ = sourcePtr;
             this.next_ = next;
-
-            if (isNullable<T>() === true)
-                this.value_ = null!;
+            this.value_ = value;
         }
 
         @inline()
-        public static _Create<T>(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null): ForwardList.Iterator<T>
+        public static _Create<T>(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null, value: T): ForwardList.Iterator<T>
         {
-            return new Iterator(sourcePtr, next);
+            return new Iterator(sourcePtr, next, value);
         }
 
         @inline()

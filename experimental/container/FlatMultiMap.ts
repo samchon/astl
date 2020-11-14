@@ -20,6 +20,15 @@ export class FlatMultiMap<Key, T>
     }
 
     @inline()
+    public assign<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
+        (first: InputIterator, last: InputIterator): void
+    {
+        if (this.empty() === false)
+            this.clear();
+        this.insert_range<InputIterator>(first, last);
+    }
+
+    @inline()
     public clear(): void
     {
         this.data_.clear();
@@ -137,6 +146,7 @@ export class FlatMultiMap<Key, T>
         return this.data_.insert(upper, new Entry(key, value));
     }
 
+    @inline()
     public emplace_hint(hint: FlatMultiMap.Iterator<Key, T>, key: Key, value: T): FlatMultiMap.Iterator<Key, T>
     {
         return this.emplace(key, value);
@@ -149,6 +159,7 @@ export class FlatMultiMap<Key, T>
             this.emplace(first.value.first, first.value.second);
     }
 
+    @inline()
     public erase(first: FlatMultiMap.Iterator<Key, T>, last: FlatMultiMap.Iterator<Key, T> = first.next()): FlatMultiMap.Iterator<Key, T>
     {
         return this.data_.erase(first, last);

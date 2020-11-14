@@ -1,5 +1,5 @@
 export * from "./Deque";
-// export * from "./ForwardList";
+export * from "./ForwardList";
 export * from "./HashMap";
 export * from "./HashMultiMap";
 export * from "./HashMultiSet";

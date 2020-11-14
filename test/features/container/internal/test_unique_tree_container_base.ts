@@ -5,7 +5,7 @@ export function test_unique_tree_container_base<SourceT, IteratorT>
         emplacer: (source: SourceT, key: i32, value: i32) => std.Pair<IteratorT, boolean>,
         keyGetter: (it: IteratorT) => i32,
         valueGetter: (it: IteratorT) => i32
-    ): SourceT
+    ): void
 {
     //----
     // INSERTIONS
@@ -32,6 +32,7 @@ export function test_unique_tree_container_base<SourceT, IteratorT>
         }
         elements.splice(index, 1);
     }
+    return;
 
     // VALIDATE SIZE
     if (container.size() !== 100)
@@ -71,5 +72,4 @@ export function test_unique_tree_container_base<SourceT, IteratorT>
         
         prev = keyGetter(it);
     }
-    return container;
 }
