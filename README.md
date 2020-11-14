@@ -2,14 +2,16 @@
 ![logo](https://user-images.githubusercontent.com/13158709/98328610-7b5f4d00-2039-11eb-8135-6cf8100a12b3.png)
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/samchon/astl/blob/master/LICENSE)
+[![npm version](https://badge.fury.io/js/astl.svg)](https://www.npmjs.com/package/astl)
+[![Downloads](https://img.shields.io/npm/dm/astl.svg)](https://www.npmjs.com/package/astl)
 [![Build Status](https://github.com/samchon/astl/workflows/build/badge.svg)](https://github.com/samchon/astl/actions?query=workflow%3Abuild)
 
 Implementation of STL (Standard Template Library) for the AssemblyScript.
 
   - Containers
   - Iterators
-  - ~~Algorithms~~
-  - ~~Functors~~
+  - Algorithms
+  - Functors
 
 **ASTL** is an open-source project providing features of the STL, migrated from the *C++* to the *AssemblyScript*. You can enjoy those STL's own specific *containers*, *algorithms* and *functors* in the AssemblyScript.
 
@@ -49,27 +51,31 @@ Below components are list of the provided objects in the **ASTL**.
       - `experimental.FlatMultiMap`
 
 ### Algorithms
-  `<algorithm>`
-    - binary_search
-    - heap
-    - iterations
-    - mathematics
-    - merge
-    - modifiers
-    - partition
-    - sorting
-    - union_set
+  - `<algorithm>`
+    - *binary_search*
+    - *heap*
+    - *iterations*
+    - *mathematics*
+    - *merge*
+    - *modifiers*
+    - *partition*
+    - *sorting*
+    - *union_set*
 
 ### Functors
-  `<exception>`
+  - `<exception>`
     - Exception
       - LogicError
       - RntimeError
   - `<functional>`
     - *comparators*
     - *hash*
+  - `<numeric>`
+    - *operators*
+    - *operations*
+    - *special_math*
   - `<utility>`
-
+  
 
 
 

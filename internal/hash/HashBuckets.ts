@@ -147,7 +147,7 @@ export class HashBuckets<Key, Elem>
         const index: usize = this.index(val);
         const bucket: Vector<Elem> = this.data_.at(index);
 
-        for (let i: number = 0; i < bucket.size(); ++i)
+        for (let i: usize = 0; i < bucket.size(); ++i)
             if (bucket.at(i) === val)
             {
                 bucket.erase(bucket.nth(i));
