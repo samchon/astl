@@ -13,8 +13,7 @@ export namespace CMath
     {
         return x > y ? x : y;
     }
-
-    @inline()
+    
     export function factorial(k: usize): usize
     {
         if (FACTORIALS.size() <= k)

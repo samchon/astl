@@ -6,7 +6,6 @@ export function laguerre(n: u32, x: f64): f64
     return assoc_laguerre(n, 0, x);
 }
 
-@inline()
 export function assoc_laguerre(n: u32, m: u32, x: f64): f64
 {
     const memory: Vector<f64> = new Vector();

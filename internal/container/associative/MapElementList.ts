@@ -19,7 +19,7 @@ export class MapElementList<Key, T,
     private sequence_: usize = 0;
 
     private source_: SourceT;
-    private end_: MapElementList.Iterator<Key, T, Unique, SourceT> = MapElementList.Iterator._Create(this, this.sequence_++, null, null, null);
+    private end_: MapElementList.Iterator<Key, T, Unique, SourceT> = MapElementList.Iterator._Create(this, this.sequence_++, null, null, changetype<Entry<Key, T>>(0));
     private begin_: MapElementList.Iterator<Key, T, Unique, SourceT> = this.end_;
 
     /* ---------------------------------------------------------
@@ -32,8 +32,8 @@ export class MapElementList<Key, T,
 
     public clear(): void
     {
-        MapElementList.Iterator._Set_prev(this.end_, this.end_);
-        MapElementList.Iterator._Set_next(this.end_, this.end_);
+        MapElementList.Iterator._Set_prev<Key, T, Unique, SourceT>(this.end_, this.end_);
+        MapElementList.Iterator._Set_next<Key, T, Unique, SourceT>(this.end_, this.end_);
         
         this.begin_ = this.end_;
         this.size_ = 0;
@@ -195,8 +195,8 @@ export class MapElementList<Key, T,
         const prev: MapElementList.Iterator<Key, T, Unique, SourceT> = first.prev();
         const length: usize = distance(first, last);
 
-        MapElementList.Iterator._Set_next(prev, last);
-        MapElementList.Iterator._Set_prev(last, prev);
+        MapElementList.Iterator._Set_next<Key, T, Unique, SourceT>(prev, last);
+        MapElementList.Iterator._Set_prev<Key, T, Unique, SourceT>(last, prev);
         this.size_ -= length;
 
         return last;
@@ -228,7 +228,7 @@ export namespace MapElementList
         
         private prev_: Iterator<Key, T, Unique, SourceT> | null;
         private next_: Iterator<Key, T, Unique, SourceT> | null;
-        private readonly value_: Entry<Key, T> | null;
+        private readonly value_: Entry<Key, T>;
 
         /* ---------------------------------------------------------------
             CONSTRUCTORS
@@ -239,7 +239,7 @@ export namespace MapElementList
                 uid: usize, 
                 prev: Iterator<Key, T, Unique, SourceT> | null, 
                 next: Iterator<Key, T, Unique, SourceT> | null,
-                value: Entry<Key, T> | null
+                value: Entry<Key, T>
             )
         {
             this.container_ = container;
@@ -263,7 +263,7 @@ export namespace MapElementList
                 uid: usize,
                 prev: Iterator<Key, T, Unique, SourceT> | null, 
                 next: Iterator<Key, T, Unique, SourceT> | null,
-                value: Entry<Key, T> | null
+                value: Entry<Key, T>
             ): Iterator<Key, T, Unique, SourceT>
         {
             return new Iterator(container, uid, prev, next, value);
@@ -326,7 +326,7 @@ export namespace MapElementList
         @inline()
         public get value(): Entry<Key, T>
         {
-            return this.value_!;
+            return this.value_;
         }
 
         @inline()

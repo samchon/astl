@@ -13,3 +13,4 @@ export * from "./TreeMultiMap";
 export * from "./TreeMultiSet";
 export * from "./TreeSet";
 export * from "./Vector";
+export * from "./VectorBoolean";

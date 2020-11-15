@@ -186,7 +186,8 @@ export class HashMultiSet<Key>
     {
         return this.insert_hint(this.end(), key);
     }
-
+    
+    @inline()
     public insert_hint(hint: HashMultiSet.Iterator<Key>, key: Key): HashMultiSet.Iterator<Key>
     {
         const it: HashMultiSet.Iterator<Key> = this.data_.insert(hint, key);

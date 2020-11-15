@@ -29,6 +29,7 @@ export class MapElementVector<Key, T,
         this.comp_ = changetype<Comparator<Key>>(0);
     }
 
+    @inline()
     public assign(comp: Comparator<Key>): void
     {
         this.comp_ = comp;

@@ -59,7 +59,7 @@ export function comp_ellint_2(k: f64): f64
 --------------------------------------------------------------- */
 export function ellint_3(k: f64, v: f64, phi: f64): f64
 {
-    const predicator: number = 1 / Math.pow(Math.sin(phi), 2);
+    const predicator: f64 = 1 / Math.pow(Math.sin(phi), 2);
     if (v > predicator)
         throw new InvalidArgument("Error on ellint_3(): must be v < (1 / sin^2(phi)) -> (v = " + v.toString() + ", 1 / sin^2(phi) = " + predicator.toString() + ".");
     else if (Math.abs(k) > 1)

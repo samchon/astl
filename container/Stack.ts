@@ -52,16 +52,3 @@ export class Stack<T>
         return this.data_.back();
     }
 }
-
-export namespace Stack
-{
-    export interface IContainer<T>
-    {
-        size(): usize;
-        empty(): boolean;
-        back(): T;
-
-        pop_back(): void;
-        push_back(value: T): void;
-    }
-}

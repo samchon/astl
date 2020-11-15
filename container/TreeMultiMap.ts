@@ -1,6 +1,5 @@
 import { MapElementList } from "../internal/container/associative/MapElementList";
 import { MultiIteratorTree } from "../internal/tree/MultiIteratorTree";
-import { XTreeNode } from "../internal/tree/XTreeNode";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { IPair } from "../utility/IPair";
@@ -17,7 +16,7 @@ export class TreeMultiMap<Key, T>
 
     public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new MultiIteratorTree
+        this.tree_ = new MultiIteratorTree<Key, TreeMultiMap.Iterator<Key, T>>
         (
             it => it.first, 
             comp,
@@ -98,9 +97,9 @@ export class TreeMultiMap<Key, T>
     @inline()
     public find(key: Key): TreeMultiMap.Iterator<Key, T>
     {
-        const node: XTreeNode<TreeMultiMap.Iterator<Key, T>> | null = this.tree_.lower_bound(key);
-        return (node !== null && this.key_comp()(key, node.value.first) === false)
-            ? node.value
+        const it: TreeMultiMap.Iterator<Key, T> = this.lower_bound(key);
+        return (it != this.end() && this.key_comp()(key, it.first) === false)
+            ? it
             : this.end();
     }
 
@@ -128,10 +127,7 @@ export class TreeMultiMap<Key, T>
     @inline()
     public lower_bound(key: Key): TreeMultiMap.Iterator<Key, T>
     {
-        const node: XTreeNode<TreeMultiMap.Iterator<Key, T>> | null = this.tree_.lower_bound(key);
-        return (node !== null) 
-            ? node.value 
-            : this.end();
+        return this.tree_.lower_bound(this.end(), key);
     }
 
     @inline()
@@ -143,11 +139,7 @@ export class TreeMultiMap<Key, T>
     @inline()
     public equal_range(key: Key): Pair<TreeMultiMap.Iterator<Key, T>, TreeMultiMap.Iterator<Key, T>>
     {
-        const lower: TreeMultiMap.Iterator<Key, T> = this.lower_bound(key);
-        const upper: TreeMultiMap.Iterator<Key, T> = (lower != this.end() && this.key_comp()(key, lower.first) === false)
-            ? this.upper_bound(key)
-            : lower;
-        return new Pair(lower, upper);
+        return this.tree_.equal_range(this.end(), key);
     }
 
     /* ---------------------------------------------------------
@@ -168,13 +160,14 @@ export class TreeMultiMap<Key, T>
         return this.emplace(key, value);
     }
 
+    @inline()
     public insert_range<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
         for (; first != last; first = first.next())
             this.emplace(first.value.first, first.value.second);
     }
-    
+
     public erase(first: TreeMultiMap.Iterator<Key, T>, last: TreeMultiMap.Iterator<Key, T> = first.next()): TreeMultiMap.Iterator<Key, T>
     {
         const ret = this.data_.erase(first, last);

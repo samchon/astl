@@ -30,6 +30,7 @@ import { test_stable_sort } from "./features/algorithm/sorting/test_stable_sort"
 //----
 // LINEARS
 import { test_vector } from "./features/container/test_vector";
+import { test_vector_boolean } from "./features/container/test_vector_boolean";
 import { test_deque } from "./features/container/test_deque";
 import { test_list } from "./features/container/test_list";
 import { test_forward_list } from "./features/container/test_forward_list";
@@ -94,6 +95,7 @@ export function main(): void
     //----
     // LINEAR
     test_vector();
+    test_vector_boolean();
     test_deque();
     test_list();
     test_forward_list();

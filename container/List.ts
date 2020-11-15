@@ -141,6 +141,7 @@ export class List<T>
         return it;
     }
 
+    @inline()
     public insert_repeatedly(pos: List.Iterator<T>, n: usize, val: T): List.Iterator<T>
     {
         const first: Repeater<T> = new Repeater(0, val);
@@ -220,6 +221,7 @@ export class List<T>
     ==================================================================
         UNIQUE & REMOVE(_IF)
     --------------------------------------------------------------- */
+    @inline()
     public unique(pred: BinaryPredicator<T>): void
     {
         for (let it = this.begin().next(); it != this.end(); )
@@ -233,12 +235,13 @@ export class List<T>
     public remove(val: T): void
     {
         for (let it = this.begin(); it != this.end(); )
-            if (val === it.value)
+            if (val == it.value)
                 it = this.erase(it);
             else
                 it = it.next();
     }
 
+    @inline()
     public remove_if(pred: UnaryPredicator<T>): void
     {
         for (let it = this.begin(); it != this.end(); )
@@ -297,6 +300,7 @@ export class List<T>
     /* ---------------------------------------------------------
         SORT & SWAP
     --------------------------------------------------------- */
+    @inline()
     public sort(comp: Comparator<T>): void
     {
         this._Quick_sort(this.begin(), this.end(), comp);

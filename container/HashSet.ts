@@ -197,6 +197,7 @@ export class HashSet<Key>
         return it;
     }
 
+    @inline()
     public insert_range<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {

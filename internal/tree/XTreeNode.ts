@@ -1,4 +1,4 @@
-import { Color } from "./Color";
+import { XColor } from "./XColor";
 
 export class XTreeNode<T>
 {
@@ -7,12 +7,12 @@ export class XTreeNode<T>
     public right: XTreeNode<T> | null;
 
     public value: T;
-    public color: Color;
+    public color: XColor;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    public constructor(value: T, color: Color)
+    public constructor(value: T, color: XColor)
     {
         this.value = value;
         this.color = color;

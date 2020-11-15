@@ -56,11 +56,15 @@ export function minmax_element<ForwardIterator, Comparator>
     return new Pair(smallest, largest);
 }
 
+@inline()
 export function clamp<T, Comparator>
     (v: T, lo: T, hi: T, comp: Comparator): T
 {
-    return comp(v, lo) ? lo
-        : comp(hi, v) ? hi : v;
+    return comp(v, lo) 
+        ? lo
+        : comp(hi, v) 
+            ? hi 
+            : v;
 }
 
 /* ---------------------------------------------------------
@@ -163,36 +167,6 @@ export function next_permutation<BidirectionalIterator, Comparator>
             return false;
         }
     }
-
-    // if (first == last)
-    //     return false;
-
-    // let previous: BidirectionalIterator = last.prev();
-    // if (first == previous)
-    //     return false;
-
-    // while (true)
-    // {
-    //     const x: BidirectionalIterator = previous;
-    //     previous = previous.prev();
-
-    //     if (comp(previous.value, x.value) === true)
-    //     {
-    //         let y: BidirectionalIterator = last.prev();
-    //         while (comp(previous.value, y.value) === false)
-    //             y = y.prev();
-            
-    //         iter_swap<BidirectionalIterator, BidirectionalIterator>(previous, y);
-    //         reverse<BidirectionalIterator>(x, last);
-    //         return true;
-    //     }
-
-    //     if (previous == first)
-    //     {
-    //         reverse<BidirectionalIterator>(first, last);
-    //         return false;
-    //     }
-    // }
 }
 
 function _Count_if<InputIterator, TargetIterator, BinaryPredicator>

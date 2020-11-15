@@ -24,8 +24,8 @@ export function cyl_neumann(v: f64, x: f64): f64
     if (x <= 0)
         throw new InvalidArgument("Error on std.cyl_neumann(): x must be greater than zero -> (x = " + x + ").");
 
-    const numerator: number = cyl_bessel_j(v, x) * Math.cos(v*Math.PI) - cyl_bessel_j(-v, x)
-    const denominator: number = Math.sin(v * Math.PI);
+    const numerator: f64 = cyl_bessel_j(v, x) * Math.cos(v*Math.PI) - cyl_bessel_j(-v, x)
+    const denominator: f64 = Math.sin(v * Math.PI);
     
     return numerator / denominator;
 }

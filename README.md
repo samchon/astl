@@ -26,7 +26,7 @@ Below components are list of the provided objects in the **ASTL**.
     - `Vector`
     - `Deque`
     - `List`
-    - ~~`ForwardList`~~
+    - `ForwardList`
     - ~~`VectorBoolean`~~
   - **Associative Containers**
     - *Tree-structured ontainers*

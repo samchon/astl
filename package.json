@@ -6,7 +6,7 @@
     "email": "samchon@samchon.org",
     "url": "http://samchon.org"
   },
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "./index.ts",
   "scripts": {
     "build": "asc test/main.ts --target debug",
@@ -16,13 +16,13 @@
     "@assemblyscript/loader": "^0.17.2",
     "assemblyscript": "^0.17.2"
   },
-  "homepage": "https://github.com/samchon/tstl",
+  "homepage": "https://github.com/samchon/astl",
   "repository": {
     "type": "git",
-    "url": "https://github.com/samchon/tstl"
+    "url": "https://github.com/samchon/astl"
   },
   "bugs": {
-    "url": "https://github.com/samchon/tstl/issues"
+    "url": "https://github.com/samchon/astl/issues"
   },
   "license": "MIT",
   "keywords": [

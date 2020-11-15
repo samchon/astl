@@ -219,6 +219,7 @@ export class HashMap<Key, T>
         return it;
     }
 
+    @inline()
     public insert_range<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {

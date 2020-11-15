@@ -11,6 +11,7 @@ export function gcd<T>(x: T, y: T): T
     return x;
 }
 
+@inline()
 export function lcd<T>(x: T, y: T): T
 {
     return x * y / gcd<T>(x, y);

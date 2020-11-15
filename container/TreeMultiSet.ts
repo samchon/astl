@@ -1,6 +1,5 @@
 import { SetElementList } from "../internal/container/associative/SetElementList";
 import { MultiIteratorTree } from "../internal/tree/MultiIteratorTree";
-import { XTreeNode } from "../internal/tree/XTreeNode";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { Pair } from "../utility/Pair";
@@ -15,7 +14,7 @@ export class TreeMultiSet<Key>
 
     public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new MultiIteratorTree
+        this.tree_ = new MultiIteratorTree<Key, TreeMultiSet.Iterator<Key>>
         (
             it => it.value, 
             comp, 
@@ -96,9 +95,9 @@ export class TreeMultiSet<Key>
     @inline()
     public find(key: Key): TreeMultiSet.Iterator<Key>
     {
-        const node: XTreeNode<TreeMultiSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
-        return (node !== null && this.key_comp()(key, node.value.value) === false)
-            ? node.value
+        const it: TreeMultiSet.Iterator<Key> = this.lower_bound(key);
+        return (it != this.end() && this.key_comp()(key, it.value) === false)
+            ? it
             : this.end();
     }
 
@@ -126,10 +125,7 @@ export class TreeMultiSet<Key>
     @inline()
     public lower_bound(key: Key): TreeMultiSet.Iterator<Key>
     {
-        const node: XTreeNode<TreeMultiSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
-        return (node !== null) 
-            ? node.value 
-            : this.end();
+        return this.tree_.lower_bound(this.end(), key);
     }
 
     @inline()
@@ -141,11 +137,7 @@ export class TreeMultiSet<Key>
     @inline()
     public equal_range(key: Key): Pair<TreeMultiSet.Iterator<Key>, TreeMultiSet.Iterator<Key>>
     {
-        const lower: TreeMultiSet.Iterator<Key> = this.lower_bound(key);
-        const upper: TreeMultiSet.Iterator<Key> = (lower != this.end() && this.key_comp()(key, lower.value) === false)
-            ? this.upper_bound(key)
-            : lower;
-        return new Pair(lower, upper);
+        return this.tree_.equal_range(this.end(), key);
     }
 
     /* ---------------------------------------------------------

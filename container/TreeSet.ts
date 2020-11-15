@@ -1,6 +1,5 @@
 import { SetElementList } from "../internal/container/associative/SetElementList";
-import { XTree } from "../internal/tree/XTree";
-import { XTreeNode } from "../internal/tree/XTreeNode";
+import { UniqueIteratorTree } from "../internal/tree/UniqueIteratorTree";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { Pair } from "../utility/Pair";
@@ -11,14 +10,14 @@ import { less } from "../functional/comparators";
 export class TreeSet<Key>
 {
     private data_: SetElementList<Key, true, TreeSet<Key>> = new SetElementList(<TreeSet<Key>>this);
-    private tree_: XTree<Key, TreeSet.Iterator<Key>>;
+    private tree_: UniqueIteratorTree<Key, TreeSet.Iterator<Key>>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
     public constructor(comp: Comparator<Key> = (x, y) => less(x, y))
     {
-        this.tree_ = new XTree(it => it.value, comp);
+        this.tree_ = new UniqueIteratorTree<Key, TreeSet.Iterator<Key>>(it => it.value, comp);
     }
 
     @inline()
@@ -47,7 +46,7 @@ export class TreeSet<Key>
         obj.data_ = data;
 
         // SWAP TREE
-        const tree: XTree<Key, TreeSet.Iterator<Key>> = this.tree_;
+        const tree: UniqueIteratorTree<Key, TreeSet.Iterator<Key>> = this.tree_;
         this.tree_ = obj.tree_;
         obj.tree_ = tree;
     }
@@ -94,9 +93,9 @@ export class TreeSet<Key>
     @inline()
     public find(key: Key): TreeSet.Iterator<Key>
     {
-        const node: XTreeNode<TreeSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
-        return (node !== null && this.key_comp()(key, node.value.value) === false)
-            ? node.value
+        const it: TreeSet.Iterator<Key> = this.lower_bound(key);
+        return (it != this.end() && this.key_comp()(key, it.value) === false)
+            ? it
             : this.end();
     }
 
@@ -121,34 +120,19 @@ export class TreeSet<Key>
     @inline()
     public lower_bound(key: Key): TreeSet.Iterator<Key>
     {
-        const node: XTreeNode<TreeSet.Iterator<Key>> | null = this.tree_.lower_bound(key);
-        return (node !== null) 
-            ? node.value 
-            : this.end();
+        return this.tree_.lower_bound(this.end(), key);
     }
 
     @inline()
     public upper_bound(key: Key): TreeSet.Iterator<Key>
     {
-        const lower: TreeSet.Iterator<Key> = this.lower_bound(key);
-        return this._Upper_bound(key, lower);
+        return this.tree_.upper_bound(this.end(), key);
     }
 
     @inline()
     public equal_range(key: Key): Pair<TreeSet.Iterator<Key>, TreeSet.Iterator<Key>>
     {
-        const lower: TreeSet.Iterator<Key> = this.lower_bound(key);
-        const upper: TreeSet.Iterator<Key> = this._Upper_bound(key, lower);
-        return new Pair(lower, upper);
-    }
-
-    @inline()
-    private _Upper_bound(key: Key, lower: TreeSet.Iterator<Key>): TreeSet.Iterator<Key>
-    {
-        if (lower != this.end() && this.key_comp()(key, lower.value) === false)
-            return lower.next();
-        else
-            return lower;
+        return this.tree_.equal_range(this.end(), key);
     }
 
     /* ---------------------------------------------------------
@@ -172,6 +156,7 @@ export class TreeSet<Key>
         return this.insert(key).first;
     }
 
+    @inline()
     public insert_range<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -179,6 +164,7 @@ export class TreeSet<Key>
             this.insert(first.value);
     }
 
+    @inline()
     public erase(first: TreeSet.Iterator<Key>, last: TreeSet.Iterator<Key> = first.next()): TreeSet.Iterator<Key>
     {
         const it: TreeSet.Iterator<Key> = this.data_.erase(first, last);
@@ -188,6 +174,7 @@ export class TreeSet<Key>
         return it;
     }
 
+    @inline()
     public erase_by_key(key: Key): usize
     {
         const it: TreeSet.Iterator<Key> = this.find(key);

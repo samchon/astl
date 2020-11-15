@@ -13,6 +13,7 @@ export function tgamma(x: f64): f64
     return Math.sqrt(2 * Math.PI) * Math.pow(t, x + 0.5) * Math.exp(-t) * a;
 }
 
+@inline()
 export function lgamma(x: f64): f64
 {
     return Math.log(tgamma(x));
