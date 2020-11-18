@@ -1,3 +1,9 @@
+function test_assign<ContainerT, IteratorT>(container: ContainerT): void
+{
+    const replica: ContainerT = instantiate<ContainerT>();
+    replica.assign<IteratorT>(container.begin(), container.end());
+}
+
 export function test_multi_hash_container_base<ContainerT, IteratorT>
     (
         emplacer: (container: ContainerT, key: i32, value: i32) => IteratorT,
@@ -53,4 +59,6 @@ export function test_multi_hash_container_base<ContainerT, IteratorT>
         }
         it = it.next();
     }
+
+    test_assign<ContainerT, IteratorT>(container);
 }

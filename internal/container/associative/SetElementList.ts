@@ -26,8 +26,8 @@ export class SetElementList<Key,
 
     public clear(): void
     {
-        SetElementList.Iterator._Set_prev(this.end_, this.end_);
-        SetElementList.Iterator._Set_next(this.end_, this.end_);
+        SetElementList.Iterator._Set_prev<Key, Unique, SourceT>(this.end_, this.end_);
+        SetElementList.Iterator._Set_next<Key, Unique, SourceT>(this.end_, this.end_);
         
         this.begin_ = this.end_;
         this.size_ = 0;

@@ -16,7 +16,7 @@ export declare interface ILinearContainer<T extends InputT,
 
     insert(pos: IteratorT, val: T): IteratorT;
     insert_repeatedly(pos: IteratorT, n: usize, val: T): IteratorT;
-    insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    insert_range<InputIterator>
         (pos: IteratorT, first: InputIterator, last: InputIterator): IteratorT;
 
     back(): T;

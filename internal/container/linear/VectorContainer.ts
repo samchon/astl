@@ -169,14 +169,14 @@ export class VectorContainer<T>
         this._Insert_range_with_length(index, first, last, length);
     }
 
-    protected _Insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    protected _Insert_range<InputIterator>
         (index: usize, first: InputIterator, last: InputIterator): void
     {
         const length: usize = distance(first, last);
         this._Insert_range_with_length(index, first, last, length);
     }
 
-    private _Insert_range_with_length<InputIterator extends IForwardIterator<T, InputIterator>>
+    private _Insert_range_with_length<InputIterator>
         (index: usize, first: InputIterator, last: InputIterator, length: usize): void
     {
         const old: StaticArray<T> | null = this._Try_expand(length, index);

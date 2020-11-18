@@ -10,7 +10,7 @@ export class Vector<T>
         CONSTRUCTORS
     --------------------------------------------------------- */
     @inline()
-    public assign_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
         if (this.empty() === false)
@@ -77,7 +77,7 @@ export class Vector<T>
     }
 
     @inline()
-    public insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public insert_range<InputIterator>
         (pos: Vector.Iterator<T>, first: InputIterator, last: InputIterator): Vector.Iterator<T>
     {
         this._Insert_range(pos.index(), first, last);

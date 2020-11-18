@@ -19,7 +19,7 @@ export class ForwardList<T>
         CONSTRUCTORS
     --------------------------------------------------------- */
     @inline()
-    public assign_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
         if (this.empty() === false)
@@ -113,7 +113,7 @@ export class ForwardList<T>
         return this.insert_after_range(pos, first, last);
     }
 
-    public insert_after_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public insert_after_range<InputIterator>
         (pos: ForwardList.Iterator<T>, first: InputIterator, last: InputIterator): ForwardList.Iterator<T>
     {
         for (; first != last; first = first.next())

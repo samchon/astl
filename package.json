@@ -6,8 +6,8 @@
     "email": "samchon@samchon.org",
     "url": "http://samchon.org"
   },
-  "version": "0.0.9",
-  "main": "./index.ts",
+  "version": "0.0.11",
+  "ascMain": "./index.ts",
   "scripts": {
     "build": "asc test/main.ts --target debug",
     "test": "node test"
@@ -29,13 +29,18 @@
     "assemblyscript",
     "stl",
     "standard template library",
+    "algorithm",
+    "container",
+    "iterator",
+    "functional",
+    "numeric",
     "Vector",
     "Deque",
     "List",
     "ForwardList",
-    "Stack",
-    "Queue",
     "PriorityQueue",
+    "Queue",
+    "Stack",
     "HashMap",
     "HashMultiMap",
     "HashMultiSet",
@@ -43,6 +48,9 @@
     "TreeMap",
     "TreeMultiMap",
     "TreeMultiSet",
-    "TreeSet"
+    "TreeSet",
+    "hash",
+    "tree",
+    "special_math"
   ]
 }

@@ -29,7 +29,7 @@ export class Deque<T>
     }
 
     @inline()
-    public assign_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
         if (this.empty() === false)
@@ -270,7 +270,7 @@ export class Deque<T>
         return this.insert_range(pos, first, last);
     }
 
-    public insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public insert_range<InputIterator>
         (pos: Deque.Iterator<T>, first: InputIterator, last: InputIterator): Deque.Iterator<T>
     {
         const plus: usize = distance(first, last);
@@ -314,7 +314,7 @@ export class Deque<T>
         return row;
     }
 
-    private _Fill_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    private _Fill_range<InputIterator>
         (matrix: Vector<Vector<T>>, length: usize, first: InputIterator, last: InputIterator): void
     {
         for (; first != last; first = first.next())

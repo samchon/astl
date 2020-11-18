@@ -1,5 +1,11 @@
 import std from "../../../../index";
 
+function test_assign<ContainerT, IteratorT>(container: ContainerT): void
+{
+    const replica: ContainerT = instantiate<ContainerT>();
+    replica.assign<IteratorT>(container.begin(), container.end());
+}
+
 export function test_unique_hash_container_base<ContainerT, IteratorT>
     (
         emplacer: (source: ContainerT, key: i32, value: i32) => std.Pair<IteratorT, boolean>,
@@ -49,4 +55,6 @@ export function test_unique_hash_container_base<ContainerT, IteratorT>
             throw new Error("Bug on " + nameof<ContainerT>() + ".emplace(): insertion order has not been kept.");
         previous = keyGetter(it);
     }
+
+    test_assign<ContainerT, IteratorT>(container);
 }

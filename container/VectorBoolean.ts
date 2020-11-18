@@ -22,7 +22,7 @@ export class VectorBoolean
     }
 
     @inline()
-    public assign_range<InputIterator extends IForwardIterator<boolean, InputIterator>>
+    public assign<InputIterator extends IForwardIterator<boolean, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
         if (this.empty() === false)

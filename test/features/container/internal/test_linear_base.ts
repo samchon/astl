@@ -1,11 +1,24 @@
 import std from "../../../../index";
-import { ILinearContainer, ILinearContainerIterator, ILinearContainerReverseIterator } from "../../../../internal/container/linear/ILinearContainer";
 
-export function test_linear_base<
-        ContainerT extends ILinearContainer<i32, ContainerT, ContainerT, IteratorT, ReverseT, i32>,
-        IteratorT extends ILinearContainerIterator<i32, ContainerT, ContainerT, IteratorT, ReverseT, i32>,
-        ReverseT extends ILinearContainerReverseIterator<i32, ContainerT, ContainerT, IteratorT, ReverseT, i32>>
-    (): void
+import { ILinearContainer, ILinearContainerIterator, ILinearContainerReverseIterator } from "../../../../internal/container/linear/ILinearContainer";
+import { BinaryPredicator } from "../../../../internal/functional/BinaryPredicator";
+
+function test_assign<ContainerT, IteratorT, ReverseT>(container: ContainerT): void
+{
+    const replica: ContainerT = instantiate<ContainerT>();
+    // replica.assign<ReverseT>(container.rbegin(), container.rend());
+    
+    // const equal: boolean = std.equal<ReverseT, IteratorT, BinaryPredicator<i32, i32>>
+    // (
+    //     container.rbegin(), container.rend(), 
+    //     replica.begin(), 
+    //     (x, y) => x === y
+    // );
+    // if (equal === false)
+    //     throw new Error("Bug on " + nameof<ContainerT>() + ".assign(): elements are not assigned exactly.");
+}
+
+export function test_linear_base<ContainerT, IteratorT, ReverseT>(): void
 {
     // INSERT ELEMENTS
     const container: ContainerT = instantiate<ContainerT>();
@@ -48,4 +61,7 @@ export function test_linear_base<
         throw new Error("Bug on " + nameof<ContainerT>() + ".erase(): must be 980 but " + it.value.toString());
     else if (container.size() !== 700)
         throw new Error("Bug on " + nameof<ContainerT>() + ".size(): must be 700 but " + container.size().toString());
+
+    // TEST ASSIGN
+    test_assign<ContainerT, IteratorT, ReverseT>(container);
 }

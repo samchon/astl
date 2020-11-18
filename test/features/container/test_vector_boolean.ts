@@ -40,7 +40,7 @@ function test_flip(): void
         vb.push_back(rand_bool());
 
     const cpy: std.VectorBoolean = new std.VectorBoolean();
-    cpy.assign_range(vb.begin(), vb.end());
+    cpy.assign(vb.begin(), vb.end());
     cpy.flip();
 
     for (let i: usize = 0; i < vb.size(); ++i)

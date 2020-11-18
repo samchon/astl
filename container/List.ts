@@ -22,7 +22,7 @@ export class List<T>
         CONSTRUCTORS
     --------------------------------------------------------- */
     @inline()
-    public assign_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
         if (this.empty() === false)
@@ -150,7 +150,7 @@ export class List<T>
         return this.insert_range(pos, first, last);
     }
 
-    public insert_range<InputIterator extends IForwardIterator<T, InputIterator>>
+    public insert_range<InputIterator>
         (pos: List.Iterator<T>, first: InputIterator, last: InputIterator): List.Iterator<T>
     {
         // PREPARE ASSETS
