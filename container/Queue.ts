@@ -12,13 +12,13 @@ export class Queue<T>
         this.data_ = new List();
     }
 
-    @inline()
+    @inline
     public pop(): void
     {
         this.data_.pop_front();
     }
 
-    @inline()
+    @inline
     public push(value: T): void
     {
         this.data_.push_back(value);
@@ -34,25 +34,25 @@ export class Queue<T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public front(): T
     {
         return this.data_.front();
     }
 
-    @inline()
+    @inline
     public back(): T
     {
         return this.data_.back();

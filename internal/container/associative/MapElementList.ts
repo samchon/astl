@@ -42,55 +42,55 @@ export class MapElementList<Key, T,
     /* ---------------------------------------------------------
         ACCCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public source(): SourceT
     {
         return this.source_;
     }
 
-    @inline()
+    @inline
     public size(): usize
     {
         return this.size_;
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.size() === 0;
     }
 
-    @inline()
+    @inline
     public begin(): MapElementList.Iterator<Key, T, Unique, SourceT>
     {
         return this.begin_;
     }
 
-    @inline()
+    @inline
     public end(): MapElementList.Iterator<Key, T, Unique, SourceT>
     {
         return this.end_;
     }
 
-    @inline()
+    @inline
     public rbegin(): MapElementList.ReverseIterator<Key, T, Unique, SourceT>
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): MapElementList.ReverseIterator<Key, T, Unique, SourceT>
     {
         return this.begin().reverse();
     }
 
-    @inline()
+    @inline
     public front(): Entry<Key, T>
     {
         return this.begin().value;
     }
 
-    @inline()
+    @inline
     public back(): Entry<Key, T>
     {
         return this.end().prev().value;
@@ -104,13 +104,13 @@ export class MapElementList<Key, T,
     ==================================================================
         INSERT
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public push_front(val: Entry<Key, T>): void
     {
         this.insert(this.begin(), val);
     }
 
-    @inline()
+    @inline
     public push_back(val: Entry<Key, T>): void
     {
         this.insert(this.end(), val);
@@ -178,13 +178,13 @@ export class MapElementList<Key, T,
     /* ---------------------------------------------------------------
         ERASE
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public pop_front(): void
     {
         this.erase(this.begin());
     }
 
-    @inline()
+    @inline
     public pop_back(): void
     {
         this.erase(this.end().prev());
@@ -251,7 +251,7 @@ export namespace MapElementList
             this.value_ = value;
         }
 
-        @inline()
+        @inline
         public static _Create<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
@@ -269,7 +269,7 @@ export namespace MapElementList
             return new Iterator(container, uid, prev, next, value);
         }
 
-        @inline()
+        @inline
         public static _Set_prev<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
@@ -281,7 +281,7 @@ export namespace MapElementList
             it.prev_ = prev;
         }
 
-        @inline()
+        @inline
         public static _Set_next<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
@@ -296,19 +296,19 @@ export namespace MapElementList
         /* ---------------------------------------------------------------
             ITERATORS
         --------------------------------------------------------------- */
-        @inline()
+        @inline
         public reverse(): ReverseIterator<Key, T, Unique, SourceT>
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator<Key, T, Unique, SourceT>
         {
             return this.prev_ ? this.prev_! : this;
         }
 
-        @inline()
+        @inline
         public next(): Iterator<Key, T, Unique, SourceT>
         {
             return this.next_ ? this.next_! : this;
@@ -317,37 +317,37 @@ export namespace MapElementList
         /* ---------------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): SourceT
         {
             return this.container_.source();
         }
 
-        @inline()
+        @inline
         public get value(): Entry<Key, T>
         {
             return this.value_;
         }
 
-        @inline()
+        @inline
         public get first(): Key
         {
             return this.value.first;
         }
 
-        @inline()
+        @inline
         public get second(): T
         {
             return this.value.second;
         }
 
-        @inline()
+        @inline
         public set second(val: T)
         {
             this.value.second = val;
         }
 
-        @inline()
+        @inline
         public static _Is_erased<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
@@ -359,7 +359,7 @@ export namespace MapElementList
             return it.erased_;
         }
 
-        @inline()
+        @inline
         public static _Set_erased<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
@@ -371,7 +371,7 @@ export namespace MapElementList
             it.erased_ = true;
         }
 
-        @inline()
+        @inline
         public static _Compare_uid<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
@@ -397,25 +397,25 @@ export namespace MapElementList
             ReverseIterator<Key, T, Unique, SourceT>, 
             IPair<Key, T>>
     {
-        @inline()
+        @inline
         public get value(): Entry<Key, T>
         {
             return this.base_.value;
         }
 
-        @inline()
+        @inline
         public get first(): Key
         {
             return this.value.first;
         }
 
-        @inline()
+        @inline
         public get second(): T
         {
             return this.value.second;
         }
 
-        @inline()
+        @inline
         public set second(val: T)
         {
             this.value.second = val;

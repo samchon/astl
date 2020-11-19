@@ -10,7 +10,7 @@ import { advance, distance } from "../iterator/global";
 ============================================================
     FOR_EACH
 --------------------------------------------------------- */
-@inline()
+@inline
 export function for_eacah<InputIterator, Closure>
     (first: InputIterator, last: InputIterator, closure: Closure): Closure
 {
@@ -20,7 +20,7 @@ export function for_eacah<InputIterator, Closure>
     return closure;    
 }
 
-@inline()
+@inline
 export function for_each_n<InputIterator, Closure>
     (first: InputIterator, n: usize, closure: Closure): InputIterator
 {
@@ -35,7 +35,7 @@ export function for_each_n<InputIterator, Closure>
 /* ---------------------------------------------------------
     AGGREGATE CONDITIONS
 --------------------------------------------------------- */
-@inline()
+@inline
 export function all_of<InputIterator, UnaryPredicator>
     (first: InputIterator, last: InputIterator, pred: UnaryPredicator): boolean
 {
@@ -45,7 +45,7 @@ export function all_of<InputIterator, UnaryPredicator>
     return true;
 }
 
-@inline()
+@inline
 export function any_of<InputIterator, UnaryPredicator>
     (first: InputIterator, last: InputIterator, pred: UnaryPredicator): boolean
 {
@@ -55,7 +55,7 @@ export function any_of<InputIterator, UnaryPredicator>
     return false;
 }
 
-@inline()
+@inline
 export function none_of<InputIterator, UnaryPredicator>
     (first: InputIterator, last: InputIterator, pred: UnaryPredicator): boolean
 {
@@ -114,7 +114,7 @@ export function find<InputIterator, T>
     return last;
 }
 
-@inline()
+@inline
 export function find_if<InputIterator, UnaryPredicator>
     (first: InputIterator, last: InputIterator, pred: UnaryPredicator): InputIterator
 {
@@ -124,7 +124,7 @@ export function find_if<InputIterator, UnaryPredicator>
     return last;
 }
 
-@inline()
+@inline
 export function find_if_not<InputIterator, UnaryPredicator>
     (first: InputIterator, last: InputIterator, pred: UnaryPredicator): InputIterator
 {
@@ -271,7 +271,7 @@ export function mismatch<InputIterator1, InputIterator2, BinaryPredicator>
 /* ---------------------------------------------------------
     COUNTERS
 --------------------------------------------------------- */
-@inline()
+@inline
 export function count<InputIterator, T>
     (first: InputIterator, last: InputIterator, val: T): usize
 {

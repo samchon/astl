@@ -8,35 +8,35 @@ import { InsertIterator } from "./InsertIterator";
 /* ---------------------------------------------------------
     ITERATORS
 --------------------------------------------------------- */
-@inline()
+@inline
 export function begin<Container, Iterator>
     (container: Container): Iterator
 {
     return container.begin();
 }
 
-@inline()
+@inline
 export function end<Container, Iterator>
     (container: Container): Iterator
 {
     return container.end();
 }
 
-@inline()
+@inline
 export function rbegin<Container, ReverseIterator>
     (container: Container): ReverseIterator
 {
     container.rbegin();
 }
 
-@inline()
+@inline
 export function rend<Container, ReverseIterator>
     (container: Container): ReverseIterator
 {
     container.rend();
 }
 
-@inline()
+@inline
 export function make_reverse_iterator<IteratorT, ReverseT>
     (it: IteratorT): ReverseT
 {
@@ -46,21 +46,21 @@ export function make_reverse_iterator<IteratorT, ReverseT>
 /* ---------------------------------------------------------
     INSERTERS
 --------------------------------------------------------- */
-@inline()
+@inline
 export function inserter<ContainerT, IteratorT, T>
     (container: ContainerT, it: IteratorT): InsertIterator<ContainerT, IteratorT, T>
 {
     return new InsertIterator(container, it);
 }
 
-@inline()
+@inline
 export function front_inserter<Source extends IPushFront<T>, T>
     (source: Source): FrontInsertIterator<Source, T>
 {
     return new FrontInsertIterator(source);
 }
 
-@inline()
+@inline
 export function back_inserter<Source extends IPushBack<T>, T>
     (source: Source): BackInsertIterator<Source, T>
 {

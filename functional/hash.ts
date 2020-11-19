@@ -10,7 +10,7 @@ export function hash<T>(obj: T): usize
         return 0;
 }
 
-@inline()
+@inline
 function hash_by_string<T extends IStringable>
     (value: T): usize
 {

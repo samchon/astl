@@ -41,7 +41,7 @@ export function upper_bound<ForwardIterator, T, Comparator>
     return first;
 }
 
-@inline()
+@inline
 export function equal_range<ForwardIterator, T, Comparator>
     (first: ForwardIterator, last: ForwardIterator, val: T, comp: Comparator): Pair<ForwardIterator, ForwardIterator>
 {
@@ -51,7 +51,7 @@ export function equal_range<ForwardIterator, T, Comparator>
     return new Pair(lower, upper);
 }
 
-@inline()
+@inline
 export function binary_search<ForwardIterator, T, Comparator>
     (first: ForwardIterator, last: ForwardIterator, val: T, comp: Comparator): boolean
 {

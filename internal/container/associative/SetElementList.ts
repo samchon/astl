@@ -36,55 +36,55 @@ export class SetElementList<Key,
     /* ---------------------------------------------------------
         ACCCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public source(): SourceT
     {
         return this.source_;
     }
 
-    @inline()
+    @inline
     public size(): usize
     {
         return this.size_;
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.size() === 0;
     }
 
-    @inline()
+    @inline
     public begin(): SetElementList.Iterator<Key, Unique, SourceT>
     {
         return this.begin_;
     }
 
-    @inline()
+    @inline
     public end(): SetElementList.Iterator<Key, Unique, SourceT>
     {
         return this.end_;
     }
 
-    @inline()
+    @inline
     public rbegin(): SetElementList.ReverseIterator<Key, Unique, SourceT>
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): SetElementList.ReverseIterator<Key, Unique, SourceT>
     {
         return this.begin().reverse();
     }
 
-    @inline()
+    @inline
     public front(): Key
     {
         return this.begin().value;
     }
 
-    @inline()
+    @inline
     public back(): Key
     {
         return this.end().prev().value;
@@ -98,13 +98,13 @@ export class SetElementList<Key,
     ==================================================================
         INSERT
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public push_front(val: Key): void
     {
         this.insert(this.begin(), val);
     }
 
-    @inline()
+    @inline
     public push_back(val: Key): void
     {
         this.insert(this.end(), val);
@@ -170,13 +170,13 @@ export class SetElementList<Key,
     /* ---------------------------------------------------------------
         ERASE
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public pop_front(): void
     {
         this.erase(this.begin());
     }
 
-    @inline()
+    @inline
     public pop_back(): void
     {
         this.erase(this.end().prev());
@@ -243,7 +243,7 @@ export namespace SetElementList
             this.value_ = value;
         }
 
-        @inline()
+        @inline
         public static _Create<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
@@ -261,7 +261,7 @@ export namespace SetElementList
             return new Iterator(container, uid, prev, next, value);
         }
 
-        @inline()
+        @inline
         public static _Set_prev<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
@@ -273,7 +273,7 @@ export namespace SetElementList
             it.prev_ = prev;
         }
 
-        @inline()
+        @inline
         public static _Set_next<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
@@ -288,19 +288,19 @@ export namespace SetElementList
         /* ---------------------------------------------------------------
             ITERATORS
         --------------------------------------------------------------- */
-        @inline()
+        @inline
         public reverse(): ReverseIterator<Key, Unique, SourceT>
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator<Key, Unique, SourceT>
         {
             return this.prev_ ? this.prev_! : this;
         }
 
-        @inline()
+        @inline
         public next(): Iterator<Key, Unique, SourceT>
         {
             return this.next_ ? this.next_! : this;
@@ -309,19 +309,19 @@ export namespace SetElementList
         /* ---------------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): SourceT
         {
             return this.container_.source();
         }
 
-        @inline()
+        @inline
         public get value(): Key
         {
             return this.value_;
         }
 
-        @inline()
+        @inline
         public static _Is_erased<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
@@ -333,7 +333,7 @@ export namespace SetElementList
             return it.erased_;
         }
 
-        @inline()
+        @inline
         public static _Set_erased<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
@@ -345,7 +345,7 @@ export namespace SetElementList
             it.erased_ = true;
         }
 
-        @inline()
+        @inline
         public static _Compare_uid<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
@@ -371,7 +371,7 @@ export namespace SetElementList
             ReverseIterator<Key, Unique, SourceT>, 
             Key>
     {
-        @inline()
+        @inline
         public get value(): Key
         {
             return this.base_.value;

@@ -18,7 +18,7 @@ export class ForwardList<T>
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
@@ -27,7 +27,7 @@ export class ForwardList<T>
         this.insert_after_range<InputIterator>(this.before_begin_, first, last);
     }
 
-    @inline()
+    @inline
     public assign_repeatedly(length: usize, value: T): void
     {
         if (this.empty() === false)
@@ -35,7 +35,7 @@ export class ForwardList<T>
         this.insert_after_repeatedly(this.before_begin_, length, value);
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         ForwardList.Iterator._Set_next(this.before_begin_, this.end_);
@@ -45,37 +45,37 @@ export class ForwardList<T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.size_;
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.size_ === 0;
     }
 
-    @inline()
+    @inline
     public front(): T
     {
         return this.begin().value;
     }
 
-    @inline()
+    @inline
     public before_begin(): ForwardList.Iterator<T>
     {
         return this.before_begin_;
     }
 
-    @inline()
+    @inline
     public begin(): ForwardList.Iterator<T>
     {
         return this.before_begin_.next();
     }
 
-    @inline()
+    @inline
     public end(): ForwardList.Iterator<T>
     {
         return this.end_;
@@ -89,7 +89,7 @@ export class ForwardList<T>
     ==================================================================
         INSERT
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public push_front(val: T): void
     {
         this.insert_after(this.before_begin_, val);
@@ -104,7 +104,7 @@ export class ForwardList<T>
         return it;
     }
 
-    @inline()
+    @inline
     public insert_after_repeatedly(pos: ForwardList.Iterator<T>, n: usize, val: T): ForwardList.Iterator<T>
     {
         const first: Repeater<T> = new Repeater(0, val);
@@ -124,7 +124,7 @@ export class ForwardList<T>
     /* ---------------------------------------------------------------
         ERASE
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public pop_front(): void
     {
         this.erase_after(this.before_begin());
@@ -185,19 +185,19 @@ export namespace ForwardList
             this.value_ = value;
         }
 
-        @inline()
+        @inline
         public static _Create<T>(sourcePtr: SourcePointer<ForwardList<T>>, next: Iterator<T> | null, value: T): ForwardList.Iterator<T>
         {
             return new Iterator(sourcePtr, next, value);
         }
 
-        @inline()
+        @inline
         public static _Set_next<T>(it: Iterator<T>, next: Iterator<T>): void
         {
             it.next_ = next;
         }
 
-        @inline()
+        @inline
         public next(): Iterator<T>
         {
             if (this.next_ === null)
@@ -208,19 +208,19 @@ export namespace ForwardList
         /* ---------------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): ForwardList<T>
         {
             return this.source_ptr_.value;
         }
 
-        @inline()
+        @inline
         public get value(): T
         {
             return this.value_;
         }
 
-        @inline()
+        @inline
         public set value(val: T)
         {
             this.value_ = val;

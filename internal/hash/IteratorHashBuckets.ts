@@ -17,7 +17,7 @@ export class IteratorHashBuckets<Key, IteratorT extends IBidirectionalIterator<a
         this.key_eq_ = predicator;
     }
 
-    @inline()
+    @inline
     public key_eq(): BinaryPredicator<Key>
     {
         return this.key_eq_;

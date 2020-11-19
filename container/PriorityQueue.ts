@@ -18,14 +18,14 @@ export class PriorityQueue<T>
         this.comp_ = comp;
     }
 
-    @inline()
+    @inline
     public push(elem: T): void
     {
         this.data_.push_back(elem);
         push_heap<Vector.Iterator<T>, Comparator<T, T>>(this.data_.begin(), this.data_.end(), this.comp_);
     }
 
-    @inline()
+    @inline
     public pop(): void
     {
         pop_heap<Vector.Iterator<T>, Comparator<T, T>>(this.data_.begin(), this.data_.end(), this.comp_);
@@ -46,25 +46,25 @@ export class PriorityQueue<T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public value_comp(): Comparator<T>
     {
         return this.comp_;
     }
     
-    @inline()
+    @inline
     public top(): T
     {
         return this.data_.front();

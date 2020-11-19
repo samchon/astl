@@ -9,19 +9,19 @@ export class Repeater<T>
         this.value_ = value;
     }
 
-    @inline()
+    @inline
     public index(): usize
     {
         return this.index_;
     }
 
-    @inline()
+    @inline
     public get value(): T
     {
         return this.value_;
     }
 
-    @inline()
+    @inline
     public next(): Repeater<T>
     {
         ++this.index_;
@@ -29,7 +29,7 @@ export class Repeater<T>
     }
 
     @operator("==")
-    @inline()
+    @inline
     public equals(obj: Repeater<T>): boolean
     {
         const ret: boolean = this.index_ === obj.index_;
@@ -39,7 +39,7 @@ export class Repeater<T>
     }
 
     @operator("!=")
-    @inline()
+    @inline
     protected __non_equals(obj: Repeater<T>): boolean
     {
         return !this.equals(obj);

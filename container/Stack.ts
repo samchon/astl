@@ -12,13 +12,13 @@ export class Stack<T>
         this.data_ = new Vector<T>();
     }
 
-    @inline()
+    @inline
     public pop(): void
     {
         this.data_.pop_back();
     }
 
-    @inline()
+    @inline
     public push(value: T): void
     {
         this.data_.push_back(value);
@@ -34,19 +34,19 @@ export class Stack<T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public top(): T
     {
         return this.data_.back();

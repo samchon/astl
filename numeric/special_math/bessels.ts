@@ -30,19 +30,19 @@ export function cyl_neumann(v: f64, x: f64): f64
     return numerator / denominator;
 }
 
-@inline()
+@inline
 export function sph_bessel(v: f64, x: f64): f64
 {
     return Math.sqrt(Math.PI / (2 * x)) * cyl_bessel_j(v + .5, x);
 }
 
-@inline()
+@inline
 export function sph_neumann(v: f64, x: f64): f64
 {
     return Math.sqrt(Math.PI / (2 * x)) * cyl_neumann(v + .5, x);
 }
 
-@inline()
+@inline
 function _J_int(v: f64, x: f64): f64
 {
     if (v < 0)

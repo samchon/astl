@@ -5,7 +5,7 @@ import { CMath } from "../internal/numeric/CMath";
 import { advance, distance } from "../iterator/global";
 import { sort } from "./sorting";
 
-@inline()
+@inline
 export function randint<T>(x: T, y: T): T
 {
     const value: f64 = Math.round(Math.random() * (y - x) + x);

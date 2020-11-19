@@ -27,7 +27,7 @@ export class MultiXTree<Key, Elem>
         this.duplicate_comp_ = duplicateComp;
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.root_ = null;
@@ -36,19 +36,19 @@ export class MultiXTree<Key, Elem>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public root(): XTreeNode<Elem> | null
     {
         return this.root_;
     }
 
-    @inline()
+    @inline
     public key_getter(): (elem: Elem) => Key
     {
         return this.key_getter_;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.key_comp_;
@@ -63,7 +63,7 @@ export class MultiXTree<Key, Elem>
             return ret;
     }
 
-    @inline()
+    @inline
     private value_eq(x: Elem, y: Elem): boolean
     {
         return this.value_comp(x, y) === false && this.value_comp(y, x) === false;
@@ -72,7 +72,7 @@ export class MultiXTree<Key, Elem>
     /* ---------------------------------------------------------
         FINDERS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public nearest(key: Key): XTreeNode<Elem> | null
     {
         return this.nearest_with_mover(key, node => node.left);

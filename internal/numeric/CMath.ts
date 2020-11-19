@@ -2,13 +2,13 @@ import { Vector } from "../../container/Vector";
 
 export namespace CMath
 {
-    @inline()
+    @inline
     export function min<T>(x: T, y: T): T
     {
         return x < y ? x: y;
     }
 
-    @inline()
+    @inline
     export function max<T>(x: T, y: T): T
     {
         return x > y ? x : y;

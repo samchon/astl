@@ -22,13 +22,13 @@ export class XTreeNode<T>
         this.right = null;
     }
 
-    @inline()
+    @inline
     public get grand(): XTreeNode<T> | null
     {
         return this.parent!.parent;
     }
 
-    @inline()
+    @inline
     public get sibling(): XTreeNode<T>  | null
     {
         return this === this.parent!.left
@@ -36,7 +36,7 @@ export class XTreeNode<T>
             : this.parent!.left;
     }
  
-    @inline()
+    @inline
     public get uncle(): XTreeNode<T>  | null
     {
         return this.parent!.sibling;

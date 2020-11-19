@@ -25,7 +25,7 @@ export class HashMap<Key, T>
         this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.first);
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -34,7 +34,7 @@ export class HashMap<Key, T>
         this.insert_range<InputIterator>(first, last);
     }
     
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
@@ -59,62 +59,62 @@ export class HashMap<Key, T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public begin(): HashMap.Iterator<Key, T>
     {
         return this.data_.begin();
     }
 
-    @inline()
+    @inline
     public end(): HashMap.Iterator<Key, T>
     {
         return this.data_.end();
     }
 
-    @inline()
+    @inline
     public rbegin(): HashMap.ReverseIterator<Key, T>
     {
         return this.data_.rbegin();
     }
 
-    @inline()
+    @inline
     public rend(): HashMap.ReverseIterator<Key, T>
     {
         return this.data_.rend();
     }
 
-    @inline()
+    @inline
     public find(key: Key): HashMap.Iterator<Key, T>
     {
         const it: HashMap.Iterator<Key, T> | null = this.buckets_.find(key);
         return (it !== null) ? it : this.end();
     }
 
-    @inline()
+    @inline
     public has(key: Key): boolean
     {
         return this.buckets_.find(key) !== null;
     }
 
-    @inline()
+    @inline
     public count(key: Key): usize
     {
         return this.has(key) ? 1 : 0;
     }
 
-    @inline()
+    @inline
     @operator("[]")
     public get(key: Key): T
     {
@@ -124,61 +124,61 @@ export class HashMap<Key, T>
         return it.second;
     }
 
-    @inline()
+    @inline
     public hash_function(): Hasher<Key>
     {
         return this.buckets_.hash_function();
     }
 
-    @inline()
+    @inline
     public key_eq(): BinaryPredicator<Key>
     {
         return this.buckets_.key_eq();
     }
 
-    @inline()
+    @inline
     public bucket(key: Key): usize
     {
         return this.hash_function()(key) % this.bucket_count();
     }
 
-    @inline()
+    @inline
     public bucket_count(): usize
     {
         return this.buckets_.length();
     }
 
-    @inline()
+    @inline
     public bucket_size(index: usize): usize
     {
         return this.buckets_.at(index).size();
     }
 
-    @inline()
+    @inline
     public load_factor(): usize
     {
         return this.buckets_.load_factor();
     }
 
-    @inline()
+    @inline
     public max_load_factor(): f64
     {
         return this.buckets_.max_load_factor();
     }
 
-    @inline()
+    @inline
     public set_max_load_factor(z: f64): void
     {
         this.buckets_.set_max_load_factor(z);
     }
 
-    @inline()
+    @inline
     public reserve(n: usize): void
     {
         this.buckets_.reserve(n);
     }
 
-    @inline()
+    @inline
     public rehash(n: usize): void
     {
         this.buckets_.rehash(n);
@@ -187,7 +187,7 @@ export class HashMap<Key, T>
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
-    @inline()
+    @inline
     @operator("[]=")
     public set(key: Key, value: T): void
     {
@@ -219,7 +219,7 @@ export class HashMap<Key, T>
         return it;
     }
 
-    @inline()
+    @inline
     public insert_range<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {

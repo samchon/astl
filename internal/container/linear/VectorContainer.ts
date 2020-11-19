@@ -24,20 +24,20 @@ export class VectorContainer<T>
         this.data_ = new StaticArray(1);
     }
 
-    @inline()
+    @inline
     public resize(n: usize): void
     {
         this._Reserve(n, n);
         this.size_ = n;
     }
 
-    @inline()
+    @inline
     public reserve(capacity: usize): void
     {
         this._Reserve(capacity, this.size());
     }
 
-    @inline()
+    @inline
     public shrink_to_fit(): void
     {
         if (this.empty() === false && this.size() !== this.capacity())
@@ -85,31 +85,31 @@ export class VectorContainer<T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.size_;
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.size() === 0;
     }
 
-    @inline()
+    @inline
     public capacity(): usize
     {
         return <usize>this.data_.length;
     }
 
-    @inline()
+    @inline
     public data(): StaticArray<T>
     {
         return this.data_;
     }
     
-    @inline()
+    @inline
     @operator("[]")
     public at(index: usize): T
     {
@@ -118,7 +118,7 @@ export class VectorContainer<T>
         return this.data_[<i32>index];
     }
 
-    @inline()
+    @inline
     @operator("[]=")
     public set(index: usize, val: T): void
     {
@@ -127,13 +127,13 @@ export class VectorContainer<T>
         this.data_[<i32>index] = val;
     }
     
-    @inline()
+    @inline
     public front(): T
     {
         return this.at(0);
     }
 
-    @inline()
+    @inline
     public back(): T
     {
         return this.at(this.size() - 1);
@@ -147,20 +147,20 @@ export class VectorContainer<T>
     ============================================================
         INSERT
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public push_back(val: T): void
     {
         this._Try_expand(1);
         this.data_[<i32>(this.size_++)] = val;
     }
 
-    @inline()
+    @inline
     protected _Insert(index: usize, val: T): void
     {
         this._Insert_repeatedly(index, 1, val);
     }
 
-    @inline()
+    @inline
     protected _Insert_repeatedly(index: usize, length: usize, value: T): void
     {
         const first: Repeater<T> = new Repeater(index, value);
@@ -206,7 +206,7 @@ export class VectorContainer<T>
     /* ---------------------------------------------------------
         ERASE
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public pop_back(): void
     {
         --this.size_;

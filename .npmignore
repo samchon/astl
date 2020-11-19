@@ -2,6 +2,8 @@
 .github/
 build/
 node_modules/
+
+benchmark/
 test/
 
 *.*ignore

@@ -9,7 +9,7 @@ export class Vector<T>
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
@@ -18,7 +18,7 @@ export class Vector<T>
         this.insert_range<InputIterator>(this.end(), first, last);
     }
 
-    @inline()
+    @inline
     public assign_repeatedly(length: usize, value: T): void
     {
         if (this.empty() === false)
@@ -29,31 +29,31 @@ export class Vector<T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public nth(index: usize): Vector.Iterator<T>
     {
         return new Vector.Iterator(this, index);
     }
 
-    @inline()
+    @inline
     public begin(): Vector.Iterator<T>
     {
         return this.nth(0);
     }
 
-    @inline()
+    @inline
     public end(): Vector.Iterator<T>
     {
         return this.nth(this.size());
     }
 
-    @inline()
+    @inline
     public rbegin(): Vector.ReverseIterator<T>
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): Vector.ReverseIterator<T>
     {
         return this.begin().reverse();
@@ -62,21 +62,21 @@ export class Vector<T>
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public insert(pos: Vector.Iterator<T>, val: T): Vector.Iterator<T>
     {
         this._Insert(pos.index(), val);
         return pos;
     }
     
-    @inline()
+    @inline
     public insert_repeatedly(pos: Vector.Iterator<T>, n: usize, val: T): Vector.Iterator<T>
     {
         this._Insert_repeatedly(pos.index(), n, val);
         return pos;
     }
 
-    @inline()
+    @inline
     public insert_range<InputIterator>
         (pos: Vector.Iterator<T>, first: InputIterator, last: InputIterator): Vector.Iterator<T>
     {
@@ -84,7 +84,7 @@ export class Vector<T>
         return pos;
     }
 
-    @inline()
+    @inline
     public erase(first: Vector.Iterator<T>, last: Vector.Iterator<T> = first.next()): Vector.Iterator<T>
     {
         this._Erase(first.index(), last.index());
@@ -94,7 +94,7 @@ export class Vector<T>
     /* ---------------------------------------------------------
         SWAP
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public swap(obj: Vector<T>): void
     {
         this._Swap(obj);
@@ -117,25 +117,25 @@ export namespace Vector
             this.index_ = index;
         }
 
-        @inline()
+        @inline
         public reverse(): ReverseIterator<T>
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator<T>
         {
             return this.advance(-1);
         }
 
-        @inline()
+        @inline
         public next(): Iterator<T>
         {
             return this.advance(1);
         }
 
-        @inline()
+        @inline
         public advance(n: isize): Iterator<T>
         {
             return this.source_.nth(this.index_ + n);
@@ -144,25 +144,25 @@ export namespace Vector
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): Vector<T>
         {
             return this.source_;
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.index_;
         }
 
-        @inline()
+        @inline
         public get value(): T
         {
             return this.source_.at(this.index_);
         }
 
-        @inline()
+        @inline
         public set value(val: T)
         {
             this.source_.set(this.index_, val);
@@ -171,42 +171,42 @@ export namespace Vector
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("==")
         public equals(obj: Iterator<T>): boolean
         {
             return this.source_ === obj.source_ && this.index_ === obj.index_;
         }
 
-        @inline()
+        @inline
         @operator("<")
         public less(obj: Iterator<T>): boolean
         {
             return this.index_ < obj.index_;
         }
         
-        @inline()
+        @inline
         @operator("!=")
         protected __not_equals(obj: Iterator<T>): boolean
         {
             return !this.equals(obj);
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: Iterator<T>): boolean
         {
             return this.source_ === obj.source_ && this.index_ <= obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: Iterator<T>): boolean
         {
             return this.index_ > obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: Iterator<T>): boolean
         {
@@ -220,25 +220,25 @@ export namespace Vector
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */   
-        @inline()
+        @inline
         public advance(n: isize): ReverseIterator<T>
         {
             return this.base().advance(-n).reverse();
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.base().index();
         }
 
-        @inline()
+        @inline
         public get value(): T
         {
             return this.base_.value;
         }
 
-        @inline()
+        @inline
         public set value(val: T)
         {
             this.base_.value = val;
@@ -247,28 +247,28 @@ export namespace Vector
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("<")
         public less(obj: ReverseIterator<T>): boolean
         {
             return this.index() > obj.index();
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: ReverseIterator<T>): boolean
         {
             return this.source() === obj.source() && this.index() >= obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: ReverseIterator<T>): boolean
         {
             return this.index() < obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: ReverseIterator<T>): boolean
         {

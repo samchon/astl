@@ -9,26 +9,26 @@ export class BackInsertIterator<Container extends IPushBack<T>, T>
         this.data_ = data;
     }
 
-    @inline()
+    @inline
     public next(): BackInsertIterator<Container, T>
     {
         return this;
     }
 
-    @inline()
+    @inline
     public set value(val: T)
     {
         this.data_.push_back(val);
     }
 
-    @inline()
+    @inline
     @operator("==")
     public equals(obj: BackInsertIterator<Container, T>): boolean
     {
         return this.data_ == obj.data_;
     }
 
-    @inline()
+    @inline
     @operator("!=")
     protected __non_equals(obj: BackInsertIterator<Container, T>): boolean
     {

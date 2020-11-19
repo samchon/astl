@@ -27,7 +27,7 @@ export class SetElementVector<Key,
         this.comp_ = changetype<Comparator<Key>>(0);
     }
 
-    @inline()
+    @inline
     public assign(comp: Comparator<Key>): void
     {
         this.comp_ = comp;
@@ -47,43 +47,43 @@ export class SetElementVector<Key,
     /* ---------------------------------------------------------
         ACCCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public source(): SourceT
     {
         return this.source_;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.comp_;
     }
 
-    @inline()
+    @inline
     public nth(index: usize): SetElementVector.Iterator<Key, Unique, SourceT>
     {
         return new SetElementVector.Iterator(this, index);
     }
 
-    @inline()
+    @inline
     public begin(): SetElementVector.Iterator<Key, Unique, SourceT>
     {
         return this.nth(0);
     }
 
-    @inline()
+    @inline
     public end(): SetElementVector.Iterator<Key, Unique, SourceT>
     {
         return this.nth(this.size());
     }
 
-    @inline()
+    @inline
     public rbegin(): SetElementVector.ReverseIterator<Key, Unique, SourceT>
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): SetElementVector.ReverseIterator<Key, Unique, SourceT>
     {
         return this.begin().reverse();
@@ -92,14 +92,14 @@ export class SetElementVector<Key,
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public insert(pos: SetElementVector.Iterator<Key, Unique, SourceT>, val: Key): SetElementVector.Iterator<Key, Unique, SourceT>
     {
         this._Insert(pos.index(), val);
         return pos;
     }
 
-    @inline()
+    @inline
     public erase(first: SetElementVector.Iterator<Key, Unique, SourceT>, last: SetElementVector.Iterator<Key, Unique, SourceT> = first.next()): SetElementVector.Iterator<Key, Unique, SourceT>
     {
         this._Erase(first.index(), last.index());
@@ -130,13 +130,13 @@ export class SetElementVector<Key,
         return this.nth(index);
     }
 
-    @inline()
+    @inline
     public upper_bound(key: Key): SetElementVector.Iterator<Key, Unique, SourceT>
     {
         return this._Upper_bound(key, 0);
     }
     
-    @inline()
+    @inline
     public equal_range(key: Key): Pair<SetElementVector.Iterator<Key, Unique, SourceT>, SetElementVector.Iterator<Key, Unique, SourceT>>
     {
         const lower: SetElementVector.Iterator<Key, Unique, SourceT> = this.lower_bound(key);
@@ -186,25 +186,25 @@ export namespace SetElementVector
             this.index_ = index;
         }
 
-        @inline()
+        @inline
         public reverse(): ReverseIterator<Key, Unique, SourceT>
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator<Key, Unique, SourceT>
         {
             return this.advance(-1);
         }
 
-        @inline()
+        @inline
         public next(): Iterator<Key, Unique, SourceT>
         {
             return this.advance(1);
         }
 
-        @inline()
+        @inline
         public advance(n: isize): Iterator<Key, Unique, SourceT>
         {
             return this.data_.nth(this.index_ + n);
@@ -213,19 +213,19 @@ export namespace SetElementVector
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): SourceT
         {
             return this.data_.source();
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.index_;
         }
 
-        @inline()
+        @inline
         public get value(): Key
         {
             return this.data_.at(this.index_);
@@ -234,42 +234,42 @@ export namespace SetElementVector
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("==")
         public equals(obj: Iterator<Key, Unique, SourceT>): boolean
         {
             return this.data_ === obj.data_ && this.index_ === obj.index_;
         }
 
-        @inline()
+        @inline
         @operator("<")
         public less(obj: Iterator<Key, Unique, SourceT>): boolean
         {
             return this.index_ < obj.index_;
         }
         
-        @inline()
+        @inline
         @operator("!=")
         protected __not_equals(obj: Iterator<Key, Unique, SourceT>): boolean
         {
             return !this.equals(obj);
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: Iterator<Key, Unique, SourceT>): boolean
         {
             return this.data_ === obj.data_ && this.index_ <= obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: Iterator<Key, Unique, SourceT>): boolean
         {
             return this.index_ > obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: Iterator<Key, Unique, SourceT>): boolean
         {
@@ -293,19 +293,19 @@ export namespace SetElementVector
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         public advance(n: isize): ReverseIterator<Key, Unique, SourceT>
         {
             return this.base().advance(-n).reverse();
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.base().index();
         }
 
-        @inline()
+        @inline
         public get value(): Key
         {
             return this.base_.value;
@@ -314,28 +314,28 @@ export namespace SetElementVector
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("<")
         public less(obj: ReverseIterator<Key, Unique, SourceT>): boolean
         {
             return this.index() > obj.index();
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: ReverseIterator<Key, Unique, SourceT>): boolean
         {
             return this.source() === obj.source() && this.index() >= obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: ReverseIterator<Key, Unique, SourceT>): boolean
         {
             return this.index() < obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: ReverseIterator<Key, Unique, SourceT>): boolean
         {

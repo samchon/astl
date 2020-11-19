@@ -81,43 +81,43 @@ export class HashBuckets<Key, Elem>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public length(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public capacity(): usize
     {
         return <usize>(this.length() * this.max_load_factor_);
     }
 
-    @inline()
+    @inline
     public at(index: usize): Vector<Elem>
     {
         return this.data_.at(index);
     }
 
-    @inline()
+    @inline
     public load_factor(): f64
     {
         return this.size_ / this.length();
     }
 
-    @inline()
+    @inline
     public max_load_factor(): f64
     {
         return this.max_load_factor_;
     }
 
-    @inline()
+    @inline
     public set_max_load_factor(z: f64): void
     {
         this.max_load_factor_ = z;
     }
 
-    @inline()
+    @inline
     public hash_function(): Hasher<Key>
     {
         return this.hasher_;
@@ -126,7 +126,7 @@ export class HashBuckets<Key, Elem>
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
-    @inline()
+    @inline
     private index(elem: Elem): usize
     {
         return this.hasher_(this.fetcher_(elem)) % this.length();

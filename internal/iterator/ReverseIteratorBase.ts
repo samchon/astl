@@ -17,13 +17,13 @@ export abstract class ReverseIteratorBase<T extends InputT,
         this.base_ = base.prev();
     }
 
-    @inline()
+    @inline
     public prev(): ReverseT
     {
         return this.base().next().reverse();
     }
 
-    @inline()
+    @inline
     public next(): ReverseT
     {
         return this.base_.reverse();
@@ -32,13 +32,13 @@ export abstract class ReverseIteratorBase<T extends InputT,
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public source(): SourceT
     {
         return this.base_.source();
     }
 
-    @inline()
+    @inline
     public base(): IteratorT
     {
         return this.base_.next();
@@ -48,14 +48,14 @@ export abstract class ReverseIteratorBase<T extends InputT,
         OPERATORS
     --------------------------------------------------------- */
     @operator("==")
-    @inline()
+    @inline
     public equals(obj: ReverseT): boolean
     {
         return this.base() == obj.base();
     }
 
     @operator("!=")
-    @inline()
+    @inline
     protected __not_equals(obj: ReverseT): boolean
     {
         return !this.equals(obj);

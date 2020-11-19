@@ -20,7 +20,7 @@ export class UniqueXTree<Key, Elem>
         this.key_comp_ = keyComp;
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.root_ = null;
@@ -29,31 +29,31 @@ export class UniqueXTree<Key, Elem>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public root(): XTreeNode<Elem> | null
     {
         return this.root_;
     }
 
-    @inline()
+    @inline
     public key_getter(): (elem: Elem) => Key
     {
         return this.key_getter_;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.key_comp_;
     }
 
-    @inline()
+    @inline
     private value_comp(x: Elem, y: Elem): boolean
     {
         return this.key_comp_(this.key_getter_(x), this.key_getter_(y));
     }
 
-    @inline()
+    @inline
     private value_eq(x: Elem, y: Elem): boolean
     {
         return this.value_comp(x, y) === false && this.value_comp(y, x) === false;
@@ -94,7 +94,7 @@ export class UniqueXTree<Key, Elem>
         return ret; // DIFFERENT NODE
     }
 
-    @inline()
+    @inline
     private nearest_value(elem: Elem): XTreeNode<Elem> | null
     {
         return this.nearest(this.key_getter()(elem));
@@ -375,7 +375,7 @@ export class UniqueXTree<Key, Elem>
     /* ---------------------------------------------------------
         COLOR
     --------------------------------------------------------- */
-    @inline()
+    @inline
     private _Fetch_color(node: XTreeNode<Elem> | null): XColor
     {
         return (node !== null) 

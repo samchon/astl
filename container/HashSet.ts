@@ -22,7 +22,7 @@ export class HashSet<Key>
         this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.value);
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -31,7 +31,7 @@ export class HashSet<Key>
         this.insert_range<InputIterator>(first, last);
     }
     
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
@@ -56,116 +56,116 @@ export class HashSet<Key>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public begin(): HashSet.Iterator<Key>
     {
         return this.data_.begin();
     }
 
-    @inline()
+    @inline
     public end(): HashSet.Iterator<Key>
     {
         return this.data_.end();
     }
 
-    @inline()
+    @inline
     public rbegin(): HashSet.ReverseIterator<Key>
     {
         return this.data_.rbegin();
     }
 
-    @inline()
+    @inline
     public rend(): HashSet.ReverseIterator<Key>
     {
         return this.data_.rend();
     }
 
-    @inline()
+    @inline
     public find(key: Key): HashSet.Iterator<Key>
     {
         const it: HashSet.Iterator<Key> | null = this.buckets_.find(key);
         return (it !== null) ? it : this.end();
     }
 
-    @inline()
+    @inline
     public has(key: Key): boolean
     {
         return this.buckets_.find(key) !== null;
     }
 
-    @inline()
+    @inline
     public count(key: Key): usize
     {
         return this.has(key) ? 1 : 0;
     }
 
-    @inline()
+    @inline
     public hash_function(): Hasher<Key>
     {
         return this.buckets_.hash_function();
     }
 
-    @inline()
+    @inline
     public key_eq(): BinaryPredicator<Key>
     {
         return this.buckets_.key_eq();
     }
 
-    @inline()
+    @inline
     public bucket(key: Key): usize
     {
         return this.hash_function()(key) % this.bucket_count();
     }
 
-    @inline()
+    @inline
     public bucket_count(): usize
     {
         return this.buckets_.length();
     }
 
-    @inline()
+    @inline
     public bucket_size(index: usize): usize
     {
         return this.buckets_.at(index).size();
     }
 
-    @inline()
+    @inline
     public load_factor(): usize
     {
         return this.buckets_.load_factor();
     }
 
-    @inline()
+    @inline
     public max_load_factor(): f64
     {
         return this.buckets_.max_load_factor();
     }
 
-    @inline()
+    @inline
     public set_max_load_factor(z: f64): void
     {
         this.buckets_.set_max_load_factor(z);
     }
 
-    @inline()
+    @inline
     public reserve(n: usize): void
     {
         this.buckets_.reserve(n);
     }
 
-    @inline()
+    @inline
     public rehash(n: usize): void
     {
         this.buckets_.rehash(n);
@@ -197,7 +197,7 @@ export class HashSet<Key>
         return it;
     }
 
-    @inline()
+    @inline
     public insert_range<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {

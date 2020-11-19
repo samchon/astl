@@ -9,13 +9,13 @@ import { ISize } from "../internal/container/partial/ISize";
 ============================================================
     ACCESSORS
 --------------------------------------------------------- */
-@inline()
+@inline
 export function empty(source: IEmpty): boolean
 {
     return source.empty();
 }
 
-@inline()
+@inline
 export function size(source: ISize): usize
 {
     return source.size();

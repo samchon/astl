@@ -21,7 +21,7 @@ export class List<T>
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
@@ -30,7 +30,7 @@ export class List<T>
         this.insert_range<InputIterator>(this.end(), first, last);
     }
 
-    @inline()
+    @inline
     public assign_repeatedly(length: usize, value: T): void
     {
         if (this.empty() === false)
@@ -58,49 +58,49 @@ export class List<T>
     /* ---------------------------------------------------------
         ACCCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.size_;
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.size() === 0;
     }
 
-    @inline()
+    @inline
     public begin(): List.Iterator<T>
     {
         return this.begin_;
     }
 
-    @inline()
+    @inline
     public end(): List.Iterator<T>
     {
         return this.end_;
     }
 
-    @inline()
+    @inline
     public rbegin(): List.ReverseIterator<T>
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): List.ReverseIterator<T>
     {
         return this.begin().reverse();
     }
 
-    @inline()
+    @inline
     public front(): T
     {
         return this.begin().value;
     }
 
-    @inline()
+    @inline
     public back(): T
     {
         return this.end().prev().value;
@@ -114,13 +114,13 @@ export class List<T>
     ==================================================================
         INSERT
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public push_front(val: T): void
     {
         this.insert(this.begin(), val);
     }
 
-    @inline()
+    @inline
     public push_back(val: T): void
     {
         this.insert(this.end(), val);
@@ -141,7 +141,7 @@ export class List<T>
         return it;
     }
 
-    @inline()
+    @inline
     public insert_repeatedly(pos: List.Iterator<T>, n: usize, val: T): List.Iterator<T>
     {
         const first: Repeater<T> = new Repeater(0, val);
@@ -186,13 +186,13 @@ export class List<T>
     /* ---------------------------------------------------------------
         ERASE
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public pop_front(): void
     {
         this.erase(this.begin());
     }
 
-    @inline()
+    @inline
     public pop_back(): void
     {
         this.erase(this.end().prev());
@@ -221,7 +221,7 @@ export class List<T>
     ==================================================================
         UNIQUE & REMOVE(_IF)
     --------------------------------------------------------------- */
-    @inline()
+    @inline
     public unique(pred: BinaryPredicator<T>): void
     {
         for (let it = this.begin().next(); it != this.end(); )
@@ -231,7 +231,7 @@ export class List<T>
                 it = it.next();
     }
 
-    @inline()
+    @inline
     public remove(val: T): void
     {
         for (let it = this.begin(); it != this.end(); )
@@ -241,7 +241,7 @@ export class List<T>
                 it = it.next();
     }
 
-    @inline()
+    @inline
     public remove_if(pred: UnaryPredicator<T>): void
     {
         for (let it = this.begin(); it != this.end(); )
@@ -300,7 +300,7 @@ export class List<T>
     /* ---------------------------------------------------------
         SORT & SWAP
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public sort(comp: Comparator<T>): void
     {
         this._Quick_sort(this.begin(), this.end(), comp);
@@ -399,19 +399,19 @@ export namespace List
             this.value_ = value;
         }
 
-        @inline()
+        @inline
         public static _Create<T>(sourcePtr: SourcePointer<List<T>>, prev: Iterator<T> | null, next: Iterator<T> | null, value: T): Iterator<T>
         {
             return new Iterator<T>(sourcePtr, prev, next, value);
         }
 
-        @inline()
+        @inline
         public static _Set_prev<T>(it: Iterator<T>, prev: Iterator<T> | null): void
         {
             it.prev_ = prev;
         }
 
-        @inline()
+        @inline
         public static _Set_next<T>(it: Iterator<T>, next: Iterator<T> | null): void
         {
             it.next_ = next;
@@ -420,19 +420,19 @@ export namespace List
         /* ---------------------------------------------------------------
             ITERATORS
         --------------------------------------------------------------- */
-        @inline()
+        @inline
         public reverse(): ReverseIterator<T>
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator<T>
         {
             return this.prev_ ? this.prev_! : this;
         }
 
-        @inline()
+        @inline
         public next(): Iterator<T>
         {
             return this.next_ ? this.next_! : this;
@@ -441,31 +441,31 @@ export namespace List
         /* ---------------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): List<T>
         {
             return this.source_ptr_.value;
         }
 
-        @inline()
+        @inline
         public get value(): T
         {
             return this.value_;
         }
 
-        @inline()
+        @inline
         public set value(val: T)
         {
             this.value_ = val;
         }
 
-        @inline()
+        @inline
         public static _Is_erased<T>(it: Iterator<T>): boolean
         {
             return it.erased_;
         }
 
-        @inline()
+        @inline
         public static _Set_erased<T>(it: Iterator<T>): void
         {
             it.erased_ = true;
@@ -475,13 +475,13 @@ export namespace List
     export class ReverseIterator<T> 
         extends ReverseBase<T, List<T>, List<T>, Iterator<T>, ReverseIterator<T>, T>
     {
-        @inline()
+        @inline
         public get value(): T
         {
             return this.base_.value;
         }
         
-        @inline()
+        @inline
         public set value(val: T)
         {
             this.base_.value = val;

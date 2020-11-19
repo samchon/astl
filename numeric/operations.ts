@@ -11,7 +11,7 @@ export function gcd<T>(x: T, y: T): T
     return x;
 }
 
-@inline()
+@inline
 export function lcd<T>(x: T, y: T): T
 {
     return x * y / gcd<T>(x, y);
@@ -98,7 +98,7 @@ export function partial_sum<InputIterator, OutputIterator, PlusOperator>
 /* ---------------------------------------------------------
     PREFIX SUMS
 --------------------------------------------------------- */
-@inline()
+@inline
 export function inclusive_scan<InputIterator, OutputIterator, PlusOperator, T>
     (
         first: InputIterator, last: InputIterator,
@@ -109,7 +109,7 @@ export function inclusive_scan<InputIterator, OutputIterator, PlusOperator, T>
     return transform_inclusive_scan<InputIterator, OutputIterator, PlusOperator, (val: T) => T, T>(first, last, output, op, val => val);
 }
 
-@inline()
+@inline
 export function exclusive_scan<InputIterator, OutputIterator, T, PlusOperator>
     (
         first: InputIterator, last: InputIterator,

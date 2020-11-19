@@ -5,6 +5,11 @@
       "textFile": "build/test.wat",
       "sourceMap": true,
       "debug": true
+    },
+    "benchmark": {
+      "binaryFile": "build/benchmark.wasm",
+      "textFile": "build/benchmark.wat",
+      "optimize": true
     }
   },
   "options": {}

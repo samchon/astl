@@ -28,7 +28,7 @@ export class Deque<T>
         this.capacity_ = Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY;
     }
 
-    @inline()
+    @inline
     public assign<InputIterator>
         (first: InputIterator, last: InputIterator): void
     {
@@ -37,7 +37,7 @@ export class Deque<T>
         this.insert_range<InputIterator>(this.end(), first, last);
     }
 
-    @inline()
+    @inline
     public assign_repeatedly(length: usize, value: T): void
     {
         if (this.empty() === false)
@@ -55,7 +55,7 @@ export class Deque<T>
         this.capacity_ = 8;
     }
 
-    @inline()
+    @inline
     public resize(n: usize): void
     {
         this._Reserve(n, n);
@@ -83,6 +83,12 @@ export class Deque<T>
         this.capacity_ = capacity;
     }
 
+    @inline
+    public static reserve<T>(deque: Deque<T>, capacity: usize): void
+    {
+        deque._Reserve(capacity, deque.size());
+    }
+
     private _Try_expand(plus: usize, limit: usize = this.size()): void
     {
         const required: usize = this.size() + plus;
@@ -101,19 +107,19 @@ export class Deque<T>
     ============================================================
         CAPACITIES
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.size_;
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.size() === 0;
     }
 
-    @inline()
+    @inline
     public capacity(): usize
     {
         return this.capacity_;
@@ -130,7 +136,7 @@ export class Deque<T>
     /* ---------------------------------------------------------
         ELEMENTS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     @operator("[]")
     public at(index: usize): T
     {
@@ -141,7 +147,7 @@ export class Deque<T>
         return this.matrix_.at(tuple.first).at(tuple.second);
     }
 
-    @inline()
+    @inline
     @operator("[]=")
     public set(index: usize, val: T): void
     {
@@ -152,13 +158,13 @@ export class Deque<T>
         this.matrix_.at(tuple.first).set(tuple.second, val);
     }
     
-    @inline()
+    @inline
     public front(): T
     {
         return this.at(0);
     }
 
-    @inline()
+    @inline
     public back(): T
     {
         return this.at(this.size() - 1);
@@ -184,31 +190,31 @@ export class Deque<T>
     /* ---------------------------------------------------------
         ITERATORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public nth(index: usize): Deque.Iterator<T>
     {
         return new Deque.Iterator(this, index);
     }
 
-    @inline()
+    @inline
     public begin(): Deque.Iterator<T>
     {
         return this.nth(0);
     }
 
-    @inline()
+    @inline
     public end(): Deque.Iterator<T>
     {
         return this.nth(this.size());
     }
 
-    @inline()
+    @inline
     public rbegin(): Deque.ReverseIterator<T>
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): Deque.ReverseIterator<T>
     {
         return this.begin().reverse();
@@ -256,7 +262,7 @@ export class Deque<T>
         ++this.size_;
     }
     
-    @inline()
+    @inline
     public insert(pos: Deque.Iterator<T>, val: T): Deque.Iterator<T>
     {
         return this.insert_repeatedly(pos, 1, val);
@@ -451,25 +457,25 @@ export namespace Deque
             this.index_ = index;
         }
 
-        @inline()
+        @inline
         public reverse(): ReverseIterator<T>
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator<T>
         {
             return this.advance(-1);
         }
 
-        @inline()
+        @inline
         public next(): Iterator<T>
         {
             return this.advance(1);
         }
 
-        @inline()
+        @inline
         public advance(n: isize): Iterator<T>
         {
             return this.source_.nth(this.index_ + n);
@@ -478,25 +484,25 @@ export namespace Deque
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): Deque<T>
         {
             return this.source_;
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.index_;
         }
 
-        @inline()
+        @inline
         public get value(): T
         {
             return this.source_.at(this.index_);
         }
 
-        @inline()
+        @inline
         public set value(val: T)
         {
             this.source_.set(this.index_, val);
@@ -505,7 +511,7 @@ export namespace Deque
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("==")
         public equals(obj: Iterator<T>): boolean
         {
@@ -513,35 +519,35 @@ export namespace Deque
                 && this.index_ === obj.index_;
         }
 
-        @inline()
+        @inline
         @operator("<")
         public less(obj: Iterator<T>): boolean
         {
             return this.index_ < obj.index_;
         }
         
-        @inline()
+        @inline
         @operator("!=")
         protected __not_equals(obj: Iterator<T>): boolean
         {
             return !this.equals(obj);
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: Iterator<T>): boolean
         {
             return this.source_ === obj.source_ && this.index_ <= obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: Iterator<T>): boolean
         {
             return this.index_ > obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: Iterator<T>): boolean
         {
@@ -555,25 +561,25 @@ export namespace Deque
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */   
-        @inline()
+        @inline
         public advance(n: isize): ReverseIterator<T>
         {
             return this.base().advance(-n).reverse();
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.base().index();
         }
 
-        @inline()
+        @inline
         public get value(): T
         {
             return this.base_.value;
         }
 
-        @inline()
+        @inline
         public set value(val: T)
         {
             this.base_.value = val;
@@ -582,28 +588,28 @@ export namespace Deque
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("<")
         public less(obj: ReverseIterator<T>): boolean
         {
             return this.index() > obj.index();
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: ReverseIterator<T>): boolean
         {
             return this.source() === obj.source() && this.index() >= obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: ReverseIterator<T>): boolean
         {
             return this.index() < obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: ReverseIterator<T>): boolean
         {

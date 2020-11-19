@@ -140,7 +140,7 @@ export function nth_element<RandomAccessIterator, Comparator>
 /* ---------------------------------------------------------
     INSPECTOR
 --------------------------------------------------------- */
-@inline()
+@inline
 export function is_sorted<InputIterator, Comparator>
     (first: InputIterator, last: InputIterator, comp: Comparator): boolean
 {

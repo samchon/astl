@@ -22,7 +22,7 @@ export class TreeMultiSet<Key>
         );
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -31,7 +31,7 @@ export class TreeMultiSet<Key>
         this.insert_range<InputIterator>(first, last);
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
@@ -56,43 +56,43 @@ export class TreeMultiSet<Key>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public begin(): TreeMultiSet.Iterator<Key>
     {
         return this.data_.begin();
     }
 
-    @inline()
+    @inline
     public end(): TreeMultiSet.Iterator<Key>
     {
         return this.data_.end();
     }
 
-    @inline()
+    @inline
     public rbegin(): TreeMultiSet.ReverseIterator<Key>
     {
         return this.data_.rbegin();
     }
 
-    @inline()
+    @inline
     public rend(): TreeMultiSet.ReverseIterator<Key>
     {
         return this.data_.rend();
     }
 
-    @inline()
+    @inline
     public find(key: Key): TreeMultiSet.Iterator<Key>
     {
         const it: TreeMultiSet.Iterator<Key> = this.lower_bound(key);
@@ -101,13 +101,13 @@ export class TreeMultiSet<Key>
             : this.end();
     }
 
-    @inline()
+    @inline
     public has(key: Key): boolean
     {
         return this.find(key) != this.end();
     }
 
-    @inline()
+    @inline
     public count(key: Key): usize
     {
         let ret: usize = 0;
@@ -116,25 +116,25 @@ export class TreeMultiSet<Key>
         return ret;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.tree_.key_comp();
     }
 
-    @inline()
+    @inline
     public lower_bound(key: Key): TreeMultiSet.Iterator<Key>
     {
         return this.tree_.lower_bound(this.end(), key);
     }
 
-    @inline()
+    @inline
     public upper_bound(key: Key): TreeMultiSet.Iterator<Key>
     {
         return this.tree_.upper_bound(this.end(), key);
     }
 
-    @inline()
+    @inline
     public equal_range(key: Key): Pair<TreeMultiSet.Iterator<Key>, TreeMultiSet.Iterator<Key>>
     {
         return this.tree_.equal_range(this.end(), key);
@@ -152,7 +152,7 @@ export class TreeMultiSet<Key>
         return it;
     }
 
-    @inline()
+    @inline
     public insert_hint(hint: TreeMultiSet.Iterator<Key>, key: Key): TreeMultiSet.Iterator<Key>
     {
         return this.insert(key);

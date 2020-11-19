@@ -9,26 +9,26 @@ export class FrontInsertIterator<Container extends IPushFront<T>, T>
         this.data_ = data;
     }
 
-    @inline()
+    @inline
     public next(): FrontInsertIterator<Container, T>
     {
         return this;
     }
 
-    @inline()
+    @inline
     public set value(val: T)
     {
         this.data_.push_front(val);
     }
 
-    @inline()
+    @inline
     @operator("==")
     public equals(obj: FrontInsertIterator<Container, T>): boolean
     {
         return this.data_ == obj.data_;
     }
 
-    @inline()
+    @inline
     @operator("!=")
     protected __non_equals(obj: FrontInsertIterator<Container, T>): boolean
     {

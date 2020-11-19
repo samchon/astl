@@ -38,7 +38,7 @@ export function partition_point<ForwardIterator, UnaryPredicator>
     return first;
 }
 
-@inline()
+@inline
 export function partition<BidirectionalIterator, UnaryPredicator>
     (first: BidirectionalIterator, last: BidirectionalIterator, pred: UnaryPredicator): BidirectionalIterator
 {

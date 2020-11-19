@@ -20,7 +20,7 @@ export class TreeSet<Key>
         this.tree_ = new UniqueIteratorTree<Key, TreeSet.Iterator<Key>>(it => it.value, comp);
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -29,7 +29,7 @@ export class TreeSet<Key>
         this.insert_range<InputIterator>(first, last);
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
@@ -54,43 +54,43 @@ export class TreeSet<Key>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public begin(): TreeSet.Iterator<Key>
     {
         return this.data_.begin();
     }
 
-    @inline()
+    @inline
     public end(): TreeSet.Iterator<Key>
     {
         return this.data_.end();
     }
 
-    @inline()
+    @inline
     public rbegin(): TreeSet.ReverseIterator<Key>
     {
         return this.data_.rbegin();
     }
 
-    @inline()
+    @inline
     public rend(): TreeSet.ReverseIterator<Key>
     {
         return this.data_.rend();
     }
 
-    @inline()
+    @inline
     public find(key: Key): TreeSet.Iterator<Key>
     {
         const it: TreeSet.Iterator<Key> = this.lower_bound(key);
@@ -99,37 +99,37 @@ export class TreeSet<Key>
             : this.end();
     }
 
-    @inline()
+    @inline
     public has(key: Key): boolean
     {
         return this.find(key) != this.end();
     }
 
-    @inline()
+    @inline
     public count(key: Key): usize
     {
         return this.has(key) ? 1 : 0;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.tree_.key_comp();
     }
 
-    @inline()
+    @inline
     public lower_bound(key: Key): TreeSet.Iterator<Key>
     {
         return this.tree_.lower_bound(this.end(), key);
     }
 
-    @inline()
+    @inline
     public upper_bound(key: Key): TreeSet.Iterator<Key>
     {
         return this.tree_.upper_bound(this.end(), key);
     }
 
-    @inline()
+    @inline
     public equal_range(key: Key): Pair<TreeSet.Iterator<Key>, TreeSet.Iterator<Key>>
     {
         return this.tree_.equal_range(this.end(), key);
@@ -150,13 +150,13 @@ export class TreeSet<Key>
         return new Pair(it, true);
     }
 
-    @inline()
+    @inline
     public insert_hint(hint: TreeSet.Iterator<Key>, key: Key): TreeSet.Iterator<Key>
     {
         return this.insert(key).first;
     }
 
-    @inline()
+    @inline
     public insert_range<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -164,7 +164,7 @@ export class TreeSet<Key>
             this.insert(first.value);
     }
 
-    @inline()
+    @inline
     public erase(first: TreeSet.Iterator<Key>, last: TreeSet.Iterator<Key> = first.next()): TreeSet.Iterator<Key>
     {
         const it: TreeSet.Iterator<Key> = this.data_.erase(first, last);
@@ -174,7 +174,7 @@ export class TreeSet<Key>
         return it;
     }
 
-    @inline()
+    @inline
     public erase_by_key(key: Key): usize
     {
         const it: TreeSet.Iterator<Key> = this.find(key);

@@ -29,7 +29,7 @@ export class MapElementVector<Key, T,
         this.comp_ = changetype<Comparator<Key>>(0);
     }
 
-    @inline()
+    @inline
     public assign(comp: Comparator<Key>): void
     {
         this.comp_ = comp;
@@ -49,43 +49,43 @@ export class MapElementVector<Key, T,
     /* ---------------------------------------------------------
         ACCCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public source(): SourceT
     {
         return this.source_;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.comp_;
     }
 
-    @inline()
+    @inline
     public nth(index: usize): MapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         return new MapElementVector.Iterator(this, index);
     }
 
-    @inline()
+    @inline
     public begin(): MapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         return this.nth(0);
     }
 
-    @inline()
+    @inline
     public end(): MapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         return this.nth(this.size());
     }
 
-    @inline()
+    @inline
     public rbegin(): MapElementVector.ReverseIterator<Key, T, Unique, SourceT>
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): MapElementVector.ReverseIterator<Key, T, Unique, SourceT>
     {
         return this.begin().reverse();
@@ -94,14 +94,14 @@ export class MapElementVector<Key, T,
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public insert(pos: MapElementVector.Iterator<Key, T, Unique, SourceT>, val: Entry<Key, T>): MapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         this._Insert(pos.index(), val);
         return pos;
     }
 
-    @inline()
+    @inline
     public erase(first: MapElementVector.Iterator<Key, T, Unique, SourceT>, last: MapElementVector.Iterator<Key, T, Unique, SourceT> = first.next()): MapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         this._Erase(first.index(), last.index());
@@ -132,13 +132,13 @@ export class MapElementVector<Key, T,
         return this.nth(index);
     }
 
-    @inline()
+    @inline
     public upper_bound(key: Key): MapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         return this._Upper_bound(key, 0);
     }
     
-    @inline()
+    @inline
     public equal_range(key: Key): Pair<MapElementVector.Iterator<Key, T, Unique, SourceT>, MapElementVector.Iterator<Key, T, Unique, SourceT>>
     {
         const lower: MapElementVector.Iterator<Key, T, Unique, SourceT> = this.lower_bound(key);
@@ -188,25 +188,25 @@ export namespace MapElementVector
             this.index_ = index;
         }
 
-        @inline()
+        @inline
         public reverse(): ReverseIterator<Key, T, Unique, SourceT>
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator<Key, T, Unique, SourceT>
         {
             return this.advance(-1);
         }
 
-        @inline()
+        @inline
         public next(): Iterator<Key, T, Unique, SourceT>
         {
             return this.advance(1);
         }
 
-        @inline()
+        @inline
         public advance(n: isize): Iterator<Key, T, Unique, SourceT>
         {
             return this.data_.nth(this.index_ + n);
@@ -215,37 +215,37 @@ export namespace MapElementVector
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): SourceT
         {
             return this.data_.source();
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.index_;
         }
 
-        @inline()
+        @inline
         public get value(): Entry<Key, T>
         {
             return this.data_.at(this.index_);
         }
 
-        @inline()
+        @inline
         public get first(): Key
         {
             return this.value.first;
         }
 
-        @inline()
+        @inline
         public get second(): T
         {
             return this.value.second;
         }
 
-        @inline()
+        @inline
         public set second(val: T)
         {
             this.value.second = val;
@@ -254,42 +254,42 @@ export namespace MapElementVector
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("==")
         public equals(obj: Iterator<Key, T, Unique, SourceT>): boolean
         {
             return this.data_ === obj.data_ && this.index_ === obj.index_;
         }
 
-        @inline()
+        @inline
         @operator("<")
         public less(obj: Iterator<Key, T, Unique, SourceT>): boolean
         {
             return this.index_ < obj.index_;
         }
         
-        @inline()
+        @inline
         @operator("!=")
         protected __not_equals(obj: Iterator<Key, T, Unique, SourceT>): boolean
         {
             return !this.equals(obj);
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: Iterator<Key, T, Unique, SourceT>): boolean
         {
             return this.data_ === obj.data_ && this.index_ <= obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: Iterator<Key, T, Unique, SourceT>): boolean
         {
             return this.index_ > obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: Iterator<Key, T, Unique, SourceT>): boolean
         {
@@ -313,37 +313,37 @@ export namespace MapElementVector
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         public advance(n: isize): ReverseIterator<Key, T, Unique, SourceT>
         {
             return this.base().advance(-n).reverse();
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.base().index();
         }
 
-        @inline()
+        @inline
         public get value(): Entry<Key, T>
         {
             return this.base_.value;
         }
 
-        @inline()
+        @inline
         public get first(): Key
         {
             return this.value.first;
         }
 
-        @inline()
+        @inline
         public get second(): T
         {
             return this.value.second;
         }
 
-        @inline()
+        @inline
         public set second(val: T)
         {
             this.value.second = val;
@@ -352,28 +352,28 @@ export namespace MapElementVector
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("<")
         public less(obj: ReverseIterator<Key, T, Unique, SourceT>): boolean
         {
             return this.index() > obj.index();
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: ReverseIterator<Key, T, Unique, SourceT>): boolean
         {
             return this.source() === obj.source() && this.index() >= obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: ReverseIterator<Key, T, Unique, SourceT>): boolean
         {
             return this.index() < obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: ReverseIterator<Key, T, Unique, SourceT>): boolean
         {

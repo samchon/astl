@@ -56,7 +56,7 @@ export function minmax_element<ForwardIterator, Comparator>
     return new Pair(smallest, largest);
 }
 
-@inline()
+@inline
 export function clamp<T, Comparator>
     (v: T, lo: T, hi: T, comp: Comparator): T
 {

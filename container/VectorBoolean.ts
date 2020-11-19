@@ -21,7 +21,7 @@ export class VectorBoolean
         this.size_ = 0;
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<boolean, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -30,7 +30,7 @@ export class VectorBoolean
         this.insert_range<InputIterator>(this.end(), first, last);
     }
 
-    @inline()
+    @inline
     public assign_repeatedly(length: usize, value: boolean): void
     {
         if (this.empty() === false)
@@ -38,14 +38,14 @@ export class VectorBoolean
         this.insert_repeatedly(this.end(), length, value);
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
         this.size_ = 0;
     }
 
-    @inline()
+    @inline
     public flip(): void
     {
         for (let it = this.data_.begin(); it != this.data_.end(); it = it.next())
@@ -66,49 +66,49 @@ export class VectorBoolean
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.size_;
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.size() === 0;
     }
 
-    @inline()
+    @inline
     public nth(index: usize): VectorBoolean.Iterator
     {
         return new VectorBoolean.Iterator(this, index);
     }
 
-    @inline()
+    @inline
     public begin(): VectorBoolean.Iterator
     {
         return this.nth(0);
     }
 
-    @inline()
+    @inline
     public end(): VectorBoolean.Iterator
     {
         return this.nth(this.size());
     }
 
-    @inline()
+    @inline
     public rbegin(): VectorBoolean.ReverseIterator
     {
         return this.end().reverse();
     }
 
-    @inline()
+    @inline
     public rend(): VectorBoolean.ReverseIterator
     {
         return this.begin().reverse();
     }
 
-    @inline()
+    @inline
     @operator("[]")
     public at(index: usize): boolean
     {
@@ -153,19 +153,19 @@ export class VectorBoolean
             this.data_.erase(next);
     }
 
-    @inline()
+    @inline
     public front(): boolean
     {
         return this.at(0);
     }
 
-    @inline()
+    @inline
     public back(): boolean
     {
         return this.at(this.size() - 1);
     }
 
-    @inline()
+    @inline
     private _Find_node(index: usize): TreeMap.Iterator<usize, boolean>
     {
         return this.data_.upper_bound(index).prev();
@@ -201,7 +201,7 @@ export class VectorBoolean
     /* ---------------------------------------------------------
         INSERT
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public insert(pos: VectorBoolean.Iterator, val: boolean): VectorBoolean.Iterator
     {
         return this.insert_repeatedly(pos, 1, val);
@@ -318,25 +318,25 @@ export namespace VectorBoolean
             this.index_ = index;
         }
 
-        @inline()
+        @inline
         public reverse(): ReverseIterator
         {
             return new ReverseIterator(this);
         }
 
-        @inline()
+        @inline
         public prev(): Iterator
         {
             return this.advance(-1);
         }
 
-        @inline()
+        @inline
         public next(): Iterator
         {
             return this.advance(1);
         }
 
-        @inline()
+        @inline
         public advance(n: isize): Iterator
         {
             return this.source_.nth(this.index_ + n);
@@ -345,25 +345,25 @@ export namespace VectorBoolean
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         public source(): VectorBoolean
         {
             return this.source_;
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.index_;
         }
 
-        @inline()
+        @inline
         public get value(): boolean
         {
             return this.source_.at(this.index_);
         }
 
-        @inline()
+        @inline
         public set value(val: boolean)
         {
             this.source_.set(this.index_, val);
@@ -372,42 +372,42 @@ export namespace VectorBoolean
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("==")
         public equals(obj: Iterator): boolean
         {
             return this.source_ === obj.source_ && this.index_ === obj.index_;
         }
 
-        @inline()
+        @inline
         @operator("<")
         public less(obj: Iterator): boolean
         {
             return this.index_ < obj.index_;
         }
         
-        @inline()
+        @inline
         @operator("!=")
         protected __not_equals(obj: Iterator): boolean
         {
             return !this.equals(obj);
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: Iterator): boolean
         {
             return this.source_ === obj.source_ && this.index_ <= obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: Iterator): boolean
         {
             return this.index_ > obj.index_;
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: Iterator): boolean
         {
@@ -421,25 +421,25 @@ export namespace VectorBoolean
         /* ---------------------------------------------------------
             ACCESSORS
         --------------------------------------------------------- */   
-        @inline()
+        @inline
         public advance(n: isize): ReverseIterator
         {
             return this.base().advance(-n).reverse();
         }
 
-        @inline()
+        @inline
         public index(): usize
         {
             return this.base().index();
         }
 
-        @inline()
+        @inline
         public get value(): boolean
         {
             return this.base_.value;
         }
 
-        @inline()
+        @inline
         public set value(val: boolean)
         {
             this.base_.value = val;
@@ -448,28 +448,28 @@ export namespace VectorBoolean
         /* ---------------------------------------------------------
             OPERATORS
         --------------------------------------------------------- */
-        @inline()
+        @inline
         @operator("<")
         public less(obj: ReverseIterator): boolean
         {
             return this.index() > obj.index();
         }
 
-        @inline()
+        @inline
         @operator("<=")
         protected __less_equals(obj: ReverseIterator): boolean
         {
             return this.source() === obj.source() && this.index() >= obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">")
         protected __greater(obj: ReverseIterator): boolean
         {
             return this.index() < obj.index();
         }
 
-        @inline()
+        @inline
         @operator(">=")
         protected __greater_equals(obj: ReverseIterator): boolean
         {

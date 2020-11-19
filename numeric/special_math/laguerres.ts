@@ -1,6 +1,6 @@
 import { Vector } from "../../container/Vector";
 
-@inline()
+@inline
 export function laguerre(n: u32, x: f64): f64
 {
     return assoc_laguerre(n, 0, x);

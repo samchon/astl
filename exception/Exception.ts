@@ -5,7 +5,7 @@ export class Exception extends Error
         super(message);
     }
 
-    @inline()
+    @inline
     public what(): string
     {
         return this.message;

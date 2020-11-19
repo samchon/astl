@@ -9,21 +9,21 @@ export class InsertIterator<ContainerT, IteratorT, T>
         this.it_ = it;
     }
 
-    @inline()
+    @inline
     public set value(val: T)
     {
         this.it_ = this.container_.insert(this.it_, val);
         this.it_ = this.it_.next();
     }
 
-    @inline()
+    @inline
     @operator("==")
     public equals(obj: InsertIterator<ContainerT, IteratorT, T>): boolean
     {
         return this.it_ == obj.it_;
     }
 
-    @inline()
+    @inline
     @operator("!=")
     protected __non_equals(obj: InsertIterator<ContainerT, IteratorT, T>): boolean
     {

@@ -17,7 +17,7 @@ export class FlatMultiSet<Key>
         this.data_.assign(comp);
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -26,7 +26,7 @@ export class FlatMultiSet<Key>
         this.insert_range<InputIterator>(first, last);
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
@@ -44,49 +44,49 @@ export class FlatMultiSet<Key>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public nth(index: usize): FlatMultiSet.Iterator<Key>
     {
         return this.data_.nth(index);
     }
 
-    @inline()
+    @inline
     public begin(): FlatMultiSet.Iterator<Key>
     {
         return this.data_.begin();
     }
 
-    @inline()
+    @inline
     public end(): FlatMultiSet.Iterator<Key>
     {
         return this.data_.end();
     }
 
-    @inline()
+    @inline
     public rbegin(): FlatMultiSet.ReverseIterator<Key>
     {
         return this.data_.rbegin();
     }
 
-    @inline()
+    @inline
     public rend(): FlatMultiSet.ReverseIterator<Key>
     {
         return this.data_.rend();
     }
 
-    @inline()
+    @inline
     public find(key: Key): FlatMultiSet.Iterator<Key>
     {
         const it: FlatMultiSet.Iterator<Key> = this.lower_bound(key);
@@ -96,13 +96,13 @@ export class FlatMultiSet<Key>
             return this.end();
     }
 
-    @inline()
+    @inline
     public has(key: Key): boolean
     {
         return this.find(key) != this.end();
     }
 
-    @inline()
+    @inline
     public count(key: Key): usize
     {
         let ret: usize = 0;
@@ -111,25 +111,25 @@ export class FlatMultiSet<Key>
         return ret;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.data_.key_comp();
     }
 
-    @inline()
+    @inline
     public lower_bound(key: Key): FlatMultiSet.Iterator<Key>
     {
         return this.data_.lower_bound(key);
     }
 
-    @inline()
+    @inline
     public upper_bound(key: Key): FlatMultiSet.Iterator<Key>
     {
         return this.data_.upper_bound(key);
     }
 
-    @inline()
+    @inline
     public equal_range(key: Key): Pair<FlatMultiSet.Iterator<Key>, FlatMultiSet.Iterator<Key>>
     {
         return this.data_.equal_range(key);
@@ -144,7 +144,7 @@ export class FlatMultiSet<Key>
         return this.data_.insert(upper, key);
     }
 
-    @inline()
+    @inline
     public insert_hint(hint: FlatMultiSet.Iterator<Key>, key: Key): FlatMultiSet.Iterator<Key>
     {
         return this.insert(key);
@@ -158,7 +158,7 @@ export class FlatMultiSet<Key>
     }
 
 
-    @inline()
+    @inline
     public erase(first: FlatMultiSet.Iterator<Key>, last: FlatMultiSet.Iterator<Key> = first.next()): FlatMultiSet.Iterator<Key>
     {
         return this.data_.erase(first, last);

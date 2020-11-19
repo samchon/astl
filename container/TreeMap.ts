@@ -23,7 +23,7 @@ export class TreeMap<Key, T>
         this.tree_ = new UniqueIteratorTree<Key, TreeMap.Iterator<Key, T>>(it => it.first, comp);
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -32,7 +32,7 @@ export class TreeMap<Key, T>
         this.insert_range<InputIterator>(first, last);
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
@@ -57,43 +57,43 @@ export class TreeMap<Key, T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public begin(): TreeMap.Iterator<Key, T>
     {
         return this.data_.begin();
     }
 
-    @inline()
+    @inline
     public end(): TreeMap.Iterator<Key, T>
     {
         return this.data_.end();
     }
 
-    @inline()
+    @inline
     public rbegin(): TreeMap.ReverseIterator<Key, T>
     {
         return this.data_.rbegin();
     }
 
-    @inline()
+    @inline
     public rend(): TreeMap.ReverseIterator<Key, T>
     {
         return this.data_.rend();
     }
 
-    @inline()
+    @inline
     public find(key: Key): TreeMap.Iterator<Key, T>
     {
         const it: TreeMap.Iterator<Key, T> = this.lower_bound(key);
@@ -102,19 +102,19 @@ export class TreeMap<Key, T>
             : this.end();
     }
 
-    @inline()
+    @inline
     public has(key: Key): boolean
     {
         return this.find(key) != this.end();
     }
 
-    @inline()
+    @inline
     public count(key: Key): usize
     {
         return this.has(key) ? 1 : 0;
     }
 
-    @inline()
+    @inline
     @operator("[]")
     public get(key: Key): T
     {
@@ -124,25 +124,25 @@ export class TreeMap<Key, T>
         return it.second;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.tree_.key_comp();
     }
 
-    @inline()
+    @inline
     public lower_bound(key: Key): TreeMap.Iterator<Key, T>
     {
         return this.tree_.lower_bound(this.end(), key);
     }
 
-    @inline()
+    @inline
     public upper_bound(key: Key): TreeMap.Iterator<Key, T>
     {
         return this.tree_.upper_bound(this.end(), key);
     }
 
-    @inline()
+    @inline
     public equal_range(key: Key): Pair<TreeMap.Iterator<Key, T>, TreeMap.Iterator<Key, T>>
     {
         return this.tree_.equal_range(this.end(), key);
@@ -151,7 +151,7 @@ export class TreeMap<Key, T>
     /* ---------------------------------------------------------
         ELEMENTS I/O
     --------------------------------------------------------- */
-    @inline()
+    @inline
     @operator("[]=")
     public set(key: Key, value: T): void
     {
@@ -173,13 +173,13 @@ export class TreeMap<Key, T>
         return new Pair(it, true);
     }
 
-    @inline()
+    @inline
     public emplace_hint(hint: TreeMap.Iterator<Key, T>, key: Key, value: T): TreeMap.Iterator<Key, T>
     {
         return this.emplace(key, value).first;
     }
 
-    @inline()
+    @inline
     public insert_range<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -196,7 +196,7 @@ export class TreeMap<Key, T>
         return it;
     }
 
-    @inline()
+    @inline
     public erase_by_key(key: Key): usize
     {
         const it: TreeMap.Iterator<Key, T> = this.find(key);

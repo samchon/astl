@@ -19,7 +19,7 @@ export class FlatMultiMap<Key, T>
         this.data_.assign(comp);
     }
 
-    @inline()
+    @inline
     public assign<InputIterator extends IForwardIterator<IPair<Key, T>, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
@@ -28,7 +28,7 @@ export class FlatMultiMap<Key, T>
         this.insert_range<InputIterator>(first, last);
     }
 
-    @inline()
+    @inline
     public clear(): void
     {
         this.data_.clear();
@@ -46,49 +46,49 @@ export class FlatMultiMap<Key, T>
     /* ---------------------------------------------------------
         ACCESSORS
     --------------------------------------------------------- */
-    @inline()
+    @inline
     public size(): usize
     {
         return this.data_.size();
     }
 
-    @inline()
+    @inline
     public empty(): boolean
     {
         return this.data_.empty();
     }
 
-    @inline()
+    @inline
     public nth(index: usize): FlatMultiMap.Iterator<Key, T>
     {
         return this.data_.nth(index);
     }
 
-    @inline()
+    @inline
     public begin(): FlatMultiMap.Iterator<Key, T>
     {
         return this.data_.begin();
     }
 
-    @inline()
+    @inline
     public end(): FlatMultiMap.Iterator<Key, T>
     {
         return this.data_.end();
     }
 
-    @inline()
+    @inline
     public rbegin(): FlatMultiMap.ReverseIterator<Key, T>
     {
         return this.data_.rbegin();
     }
 
-    @inline()
+    @inline
     public rend(): FlatMultiMap.ReverseIterator<Key, T>
     {
         return this.data_.rend();
     }
 
-    @inline()
+    @inline
     public find(key: Key): FlatMultiMap.Iterator<Key, T>
     {
         const it: FlatMultiMap.Iterator<Key, T> = this.lower_bound(key);
@@ -98,13 +98,13 @@ export class FlatMultiMap<Key, T>
             return this.end();
     }
 
-    @inline()
+    @inline
     public has(key: Key): boolean
     {
         return this.find(key) != this.end();
     }
 
-    @inline()
+    @inline
     public count(key: Key): usize
     {
         let ret: usize = 0;
@@ -113,25 +113,25 @@ export class FlatMultiMap<Key, T>
         return ret;
     }
 
-    @inline()
+    @inline
     public key_comp(): Comparator<Key>
     {
         return this.data_.key_comp();
     }
 
-    @inline()
+    @inline
     public lower_bound(key: Key): FlatMultiMap.Iterator<Key, T>
     {
         return this.data_.lower_bound(key);
     }
 
-    @inline()
+    @inline
     public upper_bound(key: Key): FlatMultiMap.Iterator<Key, T>
     {
         return this.data_.upper_bound(key);
     }
 
-    @inline()
+    @inline
     public equal_range(key: Key): Pair<FlatMultiMap.Iterator<Key, T>, FlatMultiMap.Iterator<Key, T>>
     {
         return this.data_.equal_range(key);
@@ -146,7 +146,7 @@ export class FlatMultiMap<Key, T>
         return this.data_.insert(upper, new Entry(key, value));
     }
 
-    @inline()
+    @inline
     public emplace_hint(hint: FlatMultiMap.Iterator<Key, T>, key: Key, value: T): FlatMultiMap.Iterator<Key, T>
     {
         return this.emplace(key, value);
@@ -159,7 +159,7 @@ export class FlatMultiMap<Key, T>
             this.emplace(first.value.first, first.value.second);
     }
 
-    @inline()
+    @inline
     public erase(first: FlatMultiMap.Iterator<Key, T>, last: FlatMultiMap.Iterator<Key, T> = first.next()): FlatMultiMap.Iterator<Key, T>
     {
         return this.data_.erase(first, last);

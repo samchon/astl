@@ -21,7 +21,7 @@ export function ellint_1(k: f64, phi: f64): f64
     return ret;
 }
 
-@inline()
+@inline
 export function comp_ellint_1(k: f64): f64
 {
     return ellint_1(k, Math.PI / 2);
@@ -48,7 +48,7 @@ export function ellint_2(k: f64, phi: f64): f64
     return ret;
 }
 
-@inline()
+@inline
 export function comp_ellint_2(k: f64): f64
 {
     return ellint_2(k, Math.PI / 2);
@@ -78,7 +78,7 @@ export function ellint_3(k: f64, v: f64, phi: f64): f64
     return ret;
 }
 
-@inline()
+@inline
 export function comp_ellint_3(k: f64, v: f64): f64
 {
     return ellint_3(k, v, Math.PI / 2);
@@ -87,7 +87,7 @@ export function comp_ellint_3(k: f64, v: f64): f64
 /* ---------------------------------------------------------------
     BACKGROUNDS
 --------------------------------------------------------------- */
-@inline()
+@inline
 function _Common_formula(k: f64, x: f64): f64
 {
     return Math.sqrt(1 - Math.pow(k * Math.sin(x), 2));

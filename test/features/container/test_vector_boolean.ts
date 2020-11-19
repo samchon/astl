@@ -2,7 +2,7 @@ import std from "../../../index";
 
 import { StopWatch } from "../../internal/StopWatch";
 
-@inline()
+@inline
 function rand_bool(): boolean
 {
     return Math.random() < .5;

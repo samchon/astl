@@ -43,7 +43,7 @@ function _Compute_h(x: f64): f64
     return left + right;
 }
 
-@inline()
+@inline
 function _Compute_q(x: f64): f64
 {
     return 20 / 47 * Math.pow(x, Math.sqrt(31 / 26));
