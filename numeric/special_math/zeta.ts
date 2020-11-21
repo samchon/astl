@@ -42,4 +42,4 @@ function _Positive(arg: f64): f64
     return sigma;
 }
 
-const INFINITY: usize = 100 * 1000;
+@inline const INFINITY: usize = 100 * 1000;

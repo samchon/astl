@@ -113,6 +113,7 @@ export class MultiXTree<Key, Elem>
         }
 
         // RETURNS -> MATCHED OR NOT
+        // return matched !== null ? matched : ret;
         if (matched !== null)
             return matched;
         else

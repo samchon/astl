@@ -21,10 +21,10 @@ export class Deque<T>
     {
         this.matrix_ = new Vector();
         this.matrix_.push_back(new Vector());
-        this.matrix_.back().reserve(Deque.MIN_ROW_CAPACITY);
+        this.matrix_.back().reserve(MIN_ROW_CAPACITY);
 
         this.size_ = 0;
-        this.capacity_ = Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY;
+        this.capacity_ = ROW_SIZE * MIN_ROW_CAPACITY;
     }
 
     @inline
@@ -48,7 +48,7 @@ export class Deque<T>
     {
         this.matrix_ = new Vector();
         this.matrix_.push_back(new Vector());
-        this.matrix_.back().reserve(Deque.MIN_ROW_CAPACITY);
+        this.matrix_.back().reserve(MIN_ROW_CAPACITY);
 
         this.size_ = 0;
         this.capacity_ = 8;
@@ -64,20 +64,20 @@ export class Deque<T>
     @inline
     public reserve(capacity: usize): void
     {
-        if (this.capacity_ < CMath.max(capacity, Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY))
+        if (this.capacity_ < CMath.max(capacity, ROW_SIZE * MIN_ROW_CAPACITY))
             this._Reserve(capacity, this.size());
     }
 
     private _Reserve(capacity: usize, limit: usize): void
     {
         // FIX CAPACITY
-        capacity = CMath.max(capacity, Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY);
+        capacity = CMath.max(capacity, ROW_SIZE * MIN_ROW_CAPACITY);
         const length: usize = this._Compute_row_size(capacity);
-        capacity = length * Deque.ROW_SIZE;
+        capacity = length * ROW_SIZE;
         
         // CREATE THE NEW MATRIX
         const matrix: Vector<Vector<T>> = new Vector();
-        matrix.reserve(Deque.ROW_SIZE);
+        matrix.reserve(ROW_SIZE);
         this._Insert_row(matrix.end(), length);
 
         // RE-FILL THE VALES
@@ -95,7 +95,7 @@ export class Deque<T>
         if (this.capacity())
             return;
 
-        const capacity: usize = CMath.max(required, this.capacity() * 2);
+        const capacity: usize = CMath.max(required, this.capacity() * MAGNIFIER);
         this._Reserve(capacity, limit);
     }
 
@@ -127,7 +127,7 @@ export class Deque<T>
 
     private _Compute_row_size(capacity: usize): usize
     {
-        const value: f64 = capacity / <f64>Deque.ROW_SIZE;
+        const value: f64 = capacity / <f64>ROW_SIZE;
         const ret: usize = <usize>Math.ceil(value);
 
         return ret;
@@ -237,7 +237,7 @@ export class Deque<T>
         let top: Vector<T> = this.matrix_.front();
 
         // ADD A NEW ROW IF REQUIRED
-        if (top.size() >= length && this.matrix_.size() < Deque.ROW_SIZE)
+        if (top.size() >= length && this.matrix_.size() < ROW_SIZE)
             top = this._Insert_row(this.matrix_.begin(), length);
 
         // INSERT ITEM
@@ -254,7 +254,7 @@ export class Deque<T>
         let bottom: Vector<T> = this.matrix_.back();
 
         // ADD A NEW ROW IF REQUIRED
-        if (bottom.size() >= length && this.matrix_.size() < Deque.ROW_SIZE)
+        if (bottom.size() >= length && this.matrix_.size() < ROW_SIZE)
             bottom = this._Insert_row(this.matrix_.end(), length);
 
         // INSERT ITEM
@@ -300,7 +300,7 @@ export class Deque<T>
         else
         {
             const deque: Deque<T> = new Deque();
-            deque._Reserve(CMath.max(this.size() + plus, this.capacity() * 2), 0);
+            deque._Reserve(CMath.max(this.size() + plus, this.capacity() * MAGNIFIER), 0);
 
             deque.insert_range(deque.end(), this.begin(), pos);
             deque.insert_range(deque.end(), first, last);
@@ -439,10 +439,6 @@ export class Deque<T>
 
 export namespace Deque
 {
-    export const ROW_SIZE: usize = 8;
-    export const MIN_ROW_CAPACITY: usize = 4;
-    export const MAGNIFIER: usize = 2;
-
     export class Iterator<T>
     {
         private readonly source_: Deque<T>;
@@ -617,3 +613,7 @@ export namespace Deque
         }
     }
 }
+
+@inline const ROW_SIZE: usize = 8;
+@inline const MIN_ROW_CAPACITY: usize = 4;
+@inline const MAGNIFIER: usize = 2;

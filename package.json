@@ -6,7 +6,7 @@
     "email": "samchon@samchon.org",
     "url": "http://samchon.org"
   },
-  "version": "0.0.12",
+  "version": "0.0.13",
   "ascMain": "./index.ts",
   "scripts": {
     "benchmark": "asc benchmark/main.ts --target benchmark && node benchmark",
