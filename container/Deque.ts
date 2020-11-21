@@ -5,7 +5,6 @@ import { CMath } from "../internal/numeric/CMath";
 import { ErrorGenerator } from "../internal/exception/ErrorGenerator";
 import { Pair } from "../utility/Pair";
 
-import { IForwardIterator } from "../iterator/IForwardIterator";
 import { Repeater } from "../internal/iterator/disposable/Repeater";
 import { distance } from "../iterator/global";
 
@@ -62,6 +61,13 @@ export class Deque<T>
         this.size_ = n;
     }
 
+    @inline
+    public reserve(capacity: usize): void
+    {
+        if (this.capacity_ < CMath.max(capacity, Deque.ROW_SIZE * Deque.MIN_ROW_CAPACITY))
+            this._Reserve(capacity, this.size());
+    }
+
     private _Reserve(capacity: usize, limit: usize): void
     {
         // FIX CAPACITY
@@ -81,12 +87,6 @@ export class Deque<T>
         // ASSIGN THE MEMBERS
         this.matrix_ = matrix;
         this.capacity_ = capacity;
-    }
-
-    @inline
-    public static reserve<T>(deque: Deque<T>, capacity: usize): void
-    {
-        deque._Reserve(capacity, deque.size());
     }
 
     private _Try_expand(plus: usize, limit: usize = this.size()): void

@@ -67,7 +67,7 @@ export class HashBuckets<Key, Elem>
     {
         if (length > this.capacity())
         {
-            length = length / this.max_load_factor_;
+            length = <usize>(length / this.max_load_factor_);
             this.rehash(length);
         }
     }

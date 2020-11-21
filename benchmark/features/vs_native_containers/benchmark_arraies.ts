@@ -1,7 +1,5 @@
-import { remove_if } from "../../algorithm";
-import { Deque } from "../../container";
-import std from "../../index";
-import { BenchmarkUtil } from "../internal/BenchmarkUtil";
+import std from "../../../index";
+import { BenchmarkUtil } from "../../internal/BenchmarkUtil";
 
 const vector: std.Vector<usize> = new std.Vector();
 const deque: std.Deque<usize> = new std.Deque();
@@ -33,26 +31,28 @@ function measure_push(): string
 
 function measure_reserve(): string
 {
-    vector.clear();
-    deque.clear();
-    array = [];
-
     return BenchmarkUtil.measure("reserve", 
     [
         () =>
         {
+            vector.clear();
             vector.reserve(LIMIT);
+
             for (let i: usize = 0; i < LIMIT; ++i)
                 vector.push_back(i);
         },
         () =>
         {
-            Deque.reserve<usize>(deque, LIMIT);
+            deque.clear();
+            deque.reserve(LIMIT);
+
             for (let i: usize = 0; i < LIMIT; ++i)
                 deque.push_back(i);
         },
         () =>
         {
+            array.splice(0, array.length);
+            
             for (let i: usize = 0; i < LIMIT; ++i)
                 array.push(i);
         }
@@ -169,11 +169,11 @@ function measure_insert(): string
     ]);
 }
 
-export function benchmark_vector(): string
+export function benchmark_arraies(): string
 {
-    return "## Array Containers\n"
+    return "### Array Containers\n"
         + " Method | Vector<i32> | Deque<i32> | Array<i32> \n"
-        + "-----------|-------------|------------|------------\n"
+        + "--------|------------:|-----------:|-----------:\n"
         + measure_push() + "\n"
         + measure_reserve() + "\n"
         + measure_access() + "\n"
