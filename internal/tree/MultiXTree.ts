@@ -113,11 +113,11 @@ export class MultiXTree<Key, Elem>
         }
 
         // RETURNS -> MATCHED OR NOT
-        // return matched !== null ? matched : ret;
-        if (matched !== null)
-            return matched;
-        else
-            return ret;
+        return matched !== null ? matched : ret;
+        // if (matched !== null)
+        //     return matched;
+        // else
+        //     return ret;
     }
 
     private nearest_value(elem: Elem): XTreeNode<Elem> | null
