@@ -552,7 +552,7 @@ export namespace Deque
     }
 
     export class ReverseIterator<T>
-        extends ReverseIteratorBase<T, Deque<T>, Deque<T>, Iterator<T>, ReverseIterator<T>, T>
+        extends ReverseIteratorBase<T, Deque<T>, Iterator<T>, ReverseIterator<T>, T>
     {   
         /* ---------------------------------------------------------
             ACCESSORS

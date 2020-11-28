@@ -1,4 +1,6 @@
-export * from "./FlatMap";
-export * from "./FlatMultiMap";
-export * from "./FlatMultiSet";
-export * from "./FlatSet";
+export * from "./FlatHashSet";
+
+export * from "./FlatTreeMap";
+export * from "./FlatTreeMultiMap";
+export * from "./FlatTreeMultiSet";
+export * from "./FlatTreeSet";

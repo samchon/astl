@@ -7,7 +7,7 @@ export function test_flat_multi_set(): void
 {
     StopWatch.measure("test_flat_multi_set", () =>
     {
-        test_multi_tree_container_base<std.experimental.FlatMultiSet<i32>, std.experimental.FlatMultiSet.Iterator<i32>>
+        test_multi_tree_container_base<std.experimental.FlatTreeMultiSet<i32>, std.experimental.FlatMultiSet.Iterator<i32>>
         (
             (source, key) => source.insert(key),
             it => it.value,

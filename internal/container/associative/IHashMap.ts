@@ -8,7 +8,6 @@ export interface IHashMap<Key, T,
         Unique extends boolean, 
         SourceT extends IHashMap<Key, T, Unique, SourceT>>
     extends IMapContainer<Key, T, Unique, SourceT, 
-        MapElementList<Key, T, Unique, SourceT>,
         MapElementList.Iterator<Key, T, Unique, SourceT>,
         MapElementList.ReverseIterator<Key, T, Unique, SourceT>>
 {

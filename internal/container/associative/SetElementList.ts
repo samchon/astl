@@ -2,13 +2,13 @@ import { ISetContainer } from "./ISetContainer";
 
 import { IForwardIterator } from "../../../iterator/IForwardIterator";
 import { ReverseIteratorBase as ReverseBase } from "../../iterator/ReverseIteratorBase";
+
 import { Repeater } from "../../iterator/disposable/Repeater";
 import { distance } from "../../../iterator/global";
 
 export class SetElementList<Key, 
         Unique extends boolean, 
         SourceT extends ISetContainer<Key, Unique, SourceT, 
-            SetElementList<Key, Unique, SourceT>, 
             SetElementList.Iterator<Key, Unique, SourceT>, 
             SetElementList.ReverseIterator<Key, Unique, SourceT>>>
 {
@@ -210,7 +210,6 @@ export namespace SetElementList
     export class Iterator<Key, 
             Unique extends boolean, 
             SourceT extends ISetContainer<Key, Unique, SourceT, 
-                SetElementList<Key, Unique, SourceT>, 
                 Iterator<Key, Unique, SourceT>, 
                 ReverseIterator<Key, Unique, SourceT>>>
     {
@@ -247,7 +246,6 @@ export namespace SetElementList
         public static _Create<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
-                    SetElementList<Key, Unique, SourceT>, 
                     Iterator<Key, Unique, SourceT>, 
                     ReverseIterator<Key, Unique, SourceT>>>
             (
@@ -265,7 +263,6 @@ export namespace SetElementList
         public static _Set_prev<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
-                    SetElementList<Key, Unique, SourceT>, 
                     Iterator<Key, Unique, SourceT>, 
                     ReverseIterator<Key, Unique, SourceT>>>
             (it: Iterator<Key, Unique, SourceT>, prev: Iterator<Key, Unique, SourceT>): void
@@ -277,7 +274,6 @@ export namespace SetElementList
         public static _Set_next<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
-                    SetElementList<Key, Unique, SourceT>, 
                     Iterator<Key, Unique, SourceT>, 
                     ReverseIterator<Key, Unique, SourceT>>>
             (it: Iterator<Key, Unique, SourceT>, next: Iterator<Key, Unique, SourceT>): void
@@ -325,7 +321,6 @@ export namespace SetElementList
         public static _Is_erased<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
-                    SetElementList<Key, Unique, SourceT>, 
                     Iterator<Key, Unique, SourceT>, 
                     ReverseIterator<Key, Unique, SourceT>>>
             (it: Iterator<Key, Unique, SourceT>): boolean
@@ -337,7 +332,6 @@ export namespace SetElementList
         public static _Set_erased<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
-                    SetElementList<Key, Unique, SourceT>, 
                     Iterator<Key, Unique, SourceT>, 
                     ReverseIterator<Key, Unique, SourceT>>>
             (it: Iterator<Key, Unique, SourceT>): void
@@ -349,7 +343,6 @@ export namespace SetElementList
         public static _Compare_uid<Key, 
                 Unique extends boolean, 
                 SourceT extends ISetContainer<Key, Unique, SourceT, 
-                    SetElementList<Key, Unique, SourceT>, 
                     Iterator<Key, Unique, SourceT>, 
                     ReverseIterator<Key, Unique, SourceT>>>
             (x: Iterator<Key, Unique, SourceT>, y: Iterator<Key, Unique, SourceT>): boolean
@@ -361,12 +354,10 @@ export namespace SetElementList
     export class ReverseIterator<Key,
             Unique extends boolean, 
             SourceT extends ISetContainer<Key, Unique, SourceT, 
-                SetElementList<Key, Unique, SourceT>, 
                 Iterator<Key, Unique, SourceT>, 
                 ReverseIterator<Key, Unique, SourceT>>>
         extends ReverseBase<Key, 
             SourceT, 
-            SetElementList<Key, Unique, SourceT>, 
             Iterator<Key, Unique, SourceT>, 
             ReverseIterator<Key, Unique, SourceT>, 
             Key>

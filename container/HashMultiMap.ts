@@ -1,5 +1,5 @@
 import { MapElementList } from "../internal/container/associative/MapElementList";
-import { IteratorHashBuckets } from "../internal/hash/IteratorHashBuckets";
+import { HashBuckets } from "../internal/hash/HashBuckets";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { IPair } from "../utility/IPair";
@@ -14,14 +14,14 @@ import { equal_to } from "../functional/comparators";
 export class HashMultiMap<Key, T>
 {
     private data_: MapElementList<Key, T, false, HashMultiMap<Key, T>> = new MapElementList(<HashMultiMap<Key, T>>this);
-    private buckets_: IteratorHashBuckets<Key, HashMultiMap.Iterator<Key, T>>;
+    private buckets_: HashBuckets<Key, HashMultiMap.Iterator<Key, T>>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
     public constructor(hasher: Hasher<Key> = elem => hash(elem), predicator: BinaryPredicator<Key> = (x, y) => equal_to(x, y))
     {
-        this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.first);
+        this.buckets_ = new HashBuckets(hasher, predicator, it => it.first);
     }
 
     @inline
@@ -50,7 +50,7 @@ export class HashMultiMap<Key, T>
         obj.data_ = data;
 
         // SWAP BUCKETS
-        const buckets: IteratorHashBuckets<Key, HashMultiMap.Iterator<Key, T>> = this.buckets_;
+        const buckets: HashBuckets<Key, HashMultiMap.Iterator<Key, T>> = this.buckets_;
         this.buckets_ = obj.buckets_;
         obj.buckets_ = buckets;
     }
@@ -141,7 +141,7 @@ export class HashMultiMap<Key, T>
     @inline
     public bucket_count(): usize
     {
-        return this.buckets_.length();
+        return this.buckets_.count();
     }
 
     @inline

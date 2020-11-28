@@ -1,7 +1,8 @@
 import std from "../../../index";
 import { BenchmarkUtil } from "../../internal/BenchmarkUtil";
 
-const hash: std.HashSet<string> = new std.HashSet();
+const associative: std.HashSet<string> = new std.HashSet();
+const adaptive: std.experimental.FlatHashSet<string> = new std.experimental.FlatHashSet();
 const native: Set<string> = new Set();
 
 const LIMIT: usize = 1000000;
@@ -13,7 +14,12 @@ function measure_insert(): string
         () =>
         {
             for (let i: usize = 0; i < LIMIT; i += 10)
-                hash.insert(i.toString());
+                associative.insert(i.toString());
+        },
+        () =>
+        {
+            for (let i: usize = 0; i < LIMIT; i += 10)
+                adaptive.insert(i.toString());
         },
         () =>
         {
@@ -30,7 +36,12 @@ function measure_has(): string
         () =>
         {
             for (let i: usize = 0; i < LIMIT; ++i)
-                hash.has(i.toString());
+                associative.has(i.toString());
+        },
+        () =>
+        {
+            for (let i: usize = 0; i < LIMIT; ++i)
+                adaptive.has(i.toString());
         },
         () =>
         {
@@ -46,7 +57,12 @@ function measure_iteration(): string
     [
         () =>
         {
-            for (let it = hash.begin(); it != hash.end(); it = it.next())
+            for (let it = associative.begin(); it != associative.end(); it = it.next())
+                it.value;
+        },
+        () =>
+        {
+            for (let it = adaptive.begin(); it != adaptive.end(); it = it.next())
                 it.value;
         },
         () =>
@@ -65,7 +81,12 @@ function measure_erase(): string
         () =>
         {
             for (let i: usize = 0; i < LIMIT; i += 10)
-                hash.erase_by_key(i.toString());
+                associative.erase_by_key(i.toString());
+        },
+        () =>
+        {
+            for (let i: usize = 0; i < LIMIT; i += 10)
+                adaptive.erase_by_key(i.toString());
         },
         () =>
         {
@@ -78,8 +99,8 @@ function measure_erase(): string
 export function benchmark_sets(): string
 {
     return "### Set Containers\n"
-        + " Method | HashSet<string> | Set<string> \n"
-        + "--------|----------------:|------------:\n"
+        + " Method | HashSet<string> | FlatHashSet<string> | Set<string> \n"
+        + "--------|----------------:|--------------------:|------------:\n"
         + measure_insert() + "\n"
         + measure_has() + "\n"
         + measure_iteration() + "\n"

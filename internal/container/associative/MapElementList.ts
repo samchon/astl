@@ -11,7 +11,6 @@ import { distance } from "../../../iterator/global";
 export class MapElementList<Key, T, 
         Unique extends boolean, 
         SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-            MapElementList<Key, T, Unique, SourceT>, 
             MapElementList.Iterator<Key, T, Unique, SourceT>, 
             MapElementList.ReverseIterator<Key, T, Unique, SourceT>>>
 {
@@ -218,7 +217,6 @@ export namespace MapElementList
     export class Iterator<Key, T, 
             Unique extends boolean, 
             SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                MapElementList<Key, T, Unique, SourceT>, 
                 Iterator<Key, T, Unique, SourceT>, 
                 ReverseIterator<Key, T, Unique, SourceT>>>
     {
@@ -255,7 +253,6 @@ export namespace MapElementList
         public static _Create<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                    MapElementList<Key, T, Unique, SourceT>, 
                     Iterator<Key, T, Unique, SourceT>, 
                     ReverseIterator<Key, T, Unique, SourceT>>>
             (
@@ -272,8 +269,7 @@ export namespace MapElementList
         @inline
         public static _Set_prev<Key, T, 
                 Unique extends boolean, 
-                SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                    MapElementList<Key, T, Unique, SourceT>, 
+                SourceT extends IMapContainer<Key, T, Unique, SourceT,
                     Iterator<Key, T, Unique, SourceT>, 
                     ReverseIterator<Key, T, Unique, SourceT>>>
             (it: Iterator<Key, T, Unique, SourceT>, prev: Iterator<Key, T, Unique, SourceT>): void
@@ -284,8 +280,7 @@ export namespace MapElementList
         @inline
         public static _Set_next<Key, T, 
                 Unique extends boolean, 
-                SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                    MapElementList<Key, T, Unique, SourceT>, 
+                SourceT extends IMapContainer<Key, T, Unique, SourceT,
                     Iterator<Key, T, Unique, SourceT>, 
                     ReverseIterator<Key, T, Unique, SourceT>>>
             (it: Iterator<Key, T, Unique, SourceT>, next: Iterator<Key, T, Unique, SourceT>): void
@@ -351,7 +346,6 @@ export namespace MapElementList
         public static _Is_erased<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                    MapElementList<Key, T, Unique, SourceT>, 
                     Iterator<Key, T, Unique, SourceT>, 
                     ReverseIterator<Key, T, Unique, SourceT>>>
             (it: Iterator<Key, T, Unique, SourceT>): boolean
@@ -363,7 +357,6 @@ export namespace MapElementList
         public static _Set_erased<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                    MapElementList<Key, T, Unique, SourceT>, 
                     Iterator<Key, T, Unique, SourceT>, 
                     ReverseIterator<Key, T, Unique, SourceT>>>
             (it: Iterator<Key, T, Unique, SourceT>): void
@@ -375,7 +368,6 @@ export namespace MapElementList
         public static _Compare_uid<Key, T, 
                 Unique extends boolean, 
                 SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                    MapElementList<Key, T, Unique, SourceT>, 
                     Iterator<Key, T, Unique, SourceT>, 
                     ReverseIterator<Key, T, Unique, SourceT>>>
             (x: Iterator<Key, T, Unique, SourceT>, y: Iterator<Key, T, Unique, SourceT>): boolean
@@ -387,12 +379,10 @@ export namespace MapElementList
     export class ReverseIterator<Key, T,
             Unique extends boolean, 
             SourceT extends IMapContainer<Key, T, Unique, SourceT, 
-                MapElementList<Key, T, Unique, SourceT>, 
                 Iterator<Key, T, Unique, SourceT>, 
                 ReverseIterator<Key, T, Unique, SourceT>>>
         extends ReverseBase<Entry<Key, T>, 
             SourceT, 
-            MapElementList<Key, T, Unique, SourceT>, 
             Iterator<Key, T, Unique, SourceT>, 
             ReverseIterator<Key, T, Unique, SourceT>, 
             IPair<Key, T>>

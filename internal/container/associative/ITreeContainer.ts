@@ -6,12 +6,12 @@ import { Pair } from "../../../utility/Pair";
 
 
 export interface ITreeContainer<Key, T extends InputT,
-        SourceT extends ITreeContainer<Key, T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        ReverseT extends IContainerReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        SourceT extends ITreeContainer<Key, T, SourceT, IteratorT, ReverseT, InputT>,
+        // ContainerT extends IContainer<T, SourceT, IteratorT, ReverseT, InputT>,
+        IteratorT extends IContainerIterator<T, SourceT, IteratorT, ReverseT, InputT>,
+        ReverseT extends IContainerReverseIterator<T, SourceT, IteratorT, ReverseT, InputT>,
         InputT>
-    extends IAssociativeContainer<Key, T, SourceT, ContainerT, IteratorT, ReverseT, InputT>
+    extends IAssociativeContainer<Key, T, SourceT, IteratorT, ReverseT, InputT>
 {
     key_comp(): Comparator<Key>;
 

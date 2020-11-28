@@ -10,7 +10,7 @@ export class Vector<T>
         CONSTRUCTORS
     --------------------------------------------------------- */
     @inline
-    public assign<InputIterator>
+    public assign<InputIterator extends IForwardIterator<T, InputIterator>>
         (first: InputIterator, last: InputIterator): void
     {
         if (this.empty() === false)
@@ -215,7 +215,7 @@ export namespace Vector
     }
 
     export class ReverseIterator<T>
-        extends ReverseIteratorBase<T, Vector<T>, Vector<T>, Iterator<T>, ReverseIterator<T>, T>
+        extends ReverseIteratorBase<T, Vector<T>, Iterator<T>, ReverseIterator<T>, T>
     {
         /* ---------------------------------------------------------
             ACCESSORS

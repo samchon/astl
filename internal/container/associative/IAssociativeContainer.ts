@@ -1,12 +1,11 @@
 import { IContainer, IContainerIterator, IContainerReverseIterator } from "../linear/IContainer";
 
 export interface IAssociativeContainer<Key, T extends InputT,
-        SourceT extends IAssociativeContainer<Key, T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        ReverseT extends IContainerReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        SourceT extends IAssociativeContainer<Key, T, SourceT, IteratorT, ReverseT, InputT>,
+        IteratorT extends IContainerIterator<T, SourceT, IteratorT, ReverseT, InputT>,
+        ReverseT extends IContainerReverseIterator<T, SourceT, IteratorT, ReverseT, InputT>,
         InputT>
-    extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>
+    extends IContainer<T, SourceT, IteratorT, ReverseT, InputT>
 {
     count(key: Key): usize;
     find(key: Key): IteratorT;

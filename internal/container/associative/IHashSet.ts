@@ -1,16 +1,15 @@
-import { ISetContainer } from "./ISetContainer";
-import { SetElementList } from "./SetElementList";
+import { ISetContainer, ISetContainerIterator, ISetContainerReverseIterator } from "./ISetContainer";
 
 import { BinaryPredicator } from "../../functional/BinaryPredicator";
 import { Hasher } from "../../functional/Hasher";
 
 export interface IHashSet<Key, 
         Unique extends boolean, 
-        SourceT extends IHashSet<Key, Unique, SourceT>>
-    extends ISetContainer<Key, Unique, SourceT, 
-        SetElementList<Key, Unique, SourceT>,
-        SetElementList.Iterator<Key, Unique, SourceT>,
-        SetElementList.ReverseIterator<Key, Unique, SourceT>>
+        SourceT extends IHashSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
+        IteratorT extends IHashSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends IHashSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends ISetContainer<Key, Unique, SourceT, IteratorT, ReverseT>
 {
     hash_function(): Hasher<Key>;
     key_eq(): BinaryPredicator<Key>;
@@ -25,4 +24,24 @@ export interface IHashSet<Key,
 
     reserve(n: usize): void;
     rehash(n: usize): void;
+}
+
+export interface IHashSetIterator<Key, 
+        Unique extends boolean, 
+        SourceT extends IHashSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
+        IteratorT extends IHashSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends IHashSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends ISetContainerIterator<Key, Unique, SourceT, IteratorT, ReverseT>
+{
+}
+
+export interface IHashSetReverseIterator<Key, 
+        Unique extends boolean, 
+        SourceT extends IHashSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
+        IteratorT extends IHashSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends IHashSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends ISetContainerReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>
+{
 }

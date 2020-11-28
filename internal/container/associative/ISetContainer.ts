@@ -1,4 +1,4 @@
-import { IContainer, IContainerIterator, IContainerReverseIterator } from "../linear/IContainer";
+import { IContainerIterator, IContainerReverseIterator } from "../linear/IContainer";
 import { IAssociativeContainer } from "./IAssociativeContainer";
 
 import { IForwardIterator } from "../../../iterator/IForwardIterator";
@@ -6,13 +6,13 @@ import { IForwardIterator } from "../../../iterator/IForwardIterator";
 
 export interface ISetContainer<Key, 
         Unique extends boolean, 
-        SourceT extends ISetContainer<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ContainerT extends IContainer<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>, 
-        IteratorT extends ISetContainerIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>>
-    extends IAssociativeContainer<Key, Key, SourceT, ContainerT, IteratorT, ReverseT, Key>
+        SourceT extends ISetContainer<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
+        IteratorT extends ISetContainerIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends IAssociativeContainer<Key, Key, SourceT, IteratorT, ReverseT, Key>
 {
-    // emplace(key: Key): ISetContainerEmplaceRet<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>;
+    // emplace(key: Key): ISetContainerEmplaceRet<Key, Unique, SourceT, IteratorT, ReverseT>;
     insert_hint(hint: IteratorT, key: Key): IteratorT;
     insert_range<InputIterator extends IForwardIterator<Key, InputIterator>>
         (first: InputIterator, last: InputIterator): void;
@@ -20,30 +20,30 @@ export interface ISetContainer<Key,
 
 export interface ISetContainerIterator<Key,
         Unique extends boolean, 
-        SourceT extends ISetContainer<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ContainerT extends IContainer<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>, 
-        IteratorT extends ISetContainerIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>>
-    extends IContainerIterator<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>
+        SourceT extends ISetContainer<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
+        IteratorT extends ISetContainerIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends IContainerIterator<Key, SourceT, IteratorT, ReverseT, Key>
 {
 }
 
 export interface ISetContainerReverseIterator<Key,
         Unique extends boolean, 
-        SourceT extends ISetContainer<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ContainerT extends IContainer<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>, 
-        IteratorT extends ISetContainerIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>>
-    extends IContainerReverseIterator<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>
+        SourceT extends ISetContainer<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
+        IteratorT extends ISetContainerIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends IContainerReverseIterator<Key, SourceT, IteratorT, ReverseT, Key>
 {
 }
 
 // export type ISetContainerEmplaceRet<Key, T, 
 //         Unique extends boolean, 
-//         SourceT extends ISetContainer<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-//         ContainerT extends IContainer<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>, 
-//         IteratorT extends ISetContainerIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-//         ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>>
+//         SourceT extends ISetContainer<Key, Unique, SourceT, IteratorT, ReverseT>, 
+//         // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
+//         IteratorT extends ISetContainerIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+//         ReverseT extends ISetContainerReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
 //     = Unique extends true
 //         ? Pair<IteratorT, boolean>
 //         : IteratorT;

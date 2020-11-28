@@ -2,10 +2,10 @@ import { IReversableIterator } from "../../../iterator/IReversableIterator";
 import { IReverseIterator } from "../../../iterator/IReverseIterator";
 
 export declare interface IContainer<T extends PElem, 
-        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        ReverseT extends IContainerReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
+        SourceT extends IContainer<T, SourceT, IteratorT, ReverseT, PElem>,
+        // ContainerT extends IContainer<T, SourceT, IteratorT, ReverseT, PElem>,
+        IteratorT extends IContainerIterator<T, SourceT, IteratorT, ReverseT, PElem>,
+        ReverseT extends IContainerReverseIterator<T, SourceT, IteratorT, ReverseT, PElem>,
         PElem>
 {
     /* ---------------------------------------------------------
@@ -27,10 +27,10 @@ export declare interface IContainer<T extends PElem,
 }
 
 export interface IContainerIterator<T extends PElem, 
-        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        ReverseT extends IContainerReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
+        SourceT extends IContainer<T, SourceT, IteratorT, ReverseT, PElem>,
+        // ContainerT extends IContainer<T, SourceT, IteratorT, ReverseT, PElem>,
+        IteratorT extends IContainerIterator<T, SourceT, IteratorT, ReverseT, PElem>,
+        ReverseT extends IContainerReverseIterator<T, SourceT, IteratorT, ReverseT, PElem>,
         PElem>
     extends IReversableIterator<T, IteratorT, ReverseT>
 {
@@ -39,10 +39,10 @@ export interface IContainerIterator<T extends PElem,
 }
 
 export interface IContainerReverseIterator<T extends PElem, 
-        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
-        ReverseT extends IContainerReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, PElem>,
+        SourceT extends IContainer<T, SourceT, IteratorT, ReverseT, PElem>,
+        // ContainerT extends IContainer<T, SourceT, IteratorT, ReverseT, PElem>,
+        IteratorT extends IContainerIterator<T, SourceT, IteratorT, ReverseT, PElem>,
+        ReverseT extends IContainerReverseIterator<T, SourceT, IteratorT, ReverseT, PElem>,
         PElem>
     extends IReverseIterator<T, IteratorT, ReverseT>
 {

@@ -1,16 +1,14 @@
 import { ISetContainer, ISetContainerIterator, ISetContainerReverseIterator } from "./ISetContainer";
-import { IContainer } from "../linear/IContainer";
 
 import { Comparator } from "../../functional/Comparator";
 import { Pair } from "../../../utility/Pair";
 
 export interface ITreeSet<Key, 
         Unique extends boolean, 
-        SourceT extends ITreeSet<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ContainerT extends IContainer<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>, 
-        IteratorT extends ITreeSetIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ReverseT extends ITreeSetReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>>
-    extends ISetContainer<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>
+        SourceT extends ITreeSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        IteratorT extends ITreeSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends ITreeSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends ISetContainer<Key, Unique, SourceT, IteratorT, ReverseT>
 {
     key_comp(): Comparator<Key>;
 
@@ -21,20 +19,18 @@ export interface ITreeSet<Key,
 
 export interface ITreeSetIterator<Key, 
         Unique extends boolean, 
-        SourceT extends ITreeSet<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ContainerT extends IContainer<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>, 
-        IteratorT extends ITreeSetIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ReverseT extends ITreeSetReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>>
-    extends ISetContainerIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>
+        SourceT extends ITreeSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        IteratorT extends ITreeSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends ITreeSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends ISetContainerIterator<Key, Unique, SourceT, IteratorT, ReverseT>
 {
 }
 
 export interface ITreeSetReverseIterator<Key, 
         Unique extends boolean, 
-        SourceT extends ITreeSet<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ContainerT extends IContainer<Key, SourceT, ContainerT, IteratorT, ReverseT, Key>, 
-        IteratorT extends ITreeSetIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>, 
-        ReverseT extends ITreeSetReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>>
-    extends ISetContainerReverseIterator<Key, Unique, SourceT, ContainerT, IteratorT, ReverseT>
+        SourceT extends ITreeSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        IteratorT extends ITreeSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends ITreeSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
+    extends ISetContainerReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>
 {
 }

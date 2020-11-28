@@ -1,10 +1,10 @@
 import { IContainer, IContainerIterator, IContainerReverseIterator } from "../container/linear/IContainer";
 
 export abstract class ReverseIteratorBase<T extends InputT,
-        SourceT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        ContainerT extends IContainer<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
-        IteratorT extends IContainerIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>, 
-        ReverseT extends IContainerReverseIterator<T, SourceT, ContainerT, IteratorT, ReverseT, InputT>,
+        SourceT extends IContainer<T, SourceT, IteratorT, ReverseT, InputT>,
+        // ContainerT extends IContainer<T, SourceT, IteratorT, ReverseT, InputT>,
+        IteratorT extends IContainerIterator<T, SourceT, IteratorT, ReverseT, InputT>, 
+        ReverseT extends IContainerReverseIterator<T, SourceT, IteratorT, ReverseT, InputT>,
         InputT>
 {
     protected readonly base_: IteratorT;

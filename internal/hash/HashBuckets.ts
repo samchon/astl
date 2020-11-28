@@ -2,11 +2,14 @@ import { Vector } from "../../container/Vector";
 
 import { CMath } from "../numeric/CMath";
 import { Hasher } from "../functional/Hasher";
+import { BinaryPredicator } from "../functional/BinaryPredicator";
+import { Pair } from "../../utility";
 
 export class HashBuckets<Key, Elem>
 {
     private readonly hasher_: Hasher<Key>;
-    protected readonly fetcher_: (elem: Elem) => Key;
+    private readonly predicator_: BinaryPredicator<Key>;
+    private readonly fetcher_: (elem: Elem) => Key;
 
     private max_load_factor_: f64;
     private data_: Vector<Vector<Elem>>;
@@ -15,9 +18,10 @@ export class HashBuckets<Key, Elem>
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
-    public constructor(hasher: Hasher<Key>, fetcher: (elem: Elem) => Key)
+    public constructor(hasher: Hasher<Key>, pred: BinaryPredicator<Key>, fetcher: (elem: Elem) => Key)
     {
         this.hasher_ = hasher;
+        this.predicator_ = pred;
         this.fetcher_ = fetcher;
 
         this.max_load_factor_ = DEFAULT_MAX_FACTOR;
@@ -82,7 +86,13 @@ export class HashBuckets<Key, Elem>
         ACCESSORS
     --------------------------------------------------------- */
     @inline
-    public length(): usize
+    public size(): usize
+    {
+        return this.size_;
+    }
+
+    @inline
+    public count(): usize
     {
         return this.data_.size();
     }
@@ -90,7 +100,7 @@ export class HashBuckets<Key, Elem>
     @inline
     public capacity(): usize
     {
-        return <usize>(this.length() * this.max_load_factor_);
+        return <usize>(this.count() * this.max_load_factor_);
     }
 
     @inline
@@ -102,7 +112,7 @@ export class HashBuckets<Key, Elem>
     @inline
     public load_factor(): f64
     {
-        return this.size_ / this.length();
+        return this.size_ / this.count();
     }
 
     @inline
@@ -123,26 +133,72 @@ export class HashBuckets<Key, Elem>
         return this.hasher_;
     }
 
+    @inline
+    public key_eq(): BinaryPredicator<Key>
+    {
+        return this.predicator_;
+    }
+
     /* ---------------------------------------------------------
-        ELEMENTS I/O
+        FINDERS
     --------------------------------------------------------- */
     @inline
     private index(elem: Elem): usize
     {
-        return this.hasher_(this.fetcher_(elem)) % this.length();
+        return this.hasher_(this.fetcher_(elem)) % this.count();
     }
 
-    public insert(val: Elem): void
+    @inline
+    public find(key: Key): Elem | null
+    {
+        const indexes = this.indexes(key);
+        return (indexes !== null)
+            ? this.data_.at(indexes.first).at(indexes.second)
+            : null;
+
+        // const index: usize = this.hash_function()(key) % this.length();
+        // const bucket: Vector<Elem> = this.at(index);
+
+        // for (let i: usize = 0; i < bucket.size(); ++i)
+        // {
+        //     const it: Elem = bucket.at(i);
+        //     if (this.predicator_(key, this.fetcher_(it)) === true)
+        //         return it;
+        // }
+        // return null;
+    }
+
+    public indexes(key: Key): Pair<usize, usize> | null
+    {
+        const index: usize = this.hash_function()(key) % this.count();
+        const bucket: Vector<Elem> = this.at(index);
+
+        for (let i: usize = 0; i < bucket.size(); ++i)
+        {
+            const it: Elem = bucket.at(i);
+            if (this.predicator_(key, this.fetcher_(it)) === true)
+                return new Pair(index, i);
+        }
+        return null;
+    }
+
+    /* ---------------------------------------------------------
+        ELEMENTS I/O
+    --------------------------------------------------------- */
+    public insert(val: Elem): Pair<usize, usize>
     {
         const capacity: usize = this.capacity();
         if (++this.size_ > capacity)
             this.rehash(capacity * 2);
 
         const index: usize = this.index(val);
-        this.data_.at(index).push_back(val);
+        const bucket: Vector<Elem> = this.data_.at(index);
+
+        bucket.push_back(val);
+        return new Pair(index, bucket.size() - 1);
     }
 
-    public erase(val: Elem): void
+    public erase(val: Elem): boolean
     {
         const index: usize = this.index(val);
         const bucket: Vector<Elem> = this.data_.at(index);
@@ -152,8 +208,15 @@ export class HashBuckets<Key, Elem>
             {
                 bucket.erase(bucket.nth(i));
                 --this.size_;
-                break;
+
+                return true;
             }
+        return false;
+    }
+
+    public erase_range(first: Pair<usize, usize>, last: Pair<usize, usize>): void
+    {
+        
     }
 }
 

@@ -1,5 +1,5 @@
 import { SetElementList } from "../internal/container/associative/SetElementList";
-import { IteratorHashBuckets } from "../internal/hash/IteratorHashBuckets";
+import { HashBuckets } from "../internal/hash/HashBuckets";
 
 import { IForwardIterator } from "../iterator/IForwardIterator";
 import { Pair } from "../utility/Pair";
@@ -12,14 +12,14 @@ import { equal_to } from "../functional/comparators";
 export class HashSet<Key>
 {
     private data_: SetElementList<Key, true, HashSet<Key>> = new SetElementList(<HashSet<Key>>this);
-    private buckets_: IteratorHashBuckets<Key, HashSet.Iterator<Key>>;
+    private buckets_: HashBuckets<Key, HashSet.Iterator<Key>>;
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
     --------------------------------------------------------- */
     public constructor(hasher: Hasher<Key> = elem => hash(elem), predicator: BinaryPredicator<Key> = (x, y) => equal_to(x, y))
     {
-        this.buckets_ = new IteratorHashBuckets(hasher, predicator, it => it.value);
+        this.buckets_ = new HashBuckets(hasher, predicator, it => it.value);
     }
 
     @inline
@@ -48,7 +48,7 @@ export class HashSet<Key>
         obj.data_ = data;
 
         // SWAP BUCKETS
-        const buckets: IteratorHashBuckets<Key, HashSet.Iterator<Key>> = this.buckets_;
+        const buckets: HashBuckets<Key, HashSet.Iterator<Key>> = this.buckets_;
         this.buckets_ = obj.buckets_;
         obj.buckets_ = buckets;
     }
@@ -132,7 +132,7 @@ export class HashSet<Key>
     @inline
     public bucket_count(): usize
     {
-        return this.buckets_.length();
+        return this.buckets_.count();
     }
 
     @inline

@@ -473,7 +473,7 @@ export namespace List
     }
 
     export class ReverseIterator<T> 
-        extends ReverseBase<T, List<T>, List<T>, Iterator<T>, ReverseIterator<T>, T>
+        extends ReverseBase<T, List<T>, Iterator<T>, ReverseIterator<T>, T>
     {
         @inline
         public get value(): T
