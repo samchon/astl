@@ -1,7 +1,8 @@
 import std from "../../../index";
 import { BenchmarkUtil } from "../../internal/BenchmarkUtil";
 
-const hash: std.HashMap<string, usize> = new std.HashMap();
+const associative: std.HashMap<string, usize> = new std.HashMap();
+const adaptive: std.experimental.LightMap<string, usize> = new std.experimental.LightMap();
 const native: Map<string, usize> = new Map();
 
 const LIMIT: usize = 1000000;
@@ -13,7 +14,12 @@ function measure_insert(): string
         () =>
         {
             for (let i: usize = 0; i < LIMIT; i += 10)
-                hash.emplace(i.toString(), 0);
+                associative.emplace(i.toString(), 0);
+        },
+        () =>
+        {
+            for (let i: usize = 0; i < LIMIT; i += 10)
+                adaptive.set(i.toString(), 0);
         },
         () =>
         {
@@ -30,7 +36,12 @@ function measure_has(): string
         () =>
         {
             for (let i: usize = 0; i < LIMIT; ++i)
-                hash.has(i.toString());
+                associative.has(i.toString());
+        },
+        () =>
+        {
+            for (let i: usize = 0; i < LIMIT; ++i)
+                adaptive.has(i.toString());
         },
         () =>
         {
@@ -46,7 +57,12 @@ function measure_iteration(): string
     [
         () =>
         {
-            for (let it = hash.begin(); it != hash.end(); it = it.next())
+            for (let it = associative.begin(); it != associative.end(); it = it.next())
+                it.first;
+        },
+        () =>
+        {
+            for (let it = adaptive.begin(); it != adaptive.end(); it = it.next())
                 it.first;
         },
         () =>
@@ -65,7 +81,12 @@ function measure_erase(): string
         () =>
         {
             for (let i: usize = 0; i < LIMIT; i += 10)
-                hash.erase_by_key(i.toString());
+                associative.erase_by_key(i.toString());
+        },
+        () =>
+        {
+            for (let i: usize = 0; i < LIMIT; i += 10)
+                adaptive.erase_by_key(i.toString());
         },
         () =>
         {
@@ -78,8 +99,8 @@ function measure_erase(): string
 export function benchmark_maps(): string
 {
     return "### Map Containers\n"
-        + " Method | HashMap<string> | Map<string> \n"
-        + "--------|----------------:|------------:\n"
+        + " Method | HashMap<string, usize> | LightMap<string, usize> | Map<string, usize> \n"
+        + "--------|-----------------------:|------------------------:|-------------------:\n"
         + measure_insert() + "\n"
         + measure_has() + "\n"
         + measure_iteration() + "\n"

@@ -6,11 +6,11 @@ import { ReverseIteratorBase } from "../../iterator/ReverseIteratorBase";
 import { Comparator } from "../../functional/Comparator";
 import { Pair } from "../../../utility";
 
-export class TreeSetElementVector<Key,
+export class FlatSetElementVector<Key,
         Unique extends boolean,
         SourceT extends ITreeSet<Key, Unique, SourceT,
-            TreeSetElementVector.Iterator<Key, Unique, SourceT>,
-            TreeSetElementVector.ReverseIterator<Key, Unique, SourceT>>>
+            FlatSetElementVector.Iterator<Key, Unique, SourceT>,
+            FlatSetElementVector.ReverseIterator<Key, Unique, SourceT>>>
     extends VectorContainer<Key>
 {
     private source_: SourceT;
@@ -32,7 +32,7 @@ export class TreeSetElementVector<Key,
         this.comp_ = comp;
     }
 
-    public swap(obj: TreeSetElementVector<Key, Unique, SourceT>): void
+    public swap(obj: FlatSetElementVector<Key, Unique, SourceT>): void
     {
         const source: SourceT = this.source_;
         this.source_ = obj.source_;
@@ -59,31 +59,31 @@ export class TreeSetElementVector<Key,
     }
 
     @inline
-    public nth(index: usize): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    public nth(index: usize): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
-        return new TreeSetElementVector.Iterator(this, index);
+        return new FlatSetElementVector.Iterator(this, index);
     }
 
     @inline
-    public begin(): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    public begin(): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
         return this.nth(0);
     }
 
     @inline
-    public end(): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    public end(): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
         return this.nth(this.size());
     }
 
     @inline
-    public rbegin(): TreeSetElementVector.ReverseIterator<Key, Unique, SourceT>
+    public rbegin(): FlatSetElementVector.ReverseIterator<Key, Unique, SourceT>
     {
         return this.end().reverse();
     }
 
     @inline
-    public rend(): TreeSetElementVector.ReverseIterator<Key, Unique, SourceT>
+    public rend(): FlatSetElementVector.ReverseIterator<Key, Unique, SourceT>
     {
         return this.begin().reverse();
     }
@@ -92,14 +92,14 @@ export class TreeSetElementVector<Key,
         ELEMENTS I/O
     --------------------------------------------------------- */
     @inline
-    public insert(pos: TreeSetElementVector.Iterator<Key, Unique, SourceT>, val: Key): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    public insert(pos: FlatSetElementVector.Iterator<Key, Unique, SourceT>, val: Key): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
         this._Insert(pos.index(), val);
         return pos;
     }
 
     @inline
-    public erase(first: TreeSetElementVector.Iterator<Key, Unique, SourceT>, last: TreeSetElementVector.Iterator<Key, Unique, SourceT> = first.next()): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    public erase(first: FlatSetElementVector.Iterator<Key, Unique, SourceT>, last: FlatSetElementVector.Iterator<Key, Unique, SourceT> = first.next()): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
         this._Erase(first.index(), last.index());
         return first;
@@ -108,7 +108,7 @@ export class TreeSetElementVector<Key,
     /* ---------------------------------------------------------
         BOUNDERS
     --------------------------------------------------------- */
-    public lower_bound(key: Key): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    public lower_bound(key: Key): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
         let index: usize = 0;
         let count: isize = this.size();
@@ -130,21 +130,21 @@ export class TreeSetElementVector<Key,
     }
 
     @inline
-    public upper_bound(key: Key): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    public upper_bound(key: Key): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
         return this._Upper_bound(key, 0);
     }
     
     @inline
-    public equal_range(key: Key): Pair<TreeSetElementVector.Iterator<Key, Unique, SourceT>, TreeSetElementVector.Iterator<Key, Unique, SourceT>>
+    public equal_range(key: Key): Pair<FlatSetElementVector.Iterator<Key, Unique, SourceT>, FlatSetElementVector.Iterator<Key, Unique, SourceT>>
     {
-        const lower: TreeSetElementVector.Iterator<Key, Unique, SourceT> = this.lower_bound(key);
-        const upper: TreeSetElementVector.Iterator<Key, Unique, SourceT> = this._Upper_bound(key, lower.index());
+        const lower: FlatSetElementVector.Iterator<Key, Unique, SourceT> = this.lower_bound(key);
+        const upper: FlatSetElementVector.Iterator<Key, Unique, SourceT> = this._Upper_bound(key, lower.index());
 
         return new Pair(lower, upper);
     }
     
-    private _Upper_bound(key: Key, index: usize): TreeSetElementVector.Iterator<Key, Unique, SourceT>
+    private _Upper_bound(key: Key, index: usize): FlatSetElementVector.Iterator<Key, Unique, SourceT>
     {
         let count: isize = this.size() - index;
         while (count > 0)
@@ -164,21 +164,21 @@ export class TreeSetElementVector<Key,
     }
 }
 
-export namespace TreeSetElementVector
+export namespace FlatSetElementVector
 {
     export class Iterator<Key,
             Unique extends boolean,
             SourceT extends ITreeSet<Key, Unique, SourceT,
-                TreeSetElementVector.Iterator<Key, Unique, SourceT>,
-                TreeSetElementVector.ReverseIterator<Key, Unique, SourceT>>>
+                FlatSetElementVector.Iterator<Key, Unique, SourceT>,
+                FlatSetElementVector.ReverseIterator<Key, Unique, SourceT>>>
     {
-        private readonly data_: TreeSetElementVector<Key, Unique, SourceT>;
+        private readonly data_: FlatSetElementVector<Key, Unique, SourceT>;
         private readonly index_: usize;
 
         /* ---------------------------------------------------------
             CONSTRUCTORS
         --------------------------------------------------------- */
-        public constructor(data: TreeSetElementVector<Key, Unique, SourceT>, index: usize)
+        public constructor(data: FlatSetElementVector<Key, Unique, SourceT>, index: usize)
         {
             this.data_ = data;
             this.index_ = index;
@@ -278,12 +278,12 @@ export namespace TreeSetElementVector
     export class ReverseIterator<Key,
             Unique extends boolean,
             SourceT extends ITreeSet<Key, Unique, SourceT,
-                TreeSetElementVector.Iterator<Key, Unique, SourceT>,
-                TreeSetElementVector.ReverseIterator<Key, Unique, SourceT>>>
+                FlatSetElementVector.Iterator<Key, Unique, SourceT>,
+                FlatSetElementVector.ReverseIterator<Key, Unique, SourceT>>>
         extends ReverseIteratorBase<Key, 
             SourceT, 
-            TreeSetElementVector.Iterator<Key, Unique, SourceT>,
-            TreeSetElementVector.ReverseIterator<Key, Unique, SourceT>,
+            FlatSetElementVector.Iterator<Key, Unique, SourceT>,
+            FlatSetElementVector.ReverseIterator<Key, Unique, SourceT>,
             Key>
     {
         /* ---------------------------------------------------------

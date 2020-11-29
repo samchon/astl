@@ -145,7 +145,7 @@ export class HashMap<Key, T>
     @inline
     public bucket_count(): usize
     {
-        return this.buckets_.count();
+        return this.buckets_.row_size();
     }
 
     @inline

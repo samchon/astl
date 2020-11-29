@@ -1,4 +1,4 @@
-import { SetElementVector } from "../../internal/container/associative/SetElementVector";
+import { FlatSetElementVector } from "../../internal/container/adaptive/FlatSetElementVector";
 import { Comparator } from "../../internal/functional/Comparator";
 import { less } from "../../functional/comparators";
 
@@ -7,7 +7,7 @@ import { Pair } from "../../utility/Pair";
 
 export class FlatMultiSet<Key>
 {
-    private data_: SetElementVector<Key, false, FlatMultiSet<Key>> = new SetElementVector(<FlatMultiSet<Key>>this);
+    private data_: FlatSetElementVector<Key, false, FlatMultiSet<Key>> = new FlatSetElementVector(<FlatMultiSet<Key>>this);
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
@@ -36,7 +36,7 @@ export class FlatMultiSet<Key>
     {
         this.data_.swap(obj.data_);
 
-        const data: SetElementVector<Key, true, FlatMultiSet<Key>> = this.data_;
+        const data: FlatSetElementVector<Key, true, FlatMultiSet<Key>> = this.data_;
         this.data_ = obj.data_;
         obj.data_ = data;
     }
@@ -185,6 +185,6 @@ export class FlatMultiSet<Key>
 
 export namespace FlatMultiSet
 {
-    export type Iterator<Key> = SetElementVector.Iterator<Key, false, FlatMultiSet<Key>>;
-    export type ReverseIterator<Key> = SetElementVector.ReverseIterator<Key, false, FlatMultiSet<Key>>;
+    export type Iterator<Key> = FlatSetElementVector.Iterator<Key, false, FlatMultiSet<Key>>;
+    export type ReverseIterator<Key> = FlatSetElementVector.ReverseIterator<Key, false, FlatMultiSet<Key>>;
 }

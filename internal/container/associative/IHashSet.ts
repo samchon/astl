@@ -6,7 +6,6 @@ import { Hasher } from "../../functional/Hasher";
 export interface IHashSet<Key, 
         Unique extends boolean, 
         SourceT extends IHashSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
-        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
         IteratorT extends IHashSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
         ReverseT extends IHashSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
     extends ISetContainer<Key, Unique, SourceT, IteratorT, ReverseT>
@@ -29,7 +28,6 @@ export interface IHashSet<Key,
 export interface IHashSetIterator<Key, 
         Unique extends boolean, 
         SourceT extends IHashSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
-        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
         IteratorT extends IHashSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
         ReverseT extends IHashSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
     extends ISetContainerIterator<Key, Unique, SourceT, IteratorT, ReverseT>
@@ -39,7 +37,6 @@ export interface IHashSetIterator<Key,
 export interface IHashSetReverseIterator<Key, 
         Unique extends boolean, 
         SourceT extends IHashSet<Key, Unique, SourceT, IteratorT, ReverseT>, 
-        // ContainerT extends IContainer<Key, SourceT, IteratorT, ReverseT, Key>, 
         IteratorT extends IHashSetIterator<Key, Unique, SourceT, IteratorT, ReverseT>, 
         ReverseT extends IHashSetReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>>
     extends ISetContainerReverseIterator<Key, Unique, SourceT, IteratorT, ReverseT>

@@ -34,7 +34,8 @@ export class VectorContainer<T>
     @inline
     public reserve(capacity: usize): void
     {
-        this._Reserve(capacity, this.size());
+        if (capacity > this.capacity())
+            this._Reserve(capacity, this.size());
     }
 
     @inline

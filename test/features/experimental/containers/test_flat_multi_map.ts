@@ -7,7 +7,7 @@ export function test_flat_multi_map(): void
 {
     StopWatch.measure("test_flat_multi_map", () =>
     {
-        test_multi_tree_container_base<std.experimental.FlatTreeMultiMap<i32, i32>, std.experimental.FlatMultiMap.Iterator<i32, i32>>
+        test_multi_tree_container_base<std.experimental.FlatMultiMap<i32, i32>, std.experimental.FlatMultiMap.Iterator<i32, i32>>
         (
             (source, key, value) => source.emplace(key, value),
             it => it.first,

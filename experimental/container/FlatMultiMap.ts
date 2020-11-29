@@ -1,4 +1,4 @@
-import { MapElementVector } from "../../internal/container/associative/MapElementVector";
+import { FlatMapElementVector } from "../../internal/container/adaptive/FlatMapElementVector";
 import { Comparator } from "../../internal/functional/Comparator";
 import { less } from "../../functional/comparators";
 
@@ -9,7 +9,7 @@ import { Entry } from "../../utility/Entry";
 
 export class FlatMultiMap<Key, T>
 {
-    private data_: MapElementVector<Key, T, false, FlatMultiMap<Key, T>> = new MapElementVector(<FlatMultiMap<Key, T>>this);
+    private data_: FlatMapElementVector<Key, T, false, FlatMultiMap<Key, T>> = new FlatMapElementVector(<FlatMultiMap<Key, T>>this);
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
@@ -38,7 +38,7 @@ export class FlatMultiMap<Key, T>
     {
         this.data_.swap(obj.data_);
 
-        const data: MapElementVector<Key, T, true, FlatMultiMap<Key, T>> = this.data_;
+        const data: FlatMapElementVector<Key, T, true, FlatMultiMap<Key, T>> = this.data_;
         this.data_ = obj.data_;
         obj.data_ = data;
     }
@@ -186,6 +186,6 @@ export class FlatMultiMap<Key, T>
 
 export namespace FlatMultiMap
 {
-    export type Iterator<Key, T> = MapElementVector.Iterator<Key, T, false, FlatMultiMap<Key, T>>;
-    export type ReverseIterator<Key, T> = MapElementVector.ReverseIterator<Key, T, false, FlatMultiMap<Key, T>>;
+    export type Iterator<Key, T> = FlatMapElementVector.Iterator<Key, T, false, FlatMultiMap<Key, T>>;
+    export type ReverseIterator<Key, T> = FlatMapElementVector.ReverseIterator<Key, T, false, FlatMultiMap<Key, T>>;
 }

@@ -1,4 +1,4 @@
-import { MapElementVector } from "../../internal/container/associative/MapElementVector";
+import { FlatMapElementVector } from "../../internal/container/adaptive/FlatMapElementVector";
 import { Comparator } from "../../internal/functional/Comparator";
 import { less } from "../../functional/comparators";
 
@@ -11,7 +11,7 @@ import { Pair } from "../../utility/Pair";
 
 export class FlatMap<Key, T>
 {
-    private data_: MapElementVector<Key, T, true, FlatMap<Key, T>> = new MapElementVector(<FlatMap<Key, T>>this);
+    private data_: FlatMapElementVector<Key, T, true, FlatMap<Key, T>> = new FlatMapElementVector(<FlatMap<Key, T>>this);
 
     /* ---------------------------------------------------------
         CONSTRUCTORS
@@ -40,7 +40,7 @@ export class FlatMap<Key, T>
     {
         this.data_.swap(obj.data_);
 
-        const data: MapElementVector<Key, T, true, FlatMap<Key, T>> = this.data_;
+        const data: FlatMapElementVector<Key, T, true, FlatMap<Key, T>> = this.data_;
         this.data_ = obj.data_;
         obj.data_ = data;
     }
@@ -118,7 +118,7 @@ export class FlatMap<Key, T>
     {
         const it = this.find(key);
         if (it == this.end())
-            throw ErrorGenerator.key_nout_found("TreeMap.get()", key);
+            throw ErrorGenerator.key_nout_found("FlatMap.get()", key);
         return it.second;
     }
 
@@ -202,6 +202,6 @@ export class FlatMap<Key, T>
 
 export namespace FlatMap
 {
-    export type Iterator<Key, T> = MapElementVector.Iterator<Key, T, true, FlatMap<Key, T>>;
-    export type ReverseIterator<Key, T> = MapElementVector.ReverseIterator<Key, T, true, FlatMap<Key, T>>;
+    export type Iterator<Key, T> = FlatMapElementVector.Iterator<Key, T, true, FlatMap<Key, T>>;
+    export type ReverseIterator<Key, T> = FlatMapElementVector.ReverseIterator<Key, T, true, FlatMap<Key, T>>;
 }

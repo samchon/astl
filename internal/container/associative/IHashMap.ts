@@ -1,15 +1,14 @@
-import { IMapContainer } from "./IMapContainer";
-import { MapElementList } from "./MapElementList";
+import { IMapContainer, IMapContainerIterator, IMapContainerReverseIterator } from "./IMapContainer";
 
-import { BinaryPredicator } from "../../functional/BinaryPredicator";
 import { Hasher } from "../../functional/Hasher";
+import { BinaryPredicator } from "../../functional/BinaryPredicator";
 
 export interface IHashMap<Key, T, 
         Unique extends boolean, 
-        SourceT extends IHashMap<Key, T, Unique, SourceT>>
-    extends IMapContainer<Key, T, Unique, SourceT, 
-        MapElementList.Iterator<Key, T, Unique, SourceT>,
-        MapElementList.ReverseIterator<Key, T, Unique, SourceT>>
+        SourceT extends IHashMap<Key, T, Unique, SourceT, IteratorT, ReverseT>,
+        IteratorT extends IHashMapIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends IHashMapReverseIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>>
+    extends IMapContainer<Key, T, Unique, SourceT, IteratorT, ReverseT>
 {
     hash_function(): Hasher<Key>;
     key_eq(): BinaryPredicator<Key>;
@@ -24,4 +23,22 @@ export interface IHashMap<Key, T,
 
     reserve(n: usize): void;
     rehash(n: usize): void;
+}
+
+export interface IHashMapIterator<Key, T,
+        Unique extends boolean, 
+        SourceT extends IHashMap<Key, T, Unique, SourceT, IteratorT, ReverseT>, 
+        IteratorT extends IHashMapIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends IHashMapReverseIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>>
+    extends IMapContainerIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>
+{
+}
+
+export interface IHashMapReverseIterator<Key, T,
+        Unique extends boolean, 
+        SourceT extends IHashMap<Key, T, Unique, SourceT, IteratorT, ReverseT>, 
+        IteratorT extends IHashMapIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>, 
+        ReverseT extends IHashMapReverseIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>>
+    extends IMapContainerReverseIterator<Key, T, Unique, SourceT, IteratorT, ReverseT>
+{
 }

@@ -8,11 +8,11 @@ import { IPair } from "../../../utility/IPair";
 import { Entry } from "../../../utility/Entry";
 import { Pair } from "../../../utility";
 
-export class TreeMapElementVector<Key, T,
+export class FlatMapElementVector<Key, T,
         Unique extends boolean,
         SourceT extends ITreeMap<Key, T, Unique, SourceT,
-            TreeMapElementVector.Iterator<Key, T, Unique, SourceT>,
-            TreeMapElementVector.ReverseIterator<Key, T, Unique, SourceT>>>
+            FlatMapElementVector.Iterator<Key, T, Unique, SourceT>,
+            FlatMapElementVector.ReverseIterator<Key, T, Unique, SourceT>>>
     extends VectorContainer<Entry<Key, T>>
 {
     private source_: SourceT;
@@ -24,6 +24,7 @@ export class TreeMapElementVector<Key, T,
     public constructor(source: SourceT)
     {
         super();
+        
         this.source_ = source;
         this.comp_ = changetype<Comparator<Key>>(0);
     }
@@ -34,15 +35,11 @@ export class TreeMapElementVector<Key, T,
         this.comp_ = comp;
     }
 
-    public swap(obj: TreeMapElementVector<Key, T, Unique, SourceT>): void
+    public swap(obj: FlatMapElementVector<Key, T, Unique, SourceT>): void
     {
         const source: SourceT = this.source_;
         this.source_ = obj.source_;
         obj.source_ = source;
-
-        const comp: Comparator<Key> = this.comp_;
-        this.comp_ = obj.comp_;
-        obj.comp_ = comp;
     }
 
     /* ---------------------------------------------------------
@@ -61,31 +58,31 @@ export class TreeMapElementVector<Key, T,
     }
 
     @inline
-    public nth(index: usize): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    public nth(index: usize): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
-        return new TreeMapElementVector.Iterator(this, index);
+        return new FlatMapElementVector.Iterator(this, index);
     }
 
     @inline
-    public begin(): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    public begin(): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         return this.nth(0);
     }
 
     @inline
-    public end(): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    public end(): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         return this.nth(this.size());
     }
 
     @inline
-    public rbegin(): TreeMapElementVector.ReverseIterator<Key, T, Unique, SourceT>
+    public rbegin(): FlatMapElementVector.ReverseIterator<Key, T, Unique, SourceT>
     {
         return this.end().reverse();
     }
 
     @inline
-    public rend(): TreeMapElementVector.ReverseIterator<Key, T, Unique, SourceT>
+    public rend(): FlatMapElementVector.ReverseIterator<Key, T, Unique, SourceT>
     {
         return this.begin().reverse();
     }
@@ -94,14 +91,14 @@ export class TreeMapElementVector<Key, T,
         ELEMENTS I/O
     --------------------------------------------------------- */
     @inline
-    public insert(pos: TreeMapElementVector.Iterator<Key, T, Unique, SourceT>, val: Entry<Key, T>): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    public insert(pos: FlatMapElementVector.Iterator<Key, T, Unique, SourceT>, val: Entry<Key, T>): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         this._Insert(pos.index(), val);
         return pos;
     }
 
     @inline
-    public erase(first: TreeMapElementVector.Iterator<Key, T, Unique, SourceT>, last: TreeMapElementVector.Iterator<Key, T, Unique, SourceT> = first.next()): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    public erase(first: FlatMapElementVector.Iterator<Key, T, Unique, SourceT>, last: FlatMapElementVector.Iterator<Key, T, Unique, SourceT> = first.next()): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         this._Erase(first.index(), last.index());
         return first;
@@ -110,7 +107,7 @@ export class TreeMapElementVector<Key, T,
     /* ---------------------------------------------------------
         BOUNDERS
     --------------------------------------------------------- */
-    public lower_bound(key: Key): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    public lower_bound(key: Key): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         let index: usize = 0;
         let count: isize = this.size();
@@ -132,21 +129,21 @@ export class TreeMapElementVector<Key, T,
     }
 
     @inline
-    public upper_bound(key: Key): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    public upper_bound(key: Key): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         return this._Upper_bound(key, 0);
     }
     
     @inline
-    public equal_range(key: Key): Pair<TreeMapElementVector.Iterator<Key, T, Unique, SourceT>, TreeMapElementVector.Iterator<Key, T, Unique, SourceT>>
+    public equal_range(key: Key): Pair<FlatMapElementVector.Iterator<Key, T, Unique, SourceT>, FlatMapElementVector.Iterator<Key, T, Unique, SourceT>>
     {
-        const lower: TreeMapElementVector.Iterator<Key, T, Unique, SourceT> = this.lower_bound(key);
-        const upper: TreeMapElementVector.Iterator<Key, T, Unique, SourceT> = this._Upper_bound(key, lower.index());
+        const lower: FlatMapElementVector.Iterator<Key, T, Unique, SourceT> = this.lower_bound(key);
+        const upper: FlatMapElementVector.Iterator<Key, T, Unique, SourceT> = this._Upper_bound(key, lower.index());
 
         return new Pair(lower, upper);
     }
     
-    private _Upper_bound(key: Key, index: usize): TreeMapElementVector.Iterator<Key, T, Unique, SourceT>
+    private _Upper_bound(key: Key, index: usize): FlatMapElementVector.Iterator<Key, T, Unique, SourceT>
     {
         let count: isize = this.size() - index;
         while (count > 0)
@@ -166,21 +163,21 @@ export class TreeMapElementVector<Key, T,
     }
 }
 
-export namespace TreeMapElementVector
+export namespace FlatMapElementVector
 {
     export class Iterator<Key, T,
             Unique extends boolean,
             SourceT extends ITreeMap<Key, T, Unique, SourceT,
-                TreeMapElementVector.Iterator<Key, T, Unique, SourceT>,
-                TreeMapElementVector.ReverseIterator<Key, T, Unique, SourceT>>>
+                FlatMapElementVector.Iterator<Key, T, Unique, SourceT>,
+                FlatMapElementVector.ReverseIterator<Key, T, Unique, SourceT>>>
     {
-        private readonly data_: TreeMapElementVector<Key, T, Unique, SourceT>;
+        private readonly data_: FlatMapElementVector<Key, T, Unique, SourceT>;
         private readonly index_: usize;
 
         /* ---------------------------------------------------------
             CONSTRUCTORS
         --------------------------------------------------------- */
-        public constructor(data: TreeMapElementVector<Key, T, Unique, SourceT>, index: usize)
+        public constructor(data: FlatMapElementVector<Key, T, Unique, SourceT>, index: usize)
         {
             this.data_ = data;
             this.index_ = index;
@@ -298,12 +295,12 @@ export namespace TreeMapElementVector
     export class ReverseIterator<Key, T,
             Unique extends boolean,
             SourceT extends ITreeMap<Key, T, Unique, SourceT,
-                TreeMapElementVector.Iterator<Key, T, Unique, SourceT>,
-                TreeMapElementVector.ReverseIterator<Key, T, Unique, SourceT>>>
+                FlatMapElementVector.Iterator<Key, T, Unique, SourceT>,
+                FlatMapElementVector.ReverseIterator<Key, T, Unique, SourceT>>>
         extends ReverseIteratorBase<Entry<Key, T>, 
             SourceT, 
-            TreeMapElementVector.Iterator<Key, T, Unique, SourceT>,
-            TreeMapElementVector.ReverseIterator<Key, T, Unique, SourceT>,
+            FlatMapElementVector.Iterator<Key, T, Unique, SourceT>,
+            FlatMapElementVector.ReverseIterator<Key, T, Unique, SourceT>,
             IPair<Key, T>>
     {
         /* ---------------------------------------------------------

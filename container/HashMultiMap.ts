@@ -107,17 +107,10 @@ export class HashMultiMap<Key, T>
         return this.buckets_.find(key) !== null;
     }
 
+    @inline
     public count(key: Key): usize
     {
-        const index: usize = this.bucket(key);
-        const bucket: Vector<HashMultiMap.Iterator<Key, T>> = this.buckets_.at(index);
-
-        let ret: usize = 0;
-        for (let i: usize = 0; i < bucket.size(); ++i)
-            if (this.key_eq()(key, bucket.at(i).first) === true)
-                ++ret;
-
-        return ret;
+        return this.buckets_.count(key);
     }
 
     @inline
@@ -141,7 +134,7 @@ export class HashMultiMap<Key, T>
     @inline
     public bucket_count(): usize
     {
-        return this.buckets_.count();
+        return this.buckets_.row_size();
     }
 
     @inline

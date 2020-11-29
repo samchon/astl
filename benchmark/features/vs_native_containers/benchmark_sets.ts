@@ -2,7 +2,7 @@ import std from "../../../index";
 import { BenchmarkUtil } from "../../internal/BenchmarkUtil";
 
 const associative: std.HashSet<string> = new std.HashSet();
-const adaptive: std.experimental.FlatHashSet<string> = new std.experimental.FlatHashSet();
+const adaptive: std.experimental.LightSet<string> = new std.experimental.LightSet();
 const native: Set<string> = new Set();
 
 const LIMIT: usize = 1000000;
