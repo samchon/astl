@@ -27,28 +27,30 @@ Below components are list of the provided objects in the **ASTL**.
     - `Deque`
     - `List`
     - `ForwardList`
-    - ~~`VectorBoolean`~~
+    - `VectorBoolean`
   - **Associative Containers**
     - *Tree-structured ontainers*
-      - `TreeSet`
-      - `TreeMultiSet`
       - `TreeMap`
       - `TreeMultiMap`
+      - `TreeMultiSet`
+      - `TreeSet`
     - *Hash-buckets based containers*
-      - `HashSet`
-      - `HashMultiSet`
       - `HashMap`
       - `HashMultiMap`
+      - `HashMultiSet`
+      - `HashSet`
   - **Adaptor Containers**
     - *Linear adaptors*
       - `Stack`
       - `Queue`
       - `PriorityQueue`
     - *Associative adaptors*
-      - `experimental.FlatSet`
-      - `experimental.FlatMultiSet`
       - `experimental.FlatMap`
       - `experimental.FlatMultiMap`
+      - `experimental.FlatMultiSet`
+      - `experimental.FlatSet`
+      - `experimental.LightMap`
+      - `experimental.LightSet`
 
 ### Algorithms
   - `<algorithm>`
