@@ -6,7 +6,7 @@
     "email": "samchon@samchon.org",
     "url": "http://samchon.org"
   },
-  "version": "0.0.14",
+  "version": "0.0.15",
   "ascMain": "./index.ts",
   "scripts": {
     "benchmark": "asc benchmark/main.ts --target benchmark && node benchmark",
@@ -14,8 +14,8 @@
     "test": "node test"
   },
   "devDependencies": {
-    "@assemblyscript/loader": "^0.17.2",
-    "assemblyscript": "^0.17.2"
+    "@assemblyscript/loader": "^0.17.7",
+    "assemblyscript": "^0.17.7"
   },
   "homepage": "https://github.com/samchon/astl",
   "repository": {

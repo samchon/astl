@@ -25,7 +25,6 @@ export class HashBuckets<Key, Elem>
 
         this.max_load_factor_ = DEFAULT_MAX_FACTOR;
         this.data_ = new Vector();
-        this.size_ = 0;
 
         this.initialize();
     }
@@ -33,14 +32,16 @@ export class HashBuckets<Key, Elem>
     public clear(): void
     {
         this.data_.clear();
-        this.size_ = 0;
-
         this.initialize();
     }
 
     public rehash(length: usize): void
     {
         length = CMath.max(length, MIN_BUCKET_COUNT);
+
+        const log: f64 = Math.log2(<f64>length);
+        if (log !== Math.floor(log))
+            length = <usize>(Math.pow(2, Math.ceil(log)));
 
         // CREATE NEW BUCKET
         const data: Vector<Vector<Elem>> = new Vector();
@@ -77,6 +78,7 @@ export class HashBuckets<Key, Elem>
 
     private initialize(): void
     {
+        this.size_ = 0;
         for (let i: usize = 0; i < MIN_BUCKET_COUNT; ++i)
             this.data_.push_back(new Vector());
     }
@@ -141,15 +143,21 @@ export class HashBuckets<Key, Elem>
     /* ---------------------------------------------------------
         FINDERS
     --------------------------------------------------------- */
-    @inline
-    private index(elem: Elem): usize
+    @inline()
+    private index_by_key(key: Key): usize
     {
-        return this.hasher_(this.fetcher_(elem)) % this.row_size();
+        return this.hash_function()(key) & (this.row_size() - 1);
+    }
+
+    @inline
+    private index_by_value(elem: Elem): usize
+    {
+        return this.index_by_key(this.fetcher_(elem));
     }
 
     public find(key: Key): Elem | null
     {
-        const index: usize = this.hash_function()(key) % this.row_size();
+        const index: usize = this.index_by_key(key);
         const bucket: Vector<Elem> = this.at(index);
 
         for (let i: usize = 0; i < bucket.size(); ++i)
@@ -163,7 +171,7 @@ export class HashBuckets<Key, Elem>
     
     public count(key: Key): usize
     {
-        const index: usize = this.hash_function()(key) % this.row_size();
+        const index: usize = this.index_by_key(key);
         const bucket: Vector<Elem> = this.at(index);
 
         let ret: usize = 0;
@@ -183,7 +191,7 @@ export class HashBuckets<Key, Elem>
         if (++this.size_ > capacity)
             this.rehash(capacity * 2);
 
-        const index: usize = this.index(val);
+        const index: usize = this.index_by_value(val);
         const bucket: Vector<Elem> = this.data_.at(index);
 
         bucket.push_back(val);
@@ -191,7 +199,7 @@ export class HashBuckets<Key, Elem>
 
     public erase(val: Elem): boolean
     {
-        const index: usize = this.index(val);
+        const index: usize = this.index_by_value(val);
         const bucket: Vector<Elem> = this.data_.at(index);
 
         for (let i: usize = 0; i < bucket.size(); ++i)
@@ -206,5 +214,5 @@ export class HashBuckets<Key, Elem>
     }
 }
 
-const MIN_BUCKET_COUNT: usize = 10;
+const MIN_BUCKET_COUNT: usize = 8;
 const DEFAULT_MAX_FACTOR: f64 = 1.0;

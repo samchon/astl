@@ -99,8 +99,8 @@ function measure_erase(): string
 export function benchmark_sets(): string
 {
     return "### Set Containers\n"
-        + " Method | HashSet<string> | FlatHashSet<string> | Set<string> \n"
-        + "--------|----------------:|--------------------:|------------:\n"
+        + " Method | HashSet | LightSet | Set \n"
+        + "--------|--------:|---------:|----:\n"
         + measure_insert() + "\n"
         + measure_has() + "\n"
         + measure_iteration() + "\n"

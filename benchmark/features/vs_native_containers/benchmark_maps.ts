@@ -9,6 +9,9 @@ const LIMIT: usize = 1000000;
 
 function measure_insert(): string
 {
+    // associative.reserve(LIMIT / 10);
+    // adaptive.reserve(LIMIT / 10);
+
     return BenchmarkUtil.measure("insert", 
     [
         () =>
@@ -99,8 +102,8 @@ function measure_erase(): string
 export function benchmark_maps(): string
 {
     return "### Map Containers\n"
-        + " Method | HashMap<string, usize> | LightMap<string, usize> | Map<string, usize> \n"
-        + "--------|-----------------------:|------------------------:|-------------------:\n"
+        + " Method | HashMap | LightMap | Map \n"
+        + "--------|--------:|---------:|----:\n"
         + measure_insert() + "\n"
         + measure_has() + "\n"
         + measure_iteration() + "\n"
