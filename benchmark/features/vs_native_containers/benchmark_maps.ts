@@ -72,7 +72,7 @@ function measure_iteration(): string
         {
             const keys: string[] = native.keys();
             for (let i: i32 = 0; i < keys.length; ++i)
-                native.get(keys[i]);
+                keys[i];
         }
     ]);
 }

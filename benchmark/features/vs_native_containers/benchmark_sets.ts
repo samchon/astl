@@ -69,7 +69,7 @@ function measure_iteration(): string
         {
             const values: string[] = native.values();
             for (let i: i32 = 0; i < values.length; ++i)
-                native.has(values[i]);
+                values[i];
         }
     ]);
 }
